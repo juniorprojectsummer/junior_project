@@ -6,7 +6,7 @@ const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
-
+var ipc = electron.ipcMain;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -17,7 +17,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
+    pathname: path.join(__dirname, '/templates/login.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -33,6 +33,27 @@ function createWindow () {
     mainWindow = null
   })
 }
+
+
+ipc.on('gohome', function (event, arg) {
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, '/templates/mainpage.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+
+})
+
+ipc.on('gologin', function (event, arg) {
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, '/templates/login.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+
+})
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -58,3 +79,5 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
