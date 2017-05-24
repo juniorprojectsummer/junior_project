@@ -50,21 +50,21 @@
     var mysql = require('mysql');
     function validateForm () {
 
-        var connection = mysql.createConnection({
-            host     : '127.0.0.1',
-            user     : 'root',
-            password : '', // or the original password : 'apaswword'
-            database : 'bills'
-        });
+        // var connection = mysql.createConnection({
+        //     host     : '127.0.0.1',
+        //     user     : 'root',
+        //     password : '', // or the original password : 'apaswword'
+        //     database : 'bills'
+        // });
 
-        // connect to mysql
-        connection.connect(function(err) {
-          // in case of error
-          if(err){
-              console.log(err.code);
-              console.log(err.fatal);
-          }
-        });
+        // // connect to mysql
+        // connection.connect(function(err) {
+        //   // in case of error
+        //   if(err){
+        //       console.log(err.code);
+        //       console.log(err.fatal);
+        //   }
+        // });
         var user = document.getElementById("userName").value
         var pass = document.getElementById("userPassword").value
         if (user == "" || pass == "") {
@@ -74,56 +74,39 @@
           // for (i =0; i<workbook.Strings.length; i++){
           //   console.log(workbook.Strings[i].t);
           // }
-          var sqlite3 = require('sqlite3').verbose()
-          var db = new sqlite3.Database(':memory:');
-           
-          db.serialize(function() {
-            db.run("CREATE TABLE lorem (info TEXT)");
-           
-            var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
-            for (var i = 0; i < 10; i++) {
-                stmt.run("Ipsum " + i);
-            }
-            stmt.finalize();
-           
-            db.each("SELECT rowid AS id, info FROM lorem", function(err, row) {
-                console.log(row.id + ": " + row.info);
-            });
-          });
-           
-          db.close();
+          alert("No Username or Password entered!")
           
             // return false;
         }
         else {
           
           
-          $query = 'SELECT `password_digest` FROM `users` WHERE `username` = '+"'"+user+"'"
-          console.log($query)
-          connection.query($query, function(err, rows, fields) {
+          // $query = 'SELECT `password_digest` FROM `users` WHERE `username` = '+"'"+user+"'"
+          // console.log($query)
+          // connection.query($query, function(err, rows, fields) {
 
-              if(err){
-                  console.log("An error ocurred performing the query.");
-                  console.log(err);
-                  return;
-              }
+              // if(err){
+              //     console.log("An error ocurred performing the query.");
+              //     console.log(err);
+              //     return;
+              // }
 
-              if (rows.length == 0){
-                alert("Username does not exist")
-              }
-              else {
-                var hash = bcrypt.hashSync(pass);
-                console.log(bcrypt.compareSync(pass,rows[0].password_digest))
-                if (bcrypt.compareSync(pass,rows[0].password_digest)){
+              // if (rows.length == 0){
+              //   alert("Username does not exist")
+              // }
+              // else {
+              //   var hash = bcrypt.hashSync(pass);
+              //   console.log(bcrypt.compareSync(pass,rows[0].password_digest))
+              //   if (bcrypt.compareSync(pass,rows[0].password_digest)){
                   ipc.sendSync('gohome')
-                }
-                else{
-                  alert("Wrong Password!")
-                }
+                // }
+                // else{
+                //   alert("Wrong Password!")
+                // }
               }
-          });
+          // });
           
         }
-    }
+    // }
   </script>
 </html>
