@@ -17,8 +17,12 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "~1.6.2"
+    "bcrypt-nodejs": "0.0.3",
+    "bootstrap": "^3.3.7",
+    "electron": "~1.6.2",
+    "electron-rebuild": "^1.5.11",
+    "mysql": "^2.13.0",
+    "xlsx": "^0.10.3"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
