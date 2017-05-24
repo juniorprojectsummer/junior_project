@@ -144,7 +144,27 @@
 .navbar-brand {
     padding: 5px 15px;
 }
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus,
+.btn-primary:active:focus {
+  background-color: black;
+  color: white;
+}
+
+.link-text{
+  color: white;
+}
+
+.link-text:hover{
+  color: #828484;
+  text-decoration: none;
+}
 </style>
+<link rel="stylesheet" href="EmployeeMain.css">
 </head>
 <body>
 <div id="wrapper">
@@ -160,7 +180,7 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li>
-                    <a href="#"> <i class="fa fa-fw fa-home"></i>HOME PAGE</a>
+                    <a href="mainpage.html"> <i class="fa fa-fw fa-home"></i>HOME PAGE</a>
                 </li>
                 <li>
                     <a href="EmployeeMain.html"><i class="fa fa-fw fa-users"></i>EMPLOYEES</a>
@@ -177,10 +197,39 @@
 
     <div id="page-wrapper">
         <div class="container-fluid">
-            <!-- Page Heading -->
-            <div class="row" id="main" >
-                <div class="col-sm-12 col-md-12 well" id="content">
-                    <h1>Notification</h1>
+          <div class = "row" id="main">
+            <div class = "col-sm-7">
+              <h1>Current Employees</h1>
+              <br>
+              <br>
+              <table class = "table table-hover table-bordered">
+                <thead-default>
+                  <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Contract Type</th>
+                    <th colsapan="2"></th>
+                  </tr>
+                </thead>
+              
+                <tbody>
+                    <tr>
+                        <td>Erik</td>
+                        <td>Jenson</td>
+                        <td>ejenson@andrew.cmu.edu</td>
+                        <td>Long Term (LTE)</td>
+                        <td><a href = "#">Edit</a></td>
+                        <td><a href = "#">Delete</a></td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class = "col-sm-3 ">
+                <br>
+                <br>
+                <div class="btn btn-primary">
+                    <a href="EmployeeForm.html" class = "link-text">New Employee</a>
                 </div>
             </div>
         </div>
