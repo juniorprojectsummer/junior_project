@@ -17,7 +17,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, '/templates/login.html'),
+    pathname: path.join(__dirname, 'views/Homepage.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -52,6 +52,8 @@ ipc.on('gologin', function (event, arg) {
   }))
 
 })
+
+
 
 
 

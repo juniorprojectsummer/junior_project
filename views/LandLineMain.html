@@ -1,0 +1,125 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bill Management system</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="../style/style.css" rel="stylesheet">
+  <script> window.jQuery = window.$ = require('jquery'); </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <!-- Bootstrap Core CSS -->
+    <!-- <link href="index.css" rel="stylesheet"> -->
+
+<script type="text/javascript">
+    
+    var electron = require('electron')
+    var shell = electron.shell
+    var ipc = electron.ipcRenderer
+
+</script>
+</head>
+<body>
+<div id="wrapper">
+    <!-- Navigation -->
+    <div class="navigation"></div>
+    <div id = "page-wrapper">
+      <div class="control-group">
+      <!-- Button -->
+      <div class="controls">
+        <a class="btn btn-danger" role = "button" href="LandLineForm.html">New Home</a>
+      </div>
+    </div>
+        <div class="col-md-10">
+          <div class="table-responsive">
+            <h1 id="mainTitle"> Occupied Houses</h1>
+                <table id="mytable" class="table table-bordred table-striped">
+                  <thead>
+                     <th>Unit Number</th>
+                      <th>Compound</th>
+                       <th>LandLine</th>
+                       <th>Start Date</th>
+                       <th>End Date</th>
+                       <th>Employee</th>
+                       <th>Bills</th>
+                        <th>Edit</th>
+                     </thead>
+                    <tbody>
+                    <tr>
+                      <td>504</td>
+                      <td>pearl</td>
+                      <td>12345678</td>
+                      <td>1/1/2016</td>
+                      <td>1/1/2018</td>
+                      <td><a>Batoul Hasnah<a></td>
+                      <td><a>Bills</a></td>
+                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+                    </tr>
+                     <tr>
+                      <td>508</td>
+                      <td>aljazi</td>
+                      <td>11115678</td>
+                      <td>1/1/2017</td>
+                      <td>1/1/2019</td>
+                      <td><a>Yasir Khan<a></td>
+                      <td><a>Bills</a></td>
+                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+                    </tr>
+                    </tbody>
+              </table>    
+          </div>  
+        </div>
+           <div class="col-md-10">
+          <div class="table-responsive">
+            <h1 id="mainTitle"> Vacant Houses</h1>
+                <table id="mytable" class="table table-bordred table-striped">
+                    <thead>
+                     <th>Unit Number</th>
+                      <th>Compound</th>
+                       <th>LandLine</th>
+                       <th>Bills</th>
+                        <th>Edit</th>
+                     </thead>
+                    <tbody>
+                    </tr>
+                     <tr>
+                      <td>538</td>
+                      <td>aljazi</td>
+                      <td>15555678</td>
+                      <td><a>Bills</a></td>
+                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+                    </tr>
+                    </tr>
+                     <tr>
+                      <td>538</td>
+                      <td>aljazi</td>
+                      <td>15555678</td>
+                      <td><a>Bills</a></td>
+                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+                    </tr>
+                    </tbody>
+              </table>    
+          </div>  
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function(){
+      $('.navigation').load("navbar.html");
+    });
+</script>
+     
+</body>
+</html>
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

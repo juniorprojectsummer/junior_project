@@ -1,0 +1,109 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bill Management system</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="../style/style.css" rel="stylesheet">
+  <script> window.jQuery = window.$ = require('jquery'); </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <!-- Bootstrap Core CSS -->
+    <!-- <link href="index.css" rel="stylesheet"> -->
+
+<script type="text/javascript">
+    
+    var electron = require('electron')
+    var shell = electron.shell
+    var ipc = electron.ipcRenderer
+
+</script>
+</head>
+
+<body>
+<div id="wrapper">
+    <!-- Navigation -->
+    <div class="navigation"></div>
+    <div id = "page-wrapper">
+      <form class="form-horizontal" action='' method="POST">
+  <fieldset>
+    <div id="legend">
+      <legend class="">LandLine</legend>
+    </div>
+    <div class="control-group">
+      <label class="control-label"  for="UN">Unit Number</label>
+      <div class="controls">
+        <input type="text" placeholder="" class="input-xlarge">
+      </div>
+    </div>
+     <div class="control-group">
+      <label class="control-label">Compound</label>
+      <div class="controls">
+        <input type="text" placeholder="" class="input-xlarge">
+      </div>
+    </div>
+ 
+    <div class="control-group">
+      <!-- E-mail -->
+      <label class="control-label">LandLine</label>
+      <div class="controls">
+        <input type="text" placeholder="" class="input-xlarge">
+      </div>
+    </div>
+  <div class="control-group">
+      <!-- E-mail -->
+      <label class="control-label">Start Date</label>
+      <div class="controls">
+        <input type="Date" placeholder="" class="input-xlarge">
+      </div>
+    </div>
+    <div class="control-group">
+      <!-- E-mail -->
+      <label class="control-label">End Date</label>
+      <div class="controls">
+        <input type="Date" placeholder="" class="input-xlarge">
+      </div>
+    </div>
+     <div class="control-group">
+      <!-- E-mail -->
+      <label class="control-label">Employee</label>
+      <div class="controls">
+        <input type="text" placeholder="" class="input-xlarge">
+      </div>
+    </div>
+    <div class="control-group">
+      <!-- Button -->
+      <div class="controls">
+        <button class="btn"><strong>Done</strong></button>
+      </div>
+    </div>
+  </fieldset>
+</form>
+
+</table>
+
+
+      </fieldset>
+
+    </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function(){
+      $('.navigation').load("navbar.html");
+    });
+</script>
+     
+</body>
+</html>
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

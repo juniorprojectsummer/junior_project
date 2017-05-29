@@ -1,0 +1,79 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bill Management system</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="../style/style.css" rel="stylesheet">
+  <script> window.jQuery = window.$ = require('jquery'); </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <!-- Bootstrap Core CSS -->
+    <!-- <link href="index.css" rel="stylesheet"> -->
+
+<script type="text/javascript">
+    
+    var electron = require('electron')
+    var shell = electron.shell
+    var ipc = electron.ipcRenderer
+
+</script>
+</head>
+
+<body>
+<div id="wrapper">
+    <!-- Navigation -->
+    <div class="navigation"></div>
+    <div id = "page-wrapper">
+      <div class="col-md-11">
+        <h1 id="mainTitle"> Outstanding Payments</h1>
+        <table id="mytable" class="table table-bordred table-striped">
+                  <thead>
+                       <th>LandLine</th>
+                       <th>Employee</th>
+                       <th>Amount due</th>
+                       <th>Due Date</th>
+                       <th>Bills</th>
+                       <th><button class="btn" href="#"><strong>Remind All</strong></button></th>
+                     </thead>
+                    <tbody>
+                    <tr>
+                      <td><a>12345678</a></td>
+                      <td><a>Batoul Hasnah</a></td>
+                      <td>1,010</td>
+                      <td>April, 2017</td>
+                      <td><a>Bills</a></td>
+                      <td><button class="btn" href="#"><strong>Remind</strong></button></td>
+                    </tr>
+                    <tr>
+                      <td><a>15555678</a></td>
+                      <td><a>Yasir Khan</a></td>
+                      <td>1,500</td>
+                      <td>May, 2017</td>
+                      <td><a>Bills</a></td>
+                      <td><button class="btn" href="#"><strong>Remind</strong></button><td>
+                    </tr>
+                    </tbody>
+              </table>    
+    </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+      $('.navigation').load("navbar.html");
+    });
+</script>
+     
+</body>
+</html>
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
