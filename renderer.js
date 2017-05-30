@@ -13,6 +13,24 @@ $( ".goNewEmployee" ).click(function() {
 	$("#navigation").load("EmployeeForm	.html");
 });
 
+$( ".goEmployeeMain" ).click(function() {
+	$(".container").load("templates/employeeMain.html");
+	console.log(123)
+});
+
+// $( ".goNewEmployee" ).click(function() {
+// 	$("#navigation").load("EmployeeForm	.html");
+// });
+
+// $( ".goNewEmployee" ).click(function() {
+// 	$("#navigation").load("EmployeeForm	.html");
+// });
+
+// $( ".goNewEmployee" ).click(function() {
+// 	$("#navigation").load("EmployeeForm	.html");
+// });
+
+
 
 
 var connection = mysql.createConnection({
@@ -85,7 +103,7 @@ function deleteEmployee(email){
 	        console.log(err);
 	        return;
 	    }
-	    alert(Employee Succesfully Deleted!)
+	    alert("Employee Succesfully Deleted!")
 	    $("#navigation").load("EmployeeMain.html");
 	});
 }
@@ -101,7 +119,7 @@ app.controller('getAllEmployees', function($scope) {
 	        return;
 	    }
 	    
-	    $scope employees = rows;
+	    $scope.employees = rows;
 	});
 });
 
@@ -117,7 +135,7 @@ app.controller('getEmployee', function($scope) {
 	        return;
 	    }
 	    
-	    $scope employees = rows;
+	    $scope.employees = rows;
 	});
 });
 
@@ -125,8 +143,8 @@ app.controller('getEmployee', function($scope) {
 
 
 function updateEmployee(email, first, last, oldemail){
-UPDATE table_name SET field1 = new-value1, field2 = new-value2
-[WHERE Clause]
+// UPDATE table_name SET field1 = new-value1, field2 = new-value2
+// [WHERE Clause]
 
 
 	$query = "UPDATE `employee` SET `email` = '"+  email  +"', firstname = '"+  first  +"', lastname = '"+  last  +"' where `email` = '"+  oldemail  +"'";
@@ -137,7 +155,7 @@ UPDATE table_name SET field1 = new-value1, field2 = new-value2
 	        console.log(err);
 	        return;
 	    }
-	    alert(Employee Succesfully Deleted!)
+	    alert("Employee Succesfully Deleted!")
 	    $("#navigation").load("EmployeeMain.html");
 	});
 
@@ -185,7 +203,7 @@ function deleteHouse(unitid){
 	        console.log(err);
 	        return;
 	    }
-	    alert(Employee Succesfully Deleted!)
+	    alert("Employee Succesfully Deleted!")
 	    $("#navigation").load("HouseMain.html");
 	});
 }
@@ -201,7 +219,7 @@ app.controller('getAllHouses', function($scope) {
 	        return;
 	    }
 	    
-	    $scope houses = rows;
+	    $scope.houses = rows;
 	});
 });
 
@@ -217,7 +235,7 @@ app.controller('getHouse', function($scope) {
 	        return;
 	    }
 	    
-	    $scope houses = rows;
+	    $scope.houses = rows;
 	});
 });
 
@@ -232,8 +250,8 @@ function updateHouse(landline){
 
     var vacant = document.getElementById("houseVacant").value
 
-UPDATE table_name SET field1 = new-value1, field2 = new-value2
-[WHERE Clause]
+// UPDATE table_name SET field1 = new-value1, field2 = new-value2
+// [WHERE Clause]
 
 
 	$query = "UPDATE `housing` SET `vacant` = '"+  vacant  +"' WHERE `landline` = '"+  landline  +"'";
@@ -244,7 +262,7 @@ UPDATE table_name SET field1 = new-value1, field2 = new-value2
 	        console.log(err);
 	        return;
 	    }
-	    alert(Employee Succesfully Deleted!)
+	    alert("Employee Succesfully Deleted!")
 	    $("#navigation").load("EmployeeMain.html");
 	});
 
@@ -287,7 +305,7 @@ function deleteAssignment(landline, andrewId){
 	        console.log(err);
 	        return;
 	    }
-	    alert(Assignment Succesfully Ended!)
+	    alert("Assignment Succesfully Ended!")
 	    $("#navigation").load("HouseMain.html");
 	});
 }
@@ -303,7 +321,7 @@ app.controller('getAllAssignments', function($scope) {
 	        return;
 	    }
 	    
-	    $scope assignment = rows;
+	    $scope.assignment = rows;
 	});
 });
 
@@ -319,7 +337,7 @@ app.controller('getAssignment', function($scope) {
 	        return;
 	    }
 	    
-	    $scope employees = rows;
+	    $scope.employees = rows;
 	});
 });
 
@@ -339,7 +357,7 @@ function updateAssignment(landline){
 	        console.log(err);
 	        return;
 	    }
-	    alert(Employee Succesfully Deleted!)
+	    alert("Employee Succesfully Deleted!")
 	    $("#navigation").load("HouseMain.html");
 	});
 
@@ -383,7 +401,7 @@ function deletCompound(landline, andrewId){
 	        console.log(err);
 	        return;
 	    }
-	    alert(Assignment Succesfully Ended!)
+	    alert("Assignment Succesfully Ended!")
 	    $("#navigation").load("HouseMain.html");
 	});
 }
@@ -399,7 +417,7 @@ app.controller('getAllCompounds', function($scope) {
 	        return;
 	    }
 	    
-	    $scope assignment = rows;
+	    $scope.assignment = rows;
 	});
 });
 
@@ -415,7 +433,7 @@ app.controller('getCompound', function($scope) {
 	        return;
 	    }
 	    
-	    $scope employees = rows;
+	    $scope.employees = rows;
 	});
 });
 
@@ -435,7 +453,7 @@ function updateCompound(landline){
 	        console.log(err);
 	        return;
 	    }
-	    alert(Employee Succesfully Deleted!)
+	    alert("Employee Succesfully Deleted!")
 	    $("#navigation").load("HouseMain.html");
 	});
 

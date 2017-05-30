@@ -10,6 +10,7 @@
   <link href="../style/style.css" rel="stylesheet">
   <script> window.jQuery = window.$ = require('jquery'); </script>s
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="../node_modules/angular/angular.js"></script>
    <!-- Bootstrap Core CSS -->
     <!-- <link href="index.css" rel="stylesheet"> -->
 
@@ -26,29 +27,45 @@
 <div id="wrapper">
     <!-- Navigation -->
     <div class="navigation"></div>
-    <div id = "page-wrapper">
-
-        <div class="panel panel-danger">
-          <div class="panel-heading"><strong>Bills are not synchronized </strong></div>
-          <div class="panel-body">
-            Press generate if all the bills are ready to be uploaded to the system
-            <strong>Last time populated April </strong>
-            <button type="button" class="btn btn-danger">Populate</button></div>
-        </div>
-        <div class="panel panel-danger">
-          <div class="panel-heading"><strong>No Bills were sent to employees</strong></div>
-          <div class="panel-body">Press the send button to send each bill to each employee
-            <strong>Last time sent April </strong>
-            <button type="button" class="btn btn-danger">Send</button></div>
-        </div>
-        </div>
+    <div id = "page-wrapper" class = "container"></div>
 </div>
 
 
 <script>
+
+
     $(document).ready(function(){
       $('.navigation').load("navbar.html");
     });
+    $(document).ready(function(){
+      $('.container').load("templates/home.html");
+    });
+    function goEmployeeMain() {
+      $(".container").load("templates/employeeMain.html");
+    }
+    function goLandlineMain() {
+      $(".container").load("templates/landlineMain.html");
+    }
+    function goHome() {
+      $(".container").load("templates/home.html");
+    }
+    function goAllBills() {
+      $(".container").load("templates/allBills.html");
+    }
+    function goOutstanding() {
+      $(".container").load("templates/outstanding.html");
+    }
+    function goNewEmployee() {
+      $(".container").load("templates/newEmployee.html");
+    }
+    function goNewLandline() {
+      $(".container").load("templates/newLandline.html");
+    }
+    function logout() {
+      $(".navigation").remove();
+      $(".container").load("login.html");
+    }
+    require('../renderer.js')
 </script>
      
 </body>
