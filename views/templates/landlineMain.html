@@ -3,45 +3,13 @@
       <div class="control-group">
       <!-- Button -->
       <div class="controls">
-        <a class="btn btn-danger" role = "button" onclick="goNewLandline()">New Home</a>
+        <a class="btn btn-danger" role = "button" onclick="goNewLandline()">New Landline Assignment</a>
       </div>
     </div>
         <div class="col-md-10">
           <div class="table-responsive">
             <h1 id="mainTitle"> Occupied Houses</h1>
-                <table id="mytable" class="table table-bordred table-striped">
-                  <thead>
-                     <th>Unit Number</th>
-                      <th>Compound</th>
-                       <th>LandLine</th>
-                       <th>Start Date</th>
-                       <th>End Date</th>
-                       <th>Employee</th>
-                       <th>Bills</th>
-                        <th>Edit</th>
-                     </thead>
-                    <tbody>
-                    <tr>
-                      <td>504</td>
-                      <td>pearl</td>
-                      <td>12345678</td>
-                      <td>1/1/2016</td>
-                      <td>1/1/2018</td>
-                      <td><a>Batoul Hasnah<a></td>
-                      <td><a>Bills</a></td>
-                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                    </tr>
-                     <tr>
-                      <td>508</td>
-                      <td>aljazi</td>
-                      <td>11115678</td>
-                      <td>1/1/2017</td>
-                      <td>1/1/2019</td>
-                      <td><a>Yasir Khan<a></td>
-                      <td><a>Bills</a></td>
-                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                    </tr>
-                    </tbody>
+                <table id="mytableCheck" class="table table-bordred table-striped">
               </table>    
           </div>  
         </div>
@@ -78,3 +46,80 @@
           </div>  
         </div>
     </div>
+
+
+
+    <script type="text/javascript">
+
+
+           var $       = require( 'jquery' );
+        var dt      = require( 'datatables.net' )();   
+        var mysql = require('mysql');
+        // var bcrypt = require('bcrypt');
+
+
+        var connection = mysql.createConnection({
+            host     : 'localhost',
+            user     : 'root',
+            password : '', // or the original password : 'apaswword'
+            database : 'bills'
+        });
+
+        // connect to mysql
+        connection.connect(function(err) {
+            // in case of error
+            if(err){
+                console.log(err.code);
+                console.log(err.fatal);
+            }
+        });
+
+
+        // var app = angular.module('myApp', []);
+
+
+        function endConnection() {
+          connection.end();
+        }
+
+
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `assignment`.`startDate`, `assignment`.`endDate`, CONCAT_WS(" ", `employee`.`firstName`, `employee`.`last_name`) AS `empName`"+
+                  +"FROM `housing`, `compound`, `assignment`, `employee` "+
+                  +"WHERE `housing`.`compId` = `compound`.`compId` AND "+
+                  +"`housing`.`landline` = `assignment`.`landline` AND "+
+                  +"`employee`.`andrewId` = `assignment`.`andrewId`;"
+
+        connection.query($query, function(err, rows, fields) {
+          if(err){
+              console.log("An error ocurred performing the query.");
+              console.log(err);
+              return; 
+          }
+          console.log(rows)
+          $('#mytableCheck').bootstrapTable({
+              data: rows ,
+              columns: [{
+                  field: 'unitNo',
+                  title: 'Housing Unit'
+              }, {
+                  field: 'landLine',
+                  title: 'Landline Number'
+              }, {
+                  field: 'compName',
+                  title: 'Compound Name'
+              }, {
+                  field: 'startDate',
+                  title: 'Start Date'
+              }, {
+                  field: 'endDate',
+                  title: 'End Date'
+              },  {
+                  field: 'startDate',
+                  title: 'Start Date'
+              },]
+          });
+        });
+
+
+
+</script>

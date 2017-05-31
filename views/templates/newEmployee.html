@@ -8,13 +8,13 @@
     <div class="control-group">
       <label class="control-label"  for="FN">First Name</label>
       <div class="controls">
-        <input type="text" placeholder="Batoul" class="input-xlarge">
+        <input id="employeeFirstName" type="text" placeholder="First Name" class="input-xlarge">
       </div>
     </div>
      <div class="control-group">
       <label class="control-label"  for="LN">Last Name</label>
       <div class="controls">
-        <input type="text" placeholder="Hasnah" class="input-xlarge">
+        <input id="employeeLastName" type="text" placeholder="Last Name" class="input-xlarge">
       </div>
     </div>
  
@@ -22,15 +22,22 @@
       <!-- E-mail -->
       <label class="control-label" for="email">E-mail</label>
       <div class="controls">
-        <input type="text" placeholder="betotaboula@gmail.com" class="input-xlarge">
+        <input id="employeeEmail" type="text" placeholder="Email" class="input-xlarge">
       </div>
     </div>
  
+     <div class="control-group">
+      <!-- AndrewID -->
+      <label class="control-label" for="andrewId">AndrewID</label>
+      <div class="controls">
+        <input id="employeeAndrewId" type="text" placeholder="AndrewID" class="input-xlarge">
+      </div>
+    </div>
  
     <div class="control-group">
       <!-- Button -->
-      <div class="controls">
-        <button class="btn"><strong>Done</strong></button>
+      <div>
+        <a href="#" class="btn btn-primary btn-md" onclick = "addEmployee()" >Add</a>
       </div>
     </div>
   </fieldset>
@@ -42,3 +49,8 @@
       </fieldset>
 
     </div>
+
+
+
+
+  <script src="/renderer.js">  </script>

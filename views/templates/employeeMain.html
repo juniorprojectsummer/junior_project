@@ -1,6 +1,6 @@
-    <div class="navigation"></div>
+<
     <div id = "page-wrapper">
-      <div class="control-group">
+      <div class="control-group employeeAll">
       <!-- Button -->
       <div class="controls">
         <a onclick="goNewEmployee()" class="btn btn-danger" role="button">New Employee</a>
@@ -10,39 +10,7 @@
         <div class="col-md-10">
           <div class="table-responsive">
             <h1 id="mainTitle"> All Active Employees</h1>
-                <table id="mytable" class="table table-bordred table-striped">
-                     <thead>
-                      <h6>Home</h6>
-                     <th>First Name</th>
-                      <th>Last Name</th>
-                       <th>Email</th>
-                       <th>Contract Type</th>
-                       <th>LandLine</th>
-                       <th>Bills</th>
-                       
-                        <th>Edit</th>
-                     </thead>
-                    <tbody>
-                    <tr>
-                      <td>batoul</td>
-                      <td>hasnah</td>
-                      <td>betotaboula@gmail.com</td>
-                      <td>Long Term(LTE)</td>
-                      <td><a>12345678<a></td>
-                      <td><a>Bills</a></td>
-                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                    </tr>
-                    <tr>
-                      <td>Yasir</td>
-                      <td>Khan</td>
-                      <td>yk@gmail.com</td>
-                      <td>Short Term(STE)</td>
-                      <td><a>12345678<a></td>
-                      <td><a>Bills</a></td>
-                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                    </tr>
-                    </tbody>
-              </table>    
+                <table id="mytableCheck" class="table table-bordred table-striped"></table>    
           </div>  
         </div>
            <div class="col-md-10">
@@ -76,3 +44,70 @@
           </div>  
         </div>
     </div>
+
+
+
+<script type="text/javascript">
+
+
+           var $       = require( 'jquery' );
+        var dt      = require( 'datatables.net' )();   
+        var mysql = require('mysql');
+        // var bcrypt = require('bcrypt');
+
+
+        var connection = mysql.createConnection({
+            host     : 'localhost',
+            user     : 'root',
+            password : '', // or the original password : 'apaswword'
+            database : 'bills'
+        });
+
+        // connect to mysql
+        connection.connect(function(err) {
+            // in case of error
+            if(err){
+                console.log(err.code);
+                console.log(err.fatal);
+            }
+        });
+
+
+        // var app = angular.module('myApp', []);
+
+
+        function endConnection() {
+          connection.end();
+        }
+
+
+        $query = "SELECT * FROM `employee`";
+
+        connection.query($query, function(err, rows, fields) {
+          if(err){
+              console.log("An error ocurred performing the query.");
+              console.log(err);
+              return; 
+          }
+          console.log(rows)
+          $('#mytableCheck').bootstrapTable({
+              data: rows ,
+              columns: [{
+                  field: 'firstName',
+                  title: 'First Name'
+              }, {
+                  field: 'lastName',
+                  title: 'Last Name'
+              }, {
+                  field: 'email',
+                  title: 'Email Address'
+              }, {
+                  field: 'andrewId',
+                  title: 'AndrewID'
+              }, ]
+          });
+        });
+
+
+
+</script>

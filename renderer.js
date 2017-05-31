@@ -1,36 +1,44 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
+var $       = require( 'jquery' );
+var dt      = require( 'datatables.net' )();
+    var app = angular.module('myApp', []);
 
-
+    $(document).ready(function(){
+      $('.navigation').load("navbar.html");
+    });
+    $(document).ready(function(){
+      $('.container').load("templates/home.html");
+    });
+    function goEmployeeMain() {
+      $(".container").load("templates/employeeMain.html");
+    }
+    function goLandlineMain() {
+      $(".container").load("templates/landlineMain.html");
+    }
+    function goHome() {
+      $(".container").load("templates/home.html");
+    }
+    function goAllBills() {
+      $(".container").load("templates/allBills.html");
+    }
+    function goOutstanding() {
+      $(".container").load("templates/outstanding.html");
+    }
+    function goNewEmployee() {
+      $(".container").load("templates/newEmployee.html");
+    }
+    function goNewLandline() {
+      $(".container").load("templates/newLandline.html");
+    }
+    function logout() {
+      $(".navigation").remove();
+      $(".container").load("login.html");
+    }
 var mysql = require('mysql');
 // var bcrypt = require('bcrypt');
 var ipc = electron.ipcRenderer
-
-
-
-$( ".goNewEmployee" ).click(function() {
-	$("#navigation").load("EmployeeForm	.html");
-});
-
-$( ".goEmployeeMain" ).click(function() {
-	$(".container").load("templates/employeeMain.html");
-	console.log(123)
-});
-
-// $( ".goNewEmployee" ).click(function() {
-// 	$("#navigation").load("EmployeeForm	.html");
-// });
-
-// $( ".goNewEmployee" ).click(function() {
-// 	$("#navigation").load("EmployeeForm	.html");
-// });
-
-// $( ".goNewEmployee" ).click(function() {
-// 	$("#navigation").load("EmployeeForm	.html");
-// });
-
-
 
 
 var connection = mysql.createConnection({
@@ -50,442 +58,499 @@ connection.connect(function(err) {
 });
 
 
-var app = angular.module('myApp', []);
-
-function createConnection () {
+// var app = angular.module('myApp', []);
 
 
-	// Perform a query
-	$query = 'SELECT * FROM `user`';
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-
-	    console.log("Query succesfully executed", rows);
-	});
-
-	// Close the connection
-	connection.end(function(){
-	    // The connection has been closed
-	});
-
+function endConnection() {
+	connection.end();
 }
 
 
-function addEmployee(){
-    var email = document.getElementById("employeeEmail").value
-    var first = document.getElementById("employeeFistName").value
-    var last = document.getElementById("employeeLastName").value
-	$query = "INSERT INTO `employee` VALUES ('"+ email + "','"+ first +"', '"+ Last+"');";
+$query = "SELECT * FROM `employee`";
 
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Employee Succesfully Created!")
-	    $("#navigation").load("EmployeeMain.html");
-	});
-}
-
-
-function deleteEmployee(email){
-	$query = "DELETE FROM `employee` WHERE `email` = '"+  email  +"'";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Employee Succesfully Deleted!")
-	    $("#navigation").load("EmployeeMain.html");
-	});
-}
-
-
-app.controller('getAllEmployees', function($scope) {
-	$query = "SELECT * FROM `employees`";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    
-	    $scope.employees = rows;
-	});
-});
-
-
-// STILL TO DECIDE WHAT TO INCLUDE HERE
-app.controller('getEmployee', function($scope) {
-	$query = "SELECT * FROM `employees` where ";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    
-	    $scope.employees = rows;
-	});
+connection.query($query, function(err, rows, fields) {
+  if(err){
+      console.log("An error ocurred performing the query.");
+      console.log(err);
+      return; 
+  }
+  console.log(rows)
+          $('#mytableCheck').bootstrapTable({
+              data: rows ,
+              columns: [{
+                  field: 'firstname',
+                  title: 'First Name'
+              }, {
+                  field: 'lastname',
+                  title: 'Last Name'
+              }, {
+                  field: 'email',
+                  title: 'Email Address'
+              }, ]
+          });
 });
 
 
 
 
-function updateEmployee(email, first, last, oldemail){
-// UPDATE table_name SET field1 = new-value1, field2 = new-value2
-// [WHERE Clause]
+    function addEmployee(){
+        var email = document.getElementById("employeeEmail").value
+        var first = document.getElementById("employeeFirstName").value
+        var last = document.getElementById("employeeLastName").value
+        var andrewId = document.getElementById("employeeAndrewId").value
+     $query = "INSERT INTO `employee` VALUES ('"+ andrewId + "','"+ email +"', '"+ first+"', '"+ last+"');";
 
-
-	$query = "UPDATE `employee` SET `email` = '"+  email  +"', firstname = '"+  first  +"', lastname = '"+  last  +"' where `email` = '"+  oldemail  +"'";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Employee Succesfully Deleted!")
-	    $("#navigation").load("EmployeeMain.html");
-	});
-
-
-}
-
-
-
+     connection.query($query, function(err, rows, fields) {
+         if(err){
+             console.log("An error ocurred performing the query.");
+             console.log(err);
+             return;
+         }
+         console.log(rows)
+         endConnection();
+         alert("Employee Succesfully Created!")
+         goEmployeeMain();
+     });
+    }
 
 
 
 
+    function addAssignment(){
+        var startDate = document.getElementById("assignmentStartDate").value
+        var endDate = document.getElementById("assignmentEndDate").value
+        var andrewId = document.getElementById("assignmentAndrewId").value
+        var landline = document.getElementById("assignmentLandlineNo").value
+
+        var diff = endDate.split("-")[1]-startDate.split("-")[1]
+        var vacant = ""
+        if (diff<= 6){
+          vacant = "Short Term"
+        }
+        else{
+          vacant = "Long Term"
+        }
+     $query = "INSERT INTO `assignment` VALUES ('"+ startDate + "','"+ endDate +"', '"+ vacant +"', '"+ andrewId+"', '"+ landline+"');";
+
+     connection.query($query, function(err, rows, fields) {
+         if(err){
+             console.log("An error ocurred performing the query.");
+             alert(err);
+             return;
+         }
+         alert("Assignment Succesfully Added!")
+         goLandlineMain();
+     });
+    }
+
+//#################################
+
+// 				DB STATEMENTS
+
+
+//#################################
+
+// 				Employees
 
 
 
+// function addEmployee(){
+//     var email = document.getElementById("employeeEmail").value
+//     var first = document.getElementById("employeeFistName").value
+//     var last = document.getElementById("employeeLastName").value
+// 	$query = "INSERT INTO `employee` VALUES ('"+ email + "','"+ first +"', '"+ Last+"');";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Employee Succesfully Created!")
+// 	    $("#navigation").load("EmployeeMain.html");
+// 	});
+// }
 
 
+// function deleteEmployee(email){
+// 	$query = "DELETE FROM `employee` WHERE `email` = '"+  email  +"'";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Employee Succesfully Deleted!")
+// 	    $("#navigation").load("EmployeeMain.html");
+// 	});
+// }
 
 
-function addHouse(){
-    var billno = document.getElementById("houseBillNo").value
-    var compno = document.getElementById("houseCompNo").value
-    var unitid = document.getElementById("houseUnitId").value
-    var vacant = document.getElementById("houseVacant").value
-	$query = "INSERT INTO `house` VALUES ('"+ billno + "','"+ compno +"', '"+ unitid+"', '"+ vacant+"');";
+// app.controller('getAllEmployees', function($scope) {
+// 	$query = "SELECT * FROM `employee`";
 
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("House Succesfully Added!")
-	    $("#navigation").load("HouseMain.html");
-	});
-}
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    console.log(12312312312)
+// 	    $scope.employees = rows;
+// 	    console.log($scope.employees)
+// 	});
+// });
 
 
-function deleteHouse(unitid){
-	$query = "DELETE FROM `employee` WHERE `email` = '"+  unitid  +"'";
+// // STILL TO DECIDE WHAT TO INCLUDE HERE
+// app.controller('getEmployee', function($scope) {
+// 	$query = "SELECT * FROM `employees` where ";
 
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Employee Succesfully Deleted!")
-	    $("#navigation").load("HouseMain.html");
-	});
-}
-
-
-app.controller('getAllHouses', function($scope) {
-	$query = "SELECT * FROM `housing`";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
 	    
-	    $scope.houses = rows;
-	});
-});
+// 	    $scope.employees = rows;
+// 	});
+// });
 
 
-// STILL TO DECIDE WHAT TO INCLUDE HERE
-app.controller('getHouse', function($scope) {
-	$query = "SELECT * FROM `housing` where `";
 
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
+
+// function updateEmployee(email, first, last, oldemail){
+// // UPDATE table_name SET field1 = new-value1, field2 = new-value2
+// // [WHERE Clause]
+
+
+// 	$query = "UPDATE `employee` SET `email` = '"+  email  +"', firstname = '"+  first  +"', lastname = '"+  last  +"' where `email` = '"+  oldemail  +"'";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Employee Succesfully Deleted!")
+// 	    $("#navigation").load("EmployeeMain.html");
+// 	});
+
+
+// }
+
+
+
+
+
+
+// //#################################
+
+// // 				House
+
+
+
+
+
+
+
+
+// function addHouse(){
+//     var billno = document.getElementById("houseBillNo").value
+//     var compno = document.getElementById("houseCompNo").value
+//     var unitid = document.getElementById("houseUnitId").value
+//     var vacant = document.getElementById("houseVacant").value
+// 	$query = "INSERT INTO `house` VALUES ('"+ billno + "','"+ compno +"', '"+ unitid+"', '"+ vacant+"');";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("House Succesfully Added!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
+// }
+
+
+// function deleteHouse(unitid){
+// 	$query = "DELETE FROM `employee` WHERE `email` = '"+  unitid  +"'";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Employee Succesfully Deleted!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
+// }
+
+
+// app.controller('getAllHouses', function($scope) {
+// 	$query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `assignment`.`startDate`, `assignment`.`endDate`, CONCAT_WS(" ", `employee`.`firstName`, `employee`.`last_name`) AS `empName`"+
+//             +"FROM `housing`, `compound`, `assignment`, `employee` "+
+//             +"WHERE `housing`.`compId` = `compound`.`compId` AND "+
+//             +"`housing`.`landline` = `assignment`.`landline` AND "+
+//             +"`employee`.`andrewId` = `assignment`.`andrewId`;"
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
 	    
-	    $scope.houses = rows;
-	});
-});
-
-var pdfReader = require('pdfreader');
-function generateFunction() {
+// 	    $scope.houses = rows;
+// 	});
+// });
 
 
+// // STILL TO DECIDE WHAT TO INCLUDE HERE
+// app.controller('getHouse', function($scope) {
+// 	$query = "SELECT * FROM `housing` where `";
 
-}
-
-function updateHouse(landline){
-
-    var vacant = document.getElementById("houseVacant").value
-
-// UPDATE table_name SET field1 = new-value1, field2 = new-value2
-// [WHERE Clause]
-
-
-	$query = "UPDATE `housing` SET `vacant` = '"+  vacant  +"' WHERE `landline` = '"+  landline  +"'";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Employee Succesfully Deleted!")
-	    $("#navigation").load("EmployeeMain.html");
-	});
-
-
-}
-
-
-
-
-
-
-
-
-
-function addAssignment(){
-    var startDate = document.getElementById("assignmentStartDate").value
-    var endDate = document.getElementById("assignmentEndDate").value
-    var andrewId = document.getElementById("assignmentAndrewId").value
-    var landline = document.getElementById("assignmentLandline").value
-	$query = "INSERT INTO `assignment` VALUES ('"+ startDate + "','"+ endDate +"', '"+ landline +"', '"+ andrewId+"');";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Assignment Succesfully Added!")
-	    $("#navigation").load("HouseMain.html");
-	});
-}
-
-
-function deleteAssignment(landline, andrewId){
-	$query = "DELETE FROM `assignment` WHERE `landline` = '"+  landline  +"', `andrewId` = '"+  andrewId  +"'";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Assignment Succesfully Ended!")
-	    $("#navigation").load("HouseMain.html");
-	});
-}
-
-
-app.controller('getAllAssignments', function($scope) {
-	$query = "SELECT * FROM `assignment`";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
 	    
-	    $scope.assignment = rows;
-	});
-});
+// 	    $scope.houses = rows;
+// 	});
+// });
+
+// var pdfReader = require('pdfreader');
+// function generateFunction() {
 
 
-// STILL TO DECIDE WHAT TO INCLUDE HERE
-app.controller('getAssignment', function($scope) {
-	$query = "SELECT * FROM `housing` where `";
 
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
+// }
+
+// function updateHouse(landline){
+
+//     var vacant = document.getElementById("houseVacant").value
+
+// // UPDATE table_name SET field1 = new-value1, field2 = new-value2
+// // [WHERE Clause]
+
+
+// 	$query = "UPDATE `housing` SET `vacant` = '"+  vacant  +"' WHERE `landline` = '"+  landline  +"'";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Employee Succesfully Deleted!")
+// 	    $("#navigation").load("EmployeeMain.html");
+// 	});
+
+
+// }
+
+
+
+
+// //#################################
+
+// // 				Assignment
+
+
+
+
+
+// function addAssignment(){
+//     var startDate = document.getElementById("assignmentStartDate").value
+//     var endDate = document.getElementById("assignmentEndDate").value
+//     var andrewId = document.getElementById("assignmentAndrewId").value
+//     var landline = document.getElementById("assignmentLandline").value
+// 	$query = "INSERT INTO `assignment` VALUES ('"+ startDate + "','"+ endDate +"', '"+ landline +"', '"+ andrewId+"');";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Assignment Succesfully Added!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
+// }
+
+
+// function deleteAssignment(landline, andrewId){
+// 	$query = "DELETE FROM `assignment` WHERE `landline` = '"+  landline  +"', `andrewId` = '"+  andrewId  +"'";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Assignment Succesfully Ended!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
+// }
+
+
+// app.controller('getAllAssignments', function($scope) {
+// 	$query = "SELECT * FROM `assignment`";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
 	    
-	    $scope.employees = rows;
-	});
-});
+// 	    $scope.assignment = rows;
+// 	});
+// });
 
 
+// // STILL TO DECIDE WHAT TO INCLUDE HERE
+// app.controller('getAssignment', function($scope) {
+// 	$query = "SELECT * FROM `housing` where `";
 
-function updateAssignment(landline){
-
-    var startDate = document.getElementById("assignmentStartDate").value
-    var endDate = document.getElementById("assignmentEndDate").value
-    var andrewId = document.getElementById("assignmentAndrewId").value
-    var landline = document.getElementById("assignmentLandline").value
-	$query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"';";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Employee Succesfully Deleted!")
-	    $("#navigation").load("HouseMain.html");
-	});
-
-
-}
-
-
-
-
-
-
-
-
-
-
-function addCompound(){
-    var startDate = document.getElementById("assignmentStartDate").value
-    var endDate = document.getElementById("assignmentEndDate").value
-    var andrewId = document.getElementById("assignmentAndrewId").value
-    var landline = document.getElementById("assignmentLandline").value
-	$query = "INSERT INTO `assignment` VALUES ('"+ startDate + "','"+ endDate +"', '"+ landline +"', '"+ andrewId+"');";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Assignment Succesfully Added!")
-	    $("#navigation").load("HouseMain.html");
-	});
-}
-
-
-function deletCompound(landline, andrewId){
-	$query = "DELETE FROM `assignment` WHERE `landline` = '"+  landline  +"', `andrewId` = '"+  andrewId  +"'";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Assignment Succesfully Ended!")
-	    $("#navigation").load("HouseMain.html");
-	});
-}
-
-
-app.controller('getAllCompounds', function($scope) {
-	$query = "SELECT * FROM `assignment`";
-
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
 	    
-	    $scope.assignment = rows;
-	});
-});
+// 	    $scope.employees = rows;
+// 	});
+// });
 
 
-// STILL TO DECIDE WHAT TO INCLUDE HERE
-app.controller('getCompound', function($scope) {
-	$query = "SELECT * FROM `housing` where `";
 
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
+// function updateAssignment(landline){
+
+//     var startDate = document.getElementById("assignmentStartDate").value
+//     var endDate = document.getElementById("assignmentEndDate").value
+//     var andrewId = document.getElementById("assignmentAndrewId").value
+//     var landline = document.getElementById("assignmentLandline").value
+// 	$query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"';";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Employee Succesfully Deleted!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
+
+
+// }
+
+
+
+
+// //#################################
+
+// // 				Compound
+
+
+
+
+
+
+// function addCompound(){
+//     var startDate = document.getElementById("assignmentStartDate").value
+//     var endDate = document.getElementById("assignmentEndDate").value
+//     var andrewId = document.getElementById("assignmentAndrewId").value
+//     var landline = document.getElementById("assignmentLandline").value
+// 	$query = "INSERT INTO `assignment` VALUES ('"+ startDate + "','"+ endDate +"', '"+ landline +"', '"+ andrewId+"');";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Assignment Succesfully Added!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
+// }
+
+
+// function deletCompound(landline, andrewId){
+// 	$query = "DELETE FROM `assignment` WHERE `landline` = '"+  landline  +"', `andrewId` = '"+  andrewId  +"'";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Assignment Succesfully Ended!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
+// }
+
+
+// app.controller('getAllCompounds', function($scope) {
+// 	$query = "SELECT * FROM `assignment`";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
 	    
-	    $scope.employees = rows;
-	});
-});
+// 	    $scope.assignment = rows;
+// 	});
+// });
+
+
+// // STILL TO DECIDE WHAT TO INCLUDE HERE
+// app.controller('getCompound', function($scope) {
+// 	$query = "SELECT * FROM `housing` where `";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+	    
+// 	    $scope.employees = rows;
+// 	});
+// });
 
 
 
-function updateCompound(landline){
+// function updateCompound(landline){
 
-    var startDate = document.getElementById("assignmentStartDate").value
-    var endDate = document.getElementById("assignmentEndDate").value
-    var andrewId = document.getElementById("assignmentAndrewId").value
-    var landline = document.getElementById("assignmentLandline").value
-	$query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"';";
+//     var startDate = document.getElementById("assignmentStartDate").value
+//     var endDate = document.getElementById("assignmentEndDate").value
+//     var andrewId = document.getElementById("assignmentAndrewId").value
+//     var landline = document.getElementById("assignmentLandline").value
+// 	$query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"';";
 
-	connection.query($query, function(err, rows, fields) {
-	    if(err){
-	        console.log("An error ocurred performing the query.");
-	        console.log(err);
-	        return;
-	    }
-	    alert("Employee Succesfully Deleted!")
-	    $("#navigation").load("HouseMain.html");
-	});
-
-
-}
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Employee Succesfully Deleted!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
 
 
-
-
-
-
-
-function addBill(){
-
-}
-
-
-function deleteBill(){
-
-}
-
-function getAllBills(){
-
-}
-
-function getBill(){
-
-}
-
-function updateBill(){
-
-}
+// }
 
 
 
@@ -493,3 +558,93 @@ function updateBill(){
 
 
 
+// //#################################
+
+// // 				BILLS
+
+
+
+
+
+// function addBill(billNo, pastBalance, paymentsReceived, totalAmountDue, billDate, billPeriod, deadline, pdfURL, landline){
+// 	$query = "INSERT INTO `assignment` VALUES ('"+ billNo + "','"+ pastBalance +"', '"+ paymentsReceived +"', '"+ totalAmountDue+"', '"+ billDate+"', '"+ billPeriod+"', '"+ pdfURL+"', '"+ landline+"');";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    // alert("Assignment Succesfully Added!")
+// 	    // $("#navigation").load(".html");
+// 	});
+// }
+
+
+// function deleteBill(billNo){
+// 	$query = "DELETE FROM `bills` WHERE `billno` = '"+  billNo  +"';"
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Bill Succesfully Ended!")
+// 	    // $("#navigation").load(".html");
+// 	});
+// }
+
+
+// app.controller('getAllBills', function($scope) {
+// 	$query = "SELECT * FROM `bills`";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+	    
+// 	    $scope.assignment = rows;
+// 	});
+// });
+
+
+// // STILL TO DECIDE WHAT TO INCLUDE HERE
+// app.controller('getBill', function($scope) {
+// 	$query = "SELECT * FROM `housing` where `";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+	    
+// 	    $scope.employees = rows;
+// 	});
+// });
+
+
+
+// function updateBill(landline){
+
+//     var startDate = document.getElementById("assignmentStartDate").value
+//     var endDate = document.getElementById("assignmentEndDate").value
+//     var andrewId = document.getElementById("assignmentAndrewId").value
+//     var landline = document.getElementById("assignmentLandline").value
+// 	$query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"';";
+
+// 	connection.query($query, function(err, rows, fields) {
+// 	    if(err){
+// 	        console.log("An error ocurred performing the query.");
+// 	        console.log(err);
+// 	        return;
+// 	    }
+// 	    alert("Employee Succesfully Deleted!")
+// 	    $("#navigation").load("HouseMain.html");
+// 	});
+
+
+// }
