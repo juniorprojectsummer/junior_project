@@ -123,14 +123,14 @@ connection.query($query, function(err, rows, fields) {
         var landline = document.getElementById("assignmentLandlineNo").value
 
         var diff = endDate.split("-")[1]-startDate.split("-")[1]
-        var vacant = ""
+        var contractType;
         if (diff<= 6){
-          vacant = "Short Term"
+          contractType = "Short Term"
         }
         else{
-          vacant = "Long Term"
+          contractType = "Long Term"
         }
-     $query = "INSERT INTO `assignment` VALUES ('"+ startDate + "','"+ endDate +"', '"+ vacant +"', '"+ andrewId+"', '"+ landline+"');";
+     $query = "INSERT INTO `assignment` VALUES ('"+ startDate + "','"+ endDate +"', '"+ contractType +"', '"+ landline+"', '"+ andrewId+"');";
 
      connection.query($query, function(err, rows, fields) {
          if(err){

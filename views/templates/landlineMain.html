@@ -8,12 +8,12 @@
     </div>
         <div class="col-md-10">
           <div class="table-responsive">
-            <h1 id="mainTitle"> Occupied Houses</h1>
-                <table id="mytableCheck" class="table table-bordred table-striped">
+            <h1 id="mainTitle"> All Houses</h1>
+                <table id="allHouses" class="table table-bordred table-striped">
               </table>    
           </div>  
         </div>
-           <div class="col-md-10">
+           <!-- <div class="col-md-10">
           <div class="table-responsive">
             <h1 id="mainTitle"> Vacant Houses</h1>
                 <table id="mytable" class="table table-bordred table-striped">
@@ -44,7 +44,7 @@
                     </tbody>
               </table>    
           </div>  
-        </div>
+        </div> -->
     </div>
 
 
@@ -83,11 +83,8 @@
         }
 
 
-        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `assignment`.`startDate`, `assignment`.`endDate`, CONCAT_WS(" ", `employee`.`firstName`, `employee`.`last_name`) AS `empName`"+
-                  +"FROM `housing`, `compound`, `assignment`, `employee` "+
-                  +"WHERE `housing`.`compId` = `compound`.`compId` AND "+
-                  +"`housing`.`landline` = `assignment`.`landline` AND "+
-                  +"`employee`.`andrewId` = `assignment`.`andrewId`;"
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `assignment`.`startDate`, `assignment`.`endDate`, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `housing`, `compound`, `assignment`, `employee` WHERE `housing`.`compId` = `compound`.`compId` AND `housing`.`landline` = `assignment`.`landline` AND `employee`.`andrewId` = `assignment`.`andrewId`;";
+        console.log($query);
 
         connection.query($query, function(err, rows, fields) {
           if(err){
@@ -96,7 +93,7 @@
               return; 
           }
           console.log(rows)
-          $('#mytableCheck').bootstrapTable({
+          $('#allHouses').bootstrapTable({
               data: rows ,
               columns: [{
                   field: 'unitNo',
@@ -113,9 +110,9 @@
               }, {
                   field: 'endDate',
                   title: 'End Date'
-              },  {
-                  field: 'startDate',
-                  title: 'Start Date'
+              }, {
+                  field: 'empName',
+                  title: 'Employee'
               },]
           });
         });

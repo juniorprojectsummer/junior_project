@@ -14,7 +14,7 @@ let mainWindow
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
-
+  mainWindow.maximize();
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'views/login.html'),
@@ -37,7 +37,7 @@ function createWindow () {
 
 ipc.on('gohome', function (event, arg) {
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, '/views/Homepage.html'),
+    pathname: path.join(__dirname, 'views/Homepage.html'),
     protocol: 'file:',
     slashes: true
   }))

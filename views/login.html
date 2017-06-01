@@ -15,26 +15,32 @@
      
     
   </head>
-  <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-offset-5 col-md-3">
-                <div class="form-login">
-                <h4>Welcome back.</h4>
+  <body style="background-color: #f8f2ed; margin-left: 10%;">
+    <div class="container" >
+                <div class="form-login"  style="background-color: #fff;background-color: #fff;
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+  -moz-box-shadow: 0 0 6px 2px #b0b2ab;
+  -webkit-box-shadow: 0 0 6px 2px #b0b2ab;
+  box-shadow: 0 0 6px 2px #b0b2ab;
+  color: #990000;
+">
+                <center><h2>Welcome back.</h2></center>
+                <label>Username</label>
                 <input type="text" id="userName" class="form-control input-sm chat-input" placeholder="username" />
                 </br>
+                <label>Password</label>
                 <input type="password" id="userPassword" class="form-control input-sm chat-input" placeholder="password" />
                 </br>
                 <div class="wrapper">
                 <span class="group-btn">     
-                    <a href="#" class="btn btn-primary btn-md" onclick = "validateForm()" >login <i class="fa fa-sign-in"></i></a>
+                    <a href="#" class="btn btn-md" onclick = "validateForm()" style="background-color: #d17702; color:#990000 ">login <i class="fa fa-sign-in"></i></a>
                 </span>
                 </div>
                 </div>
             
             </div>
-        </div>  
-    </div>
 
   </body>
 
@@ -43,28 +49,28 @@
 
 
     // You can also require other files to run in this process
-    require('../renderer.js')
+    // require('../renderer.js')
 
 
     var bcrypt = require('bcrypt-nodejs');
     var mysql = require('mysql');
     function validateForm () {
 
-        // var connection = mysql.createConnection({
-        //     host     : '127.0.0.1',
-        //     user     : 'root',
-        //     password : '', // or the original password : 'apaswword'
-        //     database : 'bills'
-        // });
+        var connection = mysql.createConnection({
+            host     : '127.0.0.1',
+            user     : 'root',
+            password : '', // or the original password : 'apaswword'
+            database : 'bills'
+        });
 
-        // // connect to mysql
-        // connection.connect(function(err) {
-        //   // in case of error
-        //   if(err){
-        //       console.log(err.code);
-        //       console.log(err.fatal);
-        //   }
-        // });
+        // connect to mysql
+        connection.connect(function(err) {
+          // in case of error
+          if(err){
+              console.log(err.code);
+              console.log(err.fatal);
+          }
+        });
         var user = document.getElementById("userName").value
         var pass = document.getElementById("userPassword").value
         if (user == "" || pass == "") {
@@ -81,32 +87,33 @@
         else {
           
           
-          // $query = 'SELECT `password_digest` FROM `users` WHERE `username` = '+"'"+user+"'"
-          // console.log($query)
-          // connection.query($query, function(err, rows, fields) {
+          $query = 'SELECT `passwordDigest` FROM `users` WHERE `userName` = '+"'"+user+"'"
+          connection.query($query, function(err, rows, fields) {
 
-              // if(err){
-              //     console.log("An error ocurred performing the query.");
-              //     console.log(err);
-              //     return;
-              // }
-
-              // if (rows.length == 0){
-              //   alert("Username does not exist")
-              // }
-              // else {
-              //   var hash = bcrypt.hashSync(pass);
-              //   console.log(bcrypt.compareSync(pass,rows[0].password_digest))
-              //   if (bcrypt.compareSync(pass,rows[0].password_digest)){
-                  ipc.sendSync('gohome')
-                // }
-                // else{
-                //   alert("Wrong Password!")
-                // }
+              if(err){
+                  console.log("An error ocurred performing the query.");
+                  console.log(err);
+                  return;
               }
-          // });
+
+              if (rows.length == 0){
+                alert("Username does not exist")
+              }
+              else {
+                var hash = bcrypt.hashSync(pass);
+                // console.log(bcrypt.compareSync(pass,rows[0].password_digest))
+                console.log(1231230)
+                if (bcrypt.compareSync(pass,rows[0].passwordDigest)){
+                  ipc.sendSync('gohome')
+                  
+                }
+                else{
+                  alert("Wrong Password!")
+                }
+              }
+          });
           
         }
-    // }
+    }
   </script>
 </html>

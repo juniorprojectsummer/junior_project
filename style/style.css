@@ -1,7 +1,7 @@
 @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
 @media(min-width:768px) {
     body {
-        margin-top: 39px;
+        margin-top: 18px;
         background-color: #f8f2ed;
     }
     /*html, body, #wrapper, #page-wrapper {height: 100%; overflow: hidden;}*/
@@ -15,6 +15,7 @@
 }
 
 #page-wrapper-bills, #page-wrapper {
+    margin-top: 0;
     width: 100%;        
     padding: 0;
 }
@@ -23,7 +24,7 @@
 	margin-right: 50px;
 }
 
-@media(min-width:768px) {
+@media(min-width:500px) {
     #wrapper {
         padding-left: 225px;
     }
@@ -79,11 +80,13 @@
         overflow-x: hidden;
         padding-bottom: 40px;
         background-color: #fff;
+        font-family: Arial;
 
     }
 
     .side-nav>li>a {
-        width: 225px;        
+        /*width: 225px; 
+        font-family: Arial;    */   
     }
 
     .side-nav li a:hover,
@@ -163,7 +166,7 @@ a:hover,  a:visited {
     color: #936241;
 }
 
-button{
+button,.btn{
 	background-color: #d17702;
 }
 .plan {
@@ -185,4 +188,22 @@ button{
   -webkit-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
  }
-
+ .btn{
+    text-align: left;
+    color: #990000;
+ }
+ .container{
+    background-color: #f8f2ed;
+ }
+.form-login{
+     padding: 20px;
+  color: #fff;
+  background-color: #fff;
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+  -moz-box-shadow: 0 0 6px 2px #b0b2ab;
+  -webkit-box-shadow: 0 0 6px 2px #b0b2ab;
+  box-shadow: 0 0 6px 2px #b0b2ab;
+}
+}
