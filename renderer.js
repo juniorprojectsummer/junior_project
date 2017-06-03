@@ -2,17 +2,12 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 var $       = require( 'jquery' );
-var dt      = require( 'datatables.net' )();
-    var app = angular.module('myApp', []);
 
-    $(document).ready(function(){
-      $('.navigation').load("navbar.html");
-    });
-    $(document).ready(function(){
-      $('.container').load("templates/home.html");
-    });
     function goEmployeeMain() {
       $(".container").load("templates/employeeMain.html");
+    }
+    function goNewHouse() {
+      $(".container").load("templates/newHouse.html");
     }
     function goLandlineMain() {
       $(".container").load("templates/landlineMain.html");
@@ -29,6 +24,9 @@ var dt      = require( 'datatables.net' )();
     function goNewEmployee() {
       $(".container").load("templates/newEmployee.html");
     }
+    function goNewCompound() {
+      $(".container").load("templates/newCompound.html");
+    }
     function goNewLandline() {
       $(".container").load("templates/newLandline.html");
     }
@@ -40,12 +38,12 @@ var mysql = require('mysql');
 // var bcrypt = require('bcrypt');
 var ipc = electron.ipcRenderer
 
-
 var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '', // or the original password : 'apaswword'
-    database : 'bills'
+    host     : 'mysql.qatar.cmu.local',
+    user     : 'fmbills_devuser',
+    password : 'PatUmNed', // or the original password : 'apaswword'
+    database : 'fmbills_dev',
+    insecureAuth: true
 });
 
 // connect to mysql
@@ -66,29 +64,6 @@ function endConnection() {
 }
 
 
-$query = "SELECT * FROM `employee`";
-
-connection.query($query, function(err, rows, fields) {
-  if(err){
-      console.log("An error ocurred performing the query.");
-      console.log(err);
-      return; 
-  }
-  console.log(rows)
-          $('#mytableCheck').bootstrapTable({
-              data: rows ,
-              columns: [{
-                  field: 'firstname',
-                  title: 'First Name'
-              }, {
-                  field: 'lastname',
-                  title: 'Last Name'
-              }, {
-                  field: 'email',
-                  title: 'Email Address'
-              }, ]
-          });
-});
 
 
 

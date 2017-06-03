@@ -24,7 +24,8 @@
     "electron-rebuild": "^1.5.11",
     "jquery": "^3.2.1",
     "mysql": "^2.13.0",
-    "xlsx": "^0.10.3"
+    "xlsx": "^0.10.3",
+    "bootstrap-table"
   },
   "dependencies": {}
 }

@@ -3,6 +3,7 @@
       <div class="control-group">
       <!-- Button -->
       <div class="controls">
+        <a class="btn btn-danger" role = "button" onclick="goNewHouse()">New Landline</a>
         <a class="btn btn-danger" role = "button" onclick="goNewLandline()">New Landline Assignment</a>
       </div>
     </div>
@@ -52,17 +53,17 @@
     <script type="text/javascript">
 
 
-           var $       = require( 'jquery' );
-        var dt      = require( 'datatables.net' )();   
+        var $     = require( 'jquery' );
         var mysql = require('mysql');
         // var bcrypt = require('bcrypt');
 
 
         var connection = mysql.createConnection({
-            host     : 'localhost',
-            user     : 'root',
-            password : '', // or the original password : 'apaswword'
-            database : 'bills'
+            host     : 'mysql.qatar.cmu.local',
+            user     : 'fmbills_devuser',
+            password : 'PatUmNed', // or the original password : 'apaswword'
+            database : 'fmbills_dev',
+            insecureAuth: true
         });
 
         // connect to mysql

@@ -32,7 +32,14 @@
     <div id = "page-wrapper" class = "container"></div>
 </div>
 
-
+<script> 
+    $(document).ready(function(){
+      $('.navigation').load("navbar.html");
+    });
+    $(document).ready(function(){
+      $('.container').load("templates/home.html");
+    });
+</script>
 <script src = "../renderer.js"> </script>
      
 </body>

@@ -57,10 +57,11 @@
     function validateForm () {
 
         var connection = mysql.createConnection({
-            host     : '127.0.0.1',
-            user     : 'root',
-            password : '', // or the original password : 'apaswword'
-            database : 'bills'
+            host     : 'mysql.qatar.cmu.local',
+            user     : 'fmbills_devuser',
+            password : 'PatUmNed', // or the original password : 'apaswword'
+            database : 'fmbills_dev',
+            insecureAuth: true
         });
 
         // connect to mysql
@@ -87,7 +88,7 @@
         else {
           
           
-          $query = 'SELECT `passwordDigest` FROM `users` WHERE `userName` = '+"'"+user+"'"
+          $query = 'SELECT `passwordDigest` FROM `user` WHERE `userName` = '+"'"+user+"'"
           connection.query($query, function(err, rows, fields) {
 
               if(err){
@@ -102,9 +103,9 @@
               else {
                 var hash = bcrypt.hashSync(pass);
                 // console.log(bcrypt.compareSync(pass,rows[0].password_digest))
-                console.log(1231230)
+                console.log(bcrypt.compareSync(pass,rows[0].passwordDigest))
                 if (bcrypt.compareSync(pass,rows[0].passwordDigest)){
-                  ipc.sendSync('gohome')
+                  window.location.assign("Homepage.html");
                   
                 }
                 else{
