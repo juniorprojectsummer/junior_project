@@ -78,7 +78,7 @@ function endConnection() {
      connection.query($query, function(err, rows, fields) {
          if(err){
              console.log("An error ocurred performing the query.");
-             console.log(err);
+             alert(err);
              return;
          }
          console.log(rows)
@@ -116,6 +116,25 @@ function endConnection() {
          alert("Assignment Succesfully Added!")
          goLandlineMain();
      });
+    }
+
+
+    function addHouse(){
+        var billno = document.getElementById("houseLandline").value
+        var compno = document.getElementById("houseCompId").value
+        var unitid = document.getElementById("houseUnitId").value
+        var vacant = document.getElementById("houseVacant").value
+        $query = "INSERT INTO `house` VALUES ('"+ landline + "','"+ unitId +"', '"+ vacant+"', '"+ compId+"');";
+
+        connection.query($query, function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            }
+            alert("House Succesfully Added!")
+            $("#navigation").load("HouseMain.html");
+        });
     }
 
 //#################################
