@@ -8,18 +8,16 @@
     <div class="control-group">
       <label class="control-label"  for="UN">Unit Number</label>
       <div class="controls">
-        <input id = "UnitId" type="text" placeholder="Andrew-ID" class="input-xlarge">
+        <input id = "UnitId" type="text" placeholder="Unit Number" class="input-xlarge">
       </div>
     </div>
      <div class="control-group">
       <label class="control-label" for="textinput">Select Compound</label>
       <div id = "Select">
-        <select class="controls">
-          <option>Al Jazi </option>
-          <option>The Pearl</option>
-          <option>Les Roses</option>
+        <select class="compoundSelect">
         </select>
      </div>
+     <br>
      <a href="#" class="btn btn-primary btn-md" onclick = "goNewCompound()" >Add Compound</a>
     </div>
 
@@ -34,7 +32,7 @@
     <div class="control-group">
       <!-- Button -->
       <div class="controls"><br>
-        <a href="#" class="btn btn-primary btn-md" onclick = "addHouse()" >Add</a>
+        <a href="#" class="btn btn-primary btn-md" onclick = "addEmployee()" >Add</a>
       </div>
     </div>
   </fieldset>
@@ -47,13 +45,40 @@
 
     </div>
 
-  <script src="/renderer.js"> 
+<script type="text/javascript">
+  
+    var connection = mysql.createConnection({
+        host     : 'mysql.qatar.cmu.local',
+        user     : 'fmbills_devuser',
+        password : 'PatUmNed', // or the original password : 'apaswword'
+        database : 'fmbills_dev',
+        insecureAuth: true
+    });
 
-    
+    // connect to mysql
+    connection.connect(function(err) {
+        // in case of error
+        if(err){
+            console.log(err.code);
+            console.log(err.fatal);
+        }
+    });
+
+    $query = "SELECT * FROM `compound`";
+
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+      $.each(rows, function(i, value) {
+          $('.compoundSelect').append($('<option>').text(value.compName).attr('value', value.compName));
+      });        
+    });
 
 
 
+</script>
 
-
-
-   </script>
+  <script src="/renderer.js">  </script>

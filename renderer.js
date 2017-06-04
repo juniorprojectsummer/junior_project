@@ -73,7 +73,15 @@ function endConnection() {
         var first = document.getElementById("employeeFirstName").value
         var last = document.getElementById("employeeLastName").value
         var andrewId = document.getElementById("employeeAndrewId").value
-     $query = "INSERT INTO `employee` VALUES ('"+ andrewId + "','"+ email +"', '"+ first+"', '"+ last+"');";
+        var contractType = document.getElementById("employeeContractType").value
+
+        // var firstMatches = val.match(/\d+/g);
+        // var lastMatches = val.match(/\d+/g);
+        // if (firstMatches != null) {
+        //     alert('Fir');
+        // }
+    
+     $query = "INSERT INTO `employee` VALUES ('"+ andrewId + "','"+ email +"', '"+ first+"', '"+ last+"', '"+ contractType+"');";
 
      connection.query($query, function(err, rows, fields) {
          if(err){
@@ -124,7 +132,7 @@ function endConnection() {
         var compno = document.getElementById("houseCompId").value
         var unitid = document.getElementById("houseUnitId").value
         var vacant = document.getElementById("houseVacant").value
-        $query = "INSERT INTO `house` VALUES ('"+ landline + "','"+ unitId +"', '"+ vacant+"', '"+ compId+"');";
+        $query = "INSERT INTO `house` VALUES ('"+ landline + "','"+ unitId +"', '"+ vacant+"', '"+ compId +"');";
 
         connection.query($query, function(err, rows, fields) {
             if(err){
@@ -136,6 +144,20 @@ function endConnection() {
             $("#navigation").load("HouseMain.html");
         });
     }
+
+    function getAllCompounds(){
+        $query = "SELECT * FROM `compound`";
+
+        connection.query($query, function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            }
+            
+            return rows
+        });
+    };
 
 //#################################
 

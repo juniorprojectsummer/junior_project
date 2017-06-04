@@ -60,7 +60,7 @@
         function addCompound(){
         var compoundName = document.getElementById("compoundName").value 
         //THE COMP ID IS NOT INCREMENTAL???????
-         $query = "INSERT INTO `compound` VALUES ('" + compoundName + "');";
+         $query = "INSERT INTO `compound` (`compName`) VALUES ('" + compoundName + "');";
 
          connection.query($query, function(err, rows, fields) {
              if(err){
