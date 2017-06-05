@@ -7,15 +7,18 @@
     </div>
     <div class="control-group">
       <label class="control-label"  for="UN">Employee Andrew ID</label>
-      <div class="controls">
-        <input id = "assignmentAndrewId" type="text" placeholder="Andrew-ID" class="input-xlarge">
-      </div>
+      <div id = "Select">
+        <select id="assignmentAndrewId">
+        </select>
+     </div>
+
     </div>
      <div class="control-group">
       <label class="control-label">Landline Number</label>
-      <div class="controls">
-        <input id = "assignmentLandlineNo" type="text" placeholder="Landline Number" class="input-xlarge">
-      </div>
+      <div id = "Select">
+        <select id="assignmentLandlineNo">
+        </select>
+     </div>
     </div>
  
     <div class="control-group">
@@ -27,7 +30,7 @@
   <div class="control-group">
       <label class="control-label">End Date</label>
       <div class="controls">
-        <input id = "assignmentEndDate" type="Date" placeholder="" class="input-xlarge">
+        <input id = "assignmentEndDate" type="date" placeholder="" class="input-xlarge">
       </div>
     </div>
     <div class="control-group">
@@ -46,4 +49,63 @@
 
     </div>
 
-  <script src="/renderer.js">  </script>
+
+
+<script type="text/javascript">
+  
+    var connection = mysql.createConnection({
+        host     : 'mysql.qatar.cmu.local',
+        user     : 'fmbills_devuser',
+        password : 'PatUmNed', // or the original password : 'apaswword'
+        database : 'fmbills_dev',
+        insecureAuth: true
+    });
+
+    // connect to mysql
+    connection.connect(function(err) {
+        // in case of error
+        if(err){
+            console.log(err.code);
+            console.log(err.fatal);
+        }
+    });
+
+    $query = "SELECT `employee`.`andrewId` FROM `employee` LEFT JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` WHERE `assignment`.`andrewId` is null";
+
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        console.log(rows)
+      $.each(rows, function(i, value) {
+          $('#assignmentAndrewId').append($('<option value = "'+ value.andrewId+ '" >'+ value.andrewId + '</option>'))
+      });
+
+    });
+
+
+    $query = "SELECT `landLine` FROM `housing` WHERE `vacant` = 1"
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+      $.each(rows, function(i, value) {
+          $('#assignmentLandlineNo').append($('<option value = "'+ value.landLine+ '" >'+ value.landLine + '</option>'))
+      });
+
+    });
+
+
+
+
+
+
+</script>
+
+
+
+  <script src="../renderer.js">  </script>

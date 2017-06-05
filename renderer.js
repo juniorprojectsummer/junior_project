@@ -80,7 +80,7 @@ function endConnection() {
         // if (firstMatches != null) {
         //     alert('Fir');
         // }
-    
+
      $query = "INSERT INTO `employee` VALUES ('"+ andrewId + "','"+ email +"', '"+ first+"', '"+ last+"', '"+ contractType+"');";
 
      connection.query($query, function(err, rows, fields) {
@@ -103,36 +103,38 @@ function endConnection() {
         var startDate = document.getElementById("assignmentStartDate").value
         var endDate = document.getElementById("assignmentEndDate").value
         var andrewId = document.getElementById("assignmentAndrewId").value
-        var landline = document.getElementById("assignmentLandlineNo").value
+        var landLine = document.getElementById("assignmentLandlineNo").value
 
-        var diff = endDate.split("-")[1]-startDate.split("-")[1]
-        var contractType;
-        if (diff<= 6){
-          contractType = "Short Term"
-        }
-        else{
-          contractType = "Long Term"
-        }
-     $query = "INSERT INTO `assignment` VALUES ('"+ startDate + "','"+ endDate +"', '"+ contractType +"', '"+ landline+"', '"+ andrewId+"');";
 
+     $query = "INSERT INTO `assignment` (startDate, endDate, andrewId, landLine) VALUES ('"+ startDate +"', '"+ endDate +"', '"+ andrewId+"', '"+ landLine+"');";
+     console.log($query)
      connection.query($query, function(err, rows, fields) {
          if(err){
              console.log("An error ocurred performing the query.");
              alert(err);
              return;
          }
-         alert("Assignment Succesfully Added!")
-         goLandlineMain();
+         $query = "UPDATE `housing` SET `vacant` = 0 WHERE `landLine` = '" + landLine+"';"
+         connection.query($query, function(err, rows, fields) {
+             if(err){
+                 console.log("An error ocurred performing the query.");
+                 alert(err);
+                 return;
+             }           
+             alert("Assignment Succesfully Added!")
+             goLandlineMain();
+         });
+
      });
     }
 
 
     function addHouse(){
-        var billno = document.getElementById("houseLandline").value
+        var landLine = document.getElementById("houseLandline").value
         var compno = document.getElementById("houseCompId").value
         var unitid = document.getElementById("houseUnitId").value
-        var vacant = document.getElementById("houseVacant").value
-        $query = "INSERT INTO `house` VALUES ('"+ landline + "','"+ unitId +"', '"+ vacant+"', '"+ compId +"');";
+
+        $query = "INSERT INTO `housing` VALUES ('"+ unitid + "','"+ landLine +"', 1, '"+ compno +"');";
 
         connection.query($query, function(err, rows, fields) {
             if(err){
@@ -141,7 +143,7 @@ function endConnection() {
                 return;
             }
             alert("House Succesfully Added!")
-            $("#navigation").load("HouseMain.html");
+            $("#navigation").load("landlineMain.html");
         });
     }
 

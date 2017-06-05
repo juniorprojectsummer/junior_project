@@ -1,4 +1,4 @@
-    <div class="navigation"></div>
+
     <div id = "page-wrapper">
       <div class="control-group">
       <!-- Button -->
@@ -9,49 +9,87 @@
     </div>
         <div class="col-md-10">
           <div class="table-responsive">
-            <h1 id="mainTitle"> All Houses</h1>
-                <table id="allHouses" class="table table-bordred table-striped">
+            <h1 id="mainTitle"> Occupied Houses</h1>
+                <table id="occupiedHouses" class="table table-bordred table-striped">
               </table>    
           </div>  
         </div>
-           <!-- <div class="col-md-10">
+           <div class="col-md-10">
           <div class="table-responsive">
             <h1 id="mainTitle"> Vacant Houses</h1>
-                <table id="mytable" class="table table-bordred table-striped">
-                    <thead>
-                     <th>Unit Number</th>
-                      <th>Compound</th>
-                       <th>LandLine</th>
-                       <th>Bills</th>
-                        <th>Edit</th>
-                     </thead>
-                    <tbody>
-                    </tr>
-                     <tr>
-                      <td>538</td>
-                      <td>aljazi</td>
-                      <td>15555678</td>
-                      <td><a>Bills</a></td>
-                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                    </tr>
-                    </tr>
-                     <tr>
-                      <td>538</td>
-                      <td>aljazi</td>
-                      <td>15555678</td>
-                      <td><a>Bills</a></td>
-                      <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                    </tr>
-                    </tbody>
-              </table>    
+                <table id="vacantHouses" class="table table-bordred table-striped"></table>    
           </div>  
-        </div> -->
+        </div>
     </div>
 
 
 
-    <script type="text/javascript">
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      
 
+
+
+
+                      <form class="form-horizontal" action='' method="POST">
+                        <fieldset>
+                          <div id="legend">
+                            <legend class="">Edit Employee</legend>
+                          </div>
+                          <div class="control-group">
+                            <label class="control-label"  for="FN">Unit Number</label>
+                            <div class="controls">
+                              <input id="housingUnitNo" type="text" placeholder="Unit Number" class="input-xlarge">
+                            </div>
+                          </div>
+                           <div class="control-group">
+                            <label class="control-label"  for="LN">Landline</label>
+                            <div class="controls">
+                              <input id="housingLandLine" type="text" placeholder="Landline" class="input-xlarge" disabled>
+                            </div>
+                          </div>
+                       
+                          <div class="control-group">
+                            <label class="control-label" >Compound Name</label>
+                                  <div class = "Select">
+                                    <select id="housingCompName">
+                                    </select>
+                                 </div>
+                          </div>
+                       <br>
+                          <div class="control-group">
+                            <!-- Button -->
+                            <div>
+                              <a href="#" class="btn btn-primary btn-md" onclick = "updateHousing()" data-dismiss="modal">Update</a>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </form>
+
+
+
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+
+
+
+    <script>
+
+
+        require('../renderer.js');
 
         var $     = require( 'jquery' );
         var mysql = require('mysql');
@@ -84,8 +122,8 @@
         }
 
 
-        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `assignment`.`startDate`, `assignment`.`endDate`, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `housing`, `compound`, `assignment`, `employee` WHERE `housing`.`compId` = `compound`.`compId` AND `housing`.`landline` = `assignment`.`landline` AND `employee`.`andrewId` = `assignment`.`andrewId`;";
-        console.log($query);
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, date_format(`assignment`.`startDate`, '%M %e, %Y') as startDate, date_format(`assignment`.`endDate`, '%M %e, %Y') as endDate, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `housing`, `compound`, `assignment`, `employee` WHERE `housing`.`compId` = `compound`.`compId` AND `housing`.`landline` = `assignment`.`landline` AND `employee`.`andrewId` = `assignment`.`andrewId`;";
+
 
         connection.query($query, function(err, rows, fields) {
           if(err){
@@ -94,30 +132,163 @@
               return; 
           }
           console.log(rows)
-          $('#allHouses').bootstrapTable({
+
+          $('#occupiedHouses').bootstrapTable({
               data: rows ,
+              height: 532,
+              cache: false,
+              striped: true,
+              pagination: true,
+              pageSize: 10,
+              pageList: [10,25,50,100,200],
+              minimumCountColumns: 2,
+              search: true,
+              showRefresh:true,
+              checkboxEnable: true,
               columns: [{
+                field: 'state',
+                title: '',
+                align: 'center',
+                checkbox: true
+              },{
+
                   field: 'unitNo',
-                  title: 'Housing Unit'
+                  title: 'Housing Unit',
+                  sortable: true
               }, {
                   field: 'landLine',
-                  title: 'Landline Number'
+                  title: 'Landline',
+                  sortable: true
               }, {
                   field: 'compName',
-                  title: 'Compound Name'
+                  title: 'Compound Name',
+                  sortable: true
               }, {
                   field: 'startDate',
-                  title: 'Start Date'
+                  title: 'Start Date',
+                  sortable: true
               }, {
                   field: 'endDate',
-                  title: 'End Date'
+                  title: 'End Date',
+                  sortable: true
               }, {
                   field: 'empName',
-                  title: 'Employee'
+                  title: 'Employee',
+                  sortable: true
               },]
           });
         });
 
 
 
+
+
+
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `compound`.`compId` FROM `housing`, `compound` where `housing`.`compId` =  `compound`.`compId` AND `vacant` = 1";
+
+        connection.query($query, function(err, rows, fields) {
+          if(err){
+              console.log("An error ocurred performing the query.");
+              console.log(err);
+              return; 
+          }
+          console.log(rows)
+          $('#vacantHouses').bootstrapTable({
+              data: rows ,
+              height: 532,
+              cache: false,
+              striped: true,
+              pagination: true,
+              pageSize: 10,
+              pageList: [10,25,50,100,200],
+              minimumCountColumns: 2,
+              search: true,
+              showRefresh:true,
+              checkboxEnable: true,
+              columns: [{
+                field: 'state',
+                title: '',
+                align: 'center',
+                checkbox: true
+              }, {
+                  field: 'unitNo',
+                  title: 'Unit Number',
+                  sortable: true,
+              }, {
+                  field: 'landLine',
+                  title: 'Landline Number',
+                  sortable: true
+              }, {
+                  field: 'compName',
+                  title: 'Compound Name',
+                  sortable: true
+              },  {
+                  field: 'operate',
+                  title: 'Edit',
+                  align: 'center',
+                  events: operateEvents,
+                  formatter: operateFormatter
+              }, ]
+          });
+        });
+
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="edit" href="javascript:void(0)" title="Edit">',
+                '<i class="glyphicon glyphicon-edit"  data-toggle="modal" data-target="#myModal" ></i>',
+                '</a>  '
+            ].join('');
+        }
+
+        window.operateEvents = {
+            'click .edit': function (e, value, row, index) {
+              $("#housingUnitNo").val(row.unitNo)
+              $("#housingLandLine").val(row.landLine)
+              // $("#housingCompName").val(row.compName)
+              $("div.Select select").val(row.compId);
+            }
+        };
+
+        function updateHousing(){
+
+            var unitNo = document.getElementById("housingUnitNo").value
+            var landLine = document.getElementById("housingLandLine").value
+            var compName = document.getElementById("housingCompName").value
+
+        // UPDATE table_name SET field1 = new-value1, field2 = new-value2
+        // [WHERE Clause]
+
+
+          $query = "UPDATE `housing` SET `unitNo` = '"+  unitNo  +"', `compId` = '"+ compName + "' WHERE `landLine` = '"+  landLine  +"'";
+
+          connection.query($query, function(err, rows, fields) {
+              if(err){
+                  console.log("An error ocurred performing the query.");
+                  console.log(err);
+                  return;
+              }
+              alert("Housing Succesfully Updated!")
+              $('#myModal').hide()
+              goLandlineMain();
+          });
+        }
+
+
+
+        $query = "SELECT * FROM `compound`";
+
+        connection.query($query, function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            }
+          var compIds = rows
+          $.each(rows, function(i, value) {
+              console.log(value.compId)
+              $('#housingCompName').append($('<option value = "'+ value.compId+ '" >'+ value.compName + '</option>'))
+          });
+
+        });
 </script>
