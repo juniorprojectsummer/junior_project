@@ -46,6 +46,8 @@ var connection = mysql.createConnection({
     insecureAuth: true
 });
 
+
+
 // connect to mysql
 connection.connect(function(err) {
     // in case of error
@@ -576,72 +578,73 @@ function endConnection() {
 
 
 
+
 // //#################################
 
-// // 				BILLS
+// //               BILLS
 
 
 
-
-
-// function addBill(billNo, pastBalance, paymentsReceived, totalAmountDue, billDate, billPeriod, deadline, pdfURL, landline){
-// 	$query = "INSERT INTO `assignment` VALUES ('"+ billNo + "','"+ pastBalance +"', '"+ paymentsReceived +"', '"+ totalAmountDue+"', '"+ billDate+"', '"+ billPeriod+"', '"+ pdfURL+"', '"+ landline+"');";
-
-// 	connection.query($query, function(err, rows, fields) {
-// 	    if(err){
-// 	        console.log("An error ocurred performing the query.");
-// 	        console.log(err);
-// 	        return;
-// 	    }
-// 	    // alert("Assignment Succesfully Added!")
-// 	    // $("#navigation").load(".html");
-// 	});
-// }
+function addBill(billNo, pastBalance, paymentsReceived, totalAmountDue, billDate, billPeriod, deadline, pdfURL, landline){
+    $query = "INSERT INTO `bill` VALUES ('"+ billNo + "','"+ pastBalance +"', '"+ paymentsReceived +"', '"+ totalAmountDue+"', '"+ billDate+"', '"+ billPeriod+"', '"+ deadline +"', '"+ pdfURL+"', '"+ landline+"');";
+    console.log($query);
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            alert("Couldn't add bill for: " + landline + "\n\nNo house has this " + landline + " number", 'Bill Management System');
+            // console.log("An error ocurred performing the query.");
+            // console.log(err);
+            return;
+        }
+        console.log(rows)
+        alert("Bill Added Succesfully!")
+       // goEmployeeMain();
+    });
+}
 
 
 // function deleteBill(billNo){
-// 	$query = "DELETE FROM `bills` WHERE `billno` = '"+  billNo  +"';"
+//  $query = "DELETE FROM `bills` WHERE `billno` = '"+  billNo  +"';"
 
-// 	connection.query($query, function(err, rows, fields) {
-// 	    if(err){
-// 	        console.log("An error ocurred performing the query.");
-// 	        console.log(err);
-// 	        return;
-// 	    }
-// 	    alert("Bill Succesfully Ended!")
-// 	    // $("#navigation").load(".html");
-// 	});
+//  connection.query($query, function(err, rows, fields) {
+//      if(err){
+//          console.log("An error ocurred performing the query.");
+//          console.log(err);
+//          return;
+//      }
+//      alert("Bill Succesfully Ended!")
+//      // $("#navigation").load(".html");
+//  });
 // }
 
 
 // app.controller('getAllBills', function($scope) {
-// 	$query = "SELECT * FROM `bills`";
+//  $query = "SELECT * FROM `bills`";
 
-// 	connection.query($query, function(err, rows, fields) {
-// 	    if(err){
-// 	        console.log("An error ocurred performing the query.");
-// 	        console.log(err);
-// 	        return;
-// 	    }
-	    
-// 	    $scope.assignment = rows;
-// 	});
+//  connection.query($query, function(err, rows, fields) {
+//      if(err){
+//          console.log("An error ocurred performing the query.");
+//          console.log(err);
+//          return;
+//      }
+        
+//      $scope.assignment = rows;
+//  });
 // });
 
 
 // // STILL TO DECIDE WHAT TO INCLUDE HERE
 // app.controller('getBill', function($scope) {
-// 	$query = "SELECT * FROM `housing` where `";
+//  $query = "SELECT * FROM `housing` where `";
 
-// 	connection.query($query, function(err, rows, fields) {
-// 	    if(err){
-// 	        console.log("An error ocurred performing the query.");
-// 	        console.log(err);
-// 	        return;
-// 	    }
-	    
-// 	    $scope.employees = rows;
-// 	});
+//  connection.query($query, function(err, rows, fields) {
+//      if(err){
+//          console.log("An error ocurred performing the query.");
+//          console.log(err);
+//          return;
+//      }
+        
+//      $scope.employees = rows;
+//  });
 // });
 
 
@@ -652,17 +655,201 @@ function endConnection() {
 //     var endDate = document.getElementById("assignmentEndDate").value
 //     var andrewId = document.getElementById("assignmentAndrewId").value
 //     var landline = document.getElementById("assignmentLandline").value
-// 	$query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"';";
+//  $query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"';";
 
-// 	connection.query($query, function(err, rows, fields) {
-// 	    if(err){
-// 	        console.log("An error ocurred performing the query.");
-// 	        console.log(err);
-// 	        return;
-// 	    }
-// 	    alert("Employee Succesfully Deleted!")
-// 	    $("#navigation").load("HouseMain.html");
-// 	});
+//  connection.query($query, function(err, rows, fields) {
+//      if(err){
+//          console.log("An error ocurred performing the query.");
+//          console.log(err);
+//          return;
+//      }
+//      alert("Employee Succesfully Deleted!")
+//      $("#navigation").load("HouseMain.html");
+//  });
 
 
 // }
+
+// function checkLandlineExists(landline){
+//     $query = "";
+//     connection.query($query, function(err, rows, fields){
+//         if(err){
+//             console.log("An error ocurred performing the query.");
+//             console.log(err);
+//             return;
+//         }
+//     });
+// }
+
+const {remote} = require('electron');
+
+var fs = require('fs');
+
+const path = require('path');
+
+
+//********************************************************** dialog box ************************************************//
+
+
+var direc;
+
+var filepicker = document.getElementById('filepicker');
+if (filepicker != null)
+filepicker.onclick = openSelection;
+
+//*********************************************************Code For dialogbox ***************************************//
+function openSelection(){
+  // const dialog = require('electron').remote.dialog;
+  const dialog = remote.getGlobal('dialog');
+  var a = dialog.showOpenDialog({ properties: ['openDirectory']});
+  console.log(a);
+  direc = a[0];
+  //document.write(direc);
+
+  //Call back to go through every file in the selected directory
+  fs.readdir(direc, (err, dir) => {
+    
+
+    for(let filePath of dir){
+      
+      var pathtopdf = direc + '/' + filePath;
+
+      //Converts it into a proper path
+      pathtopdf = path.win32.normalize(pathtopdf);
+
+      //Calls the pdf Reading function
+      readPDF(pathtopdf);
+    }
+  });
+}
+
+//Requirements 
+var pdfText = remote.getGlobal('pdfText');
+var fs = require('fs');
+
+//Function to read the pdf
+function readPDF(pathtopdf){
+
+  //Creates a buffer stream out of the pdf for faster performance
+  var buffer = fs.readFileSync(pathtopdf);
+
+  //callback to extract pdf data
+  pdfText(buffer, function(err, chunks) {
+    if (err){
+      console.dir(err);
+      return;
+    }
+
+    //Function call to extract individual/required items 
+    extractData(chunks, pathtopdf);
+    //console.dir(chunks);
+
+  });
+}
+
+//Variable declaration 
+var bill_no, landline, past_balance, payments_rec, total_amount, bill_date, bill_period, payment_deadline, pdf_URL;
+var total_lines = 1;
+var QR_starter_position;
+
+//Individual data extraction
+function extractData(chunks, pdfPath){
+
+  var cust_no = chunks[5];
+  if (cust_no == "02666714"){
+
+    //Extract Bill number
+    bill_no = chunks[9];
+    console.log("Bill Number: ", bill_no);
+
+    //Extract Bill date
+    bill_date = chunks[11];
+    console.log("Bill Date: ", bill_date);
+
+    //Extract Bill number
+    bill_period = chunks[13];
+    console.log("Bill Period: ", bill_period);
+
+    //Extract PDF URL
+    pdf_URL = pdfPath
+    console.log("PDF URL: ", pdf_URL);
+
+    //Extract Landline number
+    landline = getLandline (chunks);
+    console.log("Landline Number: ", landline);
+
+    //Extract Past Balance
+    past_balance = getPastBalance(chunks);
+    console.log("Past Balance: ", past_balance);
+
+    //Extract Payments Received
+    payments_rec = chunks[QR_starter_position + 5];
+    payments_rec = parseFloat(payments_rec.replace(',', ''));
+    console.log("Payments Received: ", payments_rec);
+
+    //Extarct Total Value
+    total_amount = chunks[QR_starter_position + 18];
+    total_amount = parseFloat(total_amount.replace(',', ''));
+    console.log("Total Amount: ", total_amount);
+
+    //Extract Date Deadline
+    payment_deadline = chunks[QR_starter_position + 22];
+    console.log("Payment Deadline Date: ", payment_deadline);
+
+
+    console.log("\n\n");
+
+
+
+    addBill(bill_no, past_balance, payments_rec, total_amount, bill_date, bill_period, payment_deadline, pdf_URL, landline);
+  }
+
+  else{
+    alert("Bogus bill found with this Customer Number " + cust_no + ".\nSkipped!!!");
+  }
+}
+
+function getPastBalance(chunks){
+  var difference = total_lines + 1;
+  var start_point = 14 + difference;
+
+  while(!chunks[start_point].includes("QR")) {
+    start_point++;
+  }
+
+  QR_starter_position = start_point + 1;
+
+  var out = chunks[QR_starter_position + 2];
+
+  out = parseFloat(out.replace(',', ''));
+  return out;
+
+}
+
+function getLandline(chunks){
+  var fixed_val = 14;
+  var alter = fixed_val;
+
+  while (!chunks[alter].includes("CARNEGIE MELLON")){
+    alter++;
+  }
+
+  total_lines = alter - fixed_val - 1;
+  var pointer = fixed_val + total_lines;
+
+  if (chunks[pointer].length == 8){
+    return chunks[pointer];
+  }
+
+  else if (chunks[pointer].length > 8) {
+    var val = chunks[pointer].slice((chunks[pointer].length - 8), chunks[pointer].length);
+    return val;
+  }
+
+  else if (chunks[pointer].length < 8){
+    var endVal = chunks[pointer];
+    var startVal = chunks[pointer - 1].slice((chunks[pointer - 1].length - (8 - endVal.length)), chunks[pointer - 1].length);
+    var out = startVal + endVal;
+    return out;
+  }
+}

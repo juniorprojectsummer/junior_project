@@ -8,56 +8,99 @@
             <span><h2>2,510 QR</h2></span>
             </center>
           </div>
-          <table id="mytable" class="table table-bordred table-striped">
-                  <thead>
-                       <th>LandLine</th>
-                       <th>Employee</th>
-                       <th>Bill Number</th>
-                       <th>Amount due</th>
-                       <th>Month</th>
-                       <th>Year</th>
-                       <th>Pdf</th>
-                     </thead>
-                    <tbody>
-                    <tr>
-                      <td><a>12345678</a></td>
-                      <td><a>Batoul Hasnah</a></td>
-                      <td>17R-067</td>
-                      <td>900</td>
-                      <td>March</td>
-                      <td>2017</td>
-                      <td><a>download</a></td>
-                    </tr>
-                     <tr>
-                      <td><a>12345678</a></td>
-                      <td><a>Yasir Khan</a></td>
-                      <td>18R-0007</td>
-                      <td>500</td>
-                      <td>March</td>
-                      <td>2017</td>
-                      <td><a>download</a></td>
-                    </tr>
-                    <tr>
-                      <td><a>15555678</a></td>
-                      <td><a>Yasir Khan</a></td>
-                      <td>199R-007</td>
-                      <td>1,000</td>
-                      <td>Feb</td>
-                      <td>2017</td>
-                      <td><a>download</a></td>
-                    </tr>
-                     <tr>
-                      <td><a>12345678</a></td>
-                      <td><a>Batoul Hasnah<a></td>
-                      <td>1888R-097</td>
-                      <td>110</td>
-                      <td>Feb</td>
-                      <td>2017</td>
-                      <td><a>download</a></td>
-                    </tr>
-                    <tr>
-                    </tbody>
+          <div class="table-responsive">
+                <table id="allBills" class="table table-bordred table-striped">
               </table>    
+          </div>  
         </div>
     </div>
     </div>
+     <script>
+
+
+        require('../renderer.js');
+
+        var $     = require( 'jquery' );
+        var mysql = require('mysql');
+        // var bcrypt = require('bcrypt');
+
+
+        var connection = mysql.createConnection({
+            host     : 'mysql.qatar.cmu.local',
+            user     : 'fmbills_devuser',
+            password : 'PatUmNed', // or the original password : 'apaswword'
+            database : 'fmbills_dev',
+            insecureAuth: true
+        });
+
+        // connect to mysql
+        connection.connect(function(err) {
+            // in case of error
+            if(err){
+                console.log(err.code);
+                console.log(err.fatal);
+            }
+        });
+
+
+        // var app = angular.module('myApp', []);
+
+
+        function endConnection() {
+          connection.end();
+        }
+
+
+       /* $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `employee`;";*/
+        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`billDate` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline`; ";
+
+        connection.query($query, function(err, rows, fields) {
+          if(err){
+              console.log("An error ocurred performing the query.");
+              console.log(err);
+              return; 
+          }
+          console.log(rows)
+
+          $('#allBills').bootstrapTable({
+              data: rows ,
+              height: 532,
+              cache: false,
+              striped: true,
+              pagination: true,
+              pageSize: 10,
+              pageList: [10,25,50,100,200],
+              minimumCountColumns: 2,
+              search: true,
+              showRefresh:true,
+              checkboxEnable: true,
+              columns: [{
+
+                  field: 'landline',
+                  title: 'Landline',
+                  sortable: true
+              }, {
+                  field: 'empName',
+                  title: 'Employee',
+                  sortable: true
+              }, {
+                  field: 'billNo',
+                  title: 'Bill No.',
+                  sortable: true
+              }, {
+                  field: 'totalAmountDue',
+                  title: 'Total Amount Due',
+                  sortable: true
+              }, {
+                  field: 'billDate',
+                  title: 'Bill Date',
+                  sortable: true
+              }, {
+                  field: 'pdfUrl',
+                  title: 'pdf',
+                  sortable: true
+              },]
+          });
+        });
+
+</script>

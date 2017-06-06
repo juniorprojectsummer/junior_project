@@ -84,14 +84,9 @@
 
     }
 
-    .side-nav>li>a {
-        /*width: 225px; 
-        font-family: Arial;    */   
-    }
-
-    .side-nav li a:hover,
-    .side-nav li a:focus {
-        background-color: #990000 !important;
+    .side-nav li a:hover {
+        text-decoration: underline; 
+        background-color: #fff
     }
 }
 .side-nav> #label{
@@ -127,7 +122,7 @@
     position:relative;
     margin-top:0px;
     margin-left:0px;
-position: fixed;
+position: absolute;
     
 }
 #topnav ul {
@@ -160,10 +155,10 @@ h1,h2,h3{
 	font-size: 15px;
 }
 a{
-	color: #d17702;
+	color: #990000;
 }
 a:hover,  a:visited {
-    color: #936241;
+    color: #904343;
 }
 
 button,.btn{
@@ -188,9 +183,15 @@ button,.btn{
   -webkit-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
  }
- .btn{
+ .btn , .pagination>li>a ,.pagination>li>span {
     text-align: left;
     color: #990000;
+    background-color: #fff;
+    border-color: #990000;
+ }
+ .btn:hover{
+  color: #fff;
+    background-color: #990000;
  }
  .container{
     background-color: #f8f2ed;
@@ -206,4 +207,19 @@ button,.btn{
   -webkit-box-shadow: 0 0 6px 2px #b0b2ab;
   box-shadow: 0 0 6px 2px #b0b2ab;
 }
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover,
+.pagination>li.active>a:hover {
+    z-index: 3;
+    color: #fff;
+    background-color: #990000;
+    border-color: #990000;
+}
+
+.pagination>li.active>a {
+  background: #990000;
+  color: #fff;
+  border-color: #990000;
 }
