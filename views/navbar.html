@@ -13,11 +13,47 @@
                 <li id="label"> Bill <br> Management <br> System</li>
                <hr class="hr">
                 <li>
-                    <a onclick = "goEmployeeMain()"><i class="fa fa-users"></i> MANAGE EMPLOYEES</a>
+                    <a style="color: #464646;text-decoration: none;"><i class="fa fa-user"></i> EMPLOYEES</a>
+                </li>
+                <hr>
+                <li>
+                    <a onclick = "goEmployeeMain()" style="padding-left: 20px;padding-top: 4px;" role = "button">All Employees</a>
                 </li>
                 <li>
-                    <a onclick = "goLandlineMain()"> <i class="fa fa-home"></i>MANAGE HOMES</a>
+                    <a onclick = "goActiveEmployee()" style="padding-left: 20px;padding-top: 4px;" role = "button">Active Employees</a>
                 </li>
+                <li>
+                    <a onclick = "goInactiveEmployee()" style="padding-left: 20px;padding-top: 4px;" role = "button">Inactive Employees</a>
+                </li>
+                <li>
+                    <a style="color: #464646;text-decoration: none;"> <i class="fa fa-home"></i>HOMES</a>
+                </li>
+                <hr style="margin-top: 190px;">
+                <li>
+                    <a onclick = "goLandlineMain()" style="padding-left: 20px;padding-top: 4px;" role = "button">All Houses</a>
+                </li>
+                <li>
+                    <a onclick = "goOccupidHouses()" style="padding-left: 20px;padding-top: 4px;"role = "button">Occupied Houses</a>
+                </li>
+                <li>
+                    <a onclick = "goVacantHouses()" style="padding-left: 20px;padding-top: 4px;"role = "button">Vacant Houses</a>
+                </li>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br><br>
+                <li>
+                    <a style="color: #464646;text-decoration: none; "> <i class="fa fa-money"></i>BILLS</a>
+                </li>
+                <hr style="margin-top: 50px;">
+                                <li>
+                    <a onclick = "goOutstanding()" style="padding-left: 20px;padding-top: 4px;"role = "button">Outstanding Payments</a>
+                </li>
+                <li>
+                    <a onclick = "goAllBills()" style="padding-left: 20px;padding-top: 4px;"role = "button">Monthly Bills</a>
+                </li>
+
       
         </ul> 
     </nav>

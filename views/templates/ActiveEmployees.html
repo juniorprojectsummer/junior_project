@@ -1,22 +1,38 @@
-    <div class="navigation"></div>
     <div id = "page-wrapper">
-      <div class="col-md-18">
-        <div class="plan">
+      <div class="control-group employeeAll">
+      <!-- Button -->
+
+    </div>
+    <div class="col-md-17">
+      <div class="plan">
           <div class="plan-name">
-          <div class="table-responsive">
-            <center><h2 id="mainTitle"> All Outstanding Payments</h2></center>
+            <center>
+            <h2>All Active Employees</h2>
+            </center>
+          </div>
+          <div class="table-responsive" style="color: #990000;">
                 <table id="mytableCheck" class="table table-bordred table-striped"></table>    
           </div>  
-          </div>  
         </div>
-      </div>
-    </div>
+        </div>
+
+
+
+
+
+
+
+
+
 <script type="text/javascript">
+
 
         require('../renderer.js');
 
         var $     = require( 'jquery' ); 
         var mysql = require('mysql');
+        // var bcrypt = require('bcrypt');
+
 
         var connection = mysql.createConnection({
             host     : 'mysql.qatar.cmu.local',
@@ -34,17 +50,19 @@
                 console.log(err.fatal);
             }
         });
+
+
+
+
         // var app = angular.module('myApp', []);
+
+
         function endConnection() {
           connection.end();
         }
 
 
-        $query = "SELECT  `assignment`.`andrewId`, `assignment`.`landLine` , `bill`.`totalAmountDue` , `bill`.`billDate` FROM `assignment`  RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE ABS(DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y/%m/%d'),CURDATE())) <= 80 AND `totalAmountDue` >= 1000;"  ;
-
-        // ABS(DATEDIFF(date_format(str_to_date(`bill`.`totalAmountDue`, '%d/%M/%Y'), '%d/%m/%Y'),CURDATE()))
-
-        // date_format(str_to_date(`bill`.`totalAmountDue`, '%d/%M/%Y'), '%d/%m/%Y')
+       $query = "SELECT `employee`.`andrewId`, `employee`.`firstName`, `employee`.`lastName`, `employee`.`email` , `employee`.`contractType`, `assignment`.`landLine` FROM `employee` LEFT JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` WHERE `assignment`.`andrewId` is not null AND DATEDIFF(`assignment`.`endDate`,CURDATE()) >= 0;";
 
         connection.query($query, function(err, rows, fields) {
           if(err){
@@ -55,44 +73,43 @@
           console.log(rows)
           $('#mytableCheck').bootstrapTable({
               data: rows ,
-              height: 532,
+              height: 494,
               cache: false,
               striped: true,
               pagination: true,
-              pageSize: 10,
-              pageList: [10,25,50,100,200],
+              pageSize: 9,
+              pageList: [9,25,50,100,200],
               minimumCountColumns: 2,
               search: true,
               showRefresh:true,
               checkboxEnable: true,
-              columns: [{
-                field: 'state',
-                title: '',
-                align: 'center',
-                checkbox: true
-              },  {
+              columns: [ {
+                  field: 'firstName',
+                  title: 'First Name',
+                  sortable: true,
+              }, {
+                  field: 'lastName',
+                  title: 'Last Name',
+                  sortable: true
+              }, {
+                  field: 'email',
+                  title: 'Email Address',
+                  sortable: true
+              }, {
                   field: 'andrewId',
                   title: 'AndrewID',
                   sortable: true
-              },{
-                  field: 'totalAmountDue',
-                  title: 'total Amount Due',
-                  sortable: true
+              }, 
+               {
+                  field: 'contractType',
+                  title: 'Contract Type',
+                  sortable: true,
               },{
                   field: 'landLine',
                   title: 'Landline',
-                  sortable: true
-              },{
-                  field: 'billDate',
-                  title: 'Bill Due',
-                  sortable: true
-              },{
-                  field: 'operate',
-                  title: 'Edit',
-                  align: 'center',
-                  // events: operateEvents,
-                  // formatter: operateFormatter
+                  sortable: true,
               }, ]
           });
         });
+
 </script>

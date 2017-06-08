@@ -1,0 +1,237 @@
+
+    <div id = "page-wrapper">
+      <div class="control-group employeeAll">
+      <!-- Button -->
+
+    </div>
+    <div class="col-md-17">
+      <div class="plan">
+          <div class="plan-name">
+            <center>
+            <h2>All Houses</h2>
+            </center>
+          </div>
+          <div class="table-responsive" style="color: #990000;">
+                <button id="remove" class="btn btn-danger" disabled>Delete</button>
+                <a onclick="goNewLandline()" class="btn btn-danger" role="button">New House</a>
+                <table id="mytableCheck" class="table table-bordred table-striped"></table>    
+          </div>  
+        </div>
+        </div>
+
+
+        <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      
+
+
+
+
+                      <form class="form-horizontal" action='' method="POST">
+                        <fieldset>
+                          <div id="legend">
+                            <legend class="">Edit House</legend>
+                          </div>
+                          <div class="control-group">
+                            <label class="control-label"  for="FN">Unit Number</label>
+                            <div class="controls">
+                              <input id="housingUnitNo" type="text" placeholder="Unit Number" class="input-xlarge">
+                            </div>
+                          </div>
+                           <div class="control-group">
+                            <label class="control-label"  for="LN">Landline</label>
+                            <div class="controls">
+                              <input id="housingLandLine" type="text" placeholder="Landline" class="input-xlarge" disabled>
+                            </div>
+                          </div>
+                       
+                          <div class="control-group">
+                            <label class="control-label" >Compound Name</label>
+                                  <div class = "Select">
+                                    <select id="housingCompName">
+                                    </select>
+                                 </div>
+                          </div>
+                       <br>
+                          <div class="control-group">
+                            <!-- Button -->
+                            <div>
+                              <a href="#" class="btn btn-primary btn-md" onclick = "updateHousing()" data-dismiss="modal">Update</a>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </form>
+
+
+
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+
+        require('../renderer.js');
+
+        var $     = require( 'jquery' ); 
+        var mysql = require('mysql');
+        // var bcrypt = require('bcrypt');
+
+
+        var connection = mysql.createConnection({
+            host     : 'mysql.qatar.cmu.local',
+            user     : 'fmbills_devuser',
+            password : 'PatUmNed', // or the original password : 'apaswword'
+            database : 'fmbills_dev',
+            insecureAuth: true
+        });
+
+        // connect to mysql
+        connection.connect(function(err) {
+            // in case of error
+            if(err){
+                console.log(err.code);
+                console.log(err.fatal);
+            }
+        });
+
+
+
+
+        // var app = angular.module('myApp', []);
+
+
+        function endConnection() {
+          connection.end();
+        }
+
+
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName` FROM `housing` INNER join `compound` where `housing`.`compId` = `compound`.`compId`;";
+
+        connection.query($query, function(err, rows, fields) {
+          if(err){
+              console.log("An error ocurred performing the query.");
+              console.log(err);
+              return; 
+          }
+          console.log(rows)
+          $('#mytableCheck').bootstrapTable({
+              data: rows ,
+              height: 494,
+              cache: false,
+              striped: true,
+              pagination: true,
+              pageSize: 9,
+              pageList: [9,25,50,100,200],
+              minimumCountColumns: 2,
+              search: true,
+              showRefresh:true,
+              checkboxEnable: true,
+              columns: [{
+                field: 'state',
+                title: '',
+                align: 'center',
+                checkbox: true
+              },{
+
+                  field: 'unitNo',
+                  title: 'Housing Unit',
+                  sortable: true
+              }, {
+                  field: 'landLine',
+                  title: 'Landline',
+                  sortable: true
+              }, {
+                  field: 'compName',
+                  title: 'Compound Name',
+                  sortable: true
+              },]
+          });
+        });
+
+
+        var $table = $('#mytableCheck'),
+            $remove = $('#remove');
+
+        $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+            $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+        });
+
+
+        $remove.click(function () {
+            var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+                return row.andrewId
+            });
+
+            $table.bootstrapTable('remove', {
+                field: 'andrewId',
+                values: ids
+            });
+
+
+            $remove.prop('disabled', true);
+        });
+
+///    EDIT EMPLOYEE FUNCTIONS
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="edit" href="javascript:void(0)" title="Edit">',
+                '<i class="glyphicon glyphicon-edit"  data-toggle="modal" data-target="#myModal" ></i>',
+                '</a>  '
+            ].join('');
+        }
+
+        window.operateEvents = {
+            'click .edit': function (e, value, row, index) {
+              $("#employeeFirstName").val(row.firstName)
+              $("#employeeLastName").val(row.lastName)
+              $("#employeeEmail").val(row.email)
+              $("#employeeAndrewId").val(row.andrewId)
+            }
+        };
+
+
+
+        function updateEmployee(){
+        // UPDATE table_name SET field1 = new-value1, field2 = new-value2
+        // [WHERE Clause]
+
+          var email = document.getElementById("employeeEmail").value
+          var first = document.getElementById("employeeFirstName").value
+          var last = document.getElementById("employeeLastName").value
+          var andrewId = document.getElementById("employeeAndrewId").value
+          $query = "UPDATE `employee` SET `email` = '"+  email  +"', firstName = '"+  first  +"', lastName = '"+  last  +"' where `andrewId` = '"+  andrewId  +"'";
+
+          connection.query($query, function(err, rows, fields) {
+              if(err){
+                  console.log("An error ocurred performing the query.");
+                  console.log(err);
+                  return;
+              } 
+              alert("Employee Succesfully Updated!")
+              $('#myModal').hide()
+              goEmployeeMain();
+          });
+        };
+
+
+</script>

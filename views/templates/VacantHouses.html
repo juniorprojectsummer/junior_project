@@ -1,22 +1,32 @@
-    <div class="navigation"></div>
+
     <div id = "page-wrapper">
-      <div class="col-md-18">
-        <div class="plan">
+      <div class="control-group employeeAll">
+      <!-- Button -->
+
+    </div>
+    <div class="col-md-17">
+      <div class="plan">
           <div class="plan-name">
-          <div class="table-responsive">
-            <center><h2 id="mainTitle"> All Outstanding Payments</h2></center>
+            <center>
+            <h2>Vacant Houses</h2>
+            </center>
+          </div>
+          <div class="table-responsive" style="color: #990000;">
                 <table id="mytableCheck" class="table table-bordred table-striped"></table>    
           </div>  
-          </div>  
         </div>
-      </div>
-    </div>
+        </div>
+
+
 <script type="text/javascript">
+
 
         require('../renderer.js');
 
         var $     = require( 'jquery' ); 
         var mysql = require('mysql');
+        // var bcrypt = require('bcrypt');
+
 
         var connection = mysql.createConnection({
             host     : 'mysql.qatar.cmu.local',
@@ -34,18 +44,20 @@
                 console.log(err.fatal);
             }
         });
+
+
+
+
         // var app = angular.module('myApp', []);
+
+
         function endConnection() {
           connection.end();
         }
 
 
-        $query = "SELECT  `assignment`.`andrewId`, `assignment`.`landLine` , `bill`.`totalAmountDue` , `bill`.`billDate` FROM `assignment`  RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE ABS(DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y/%m/%d'),CURDATE())) <= 80 AND `totalAmountDue` >= 1000;"  ;
-
-        // ABS(DATEDIFF(date_format(str_to_date(`bill`.`totalAmountDue`, '%d/%M/%Y'), '%d/%m/%Y'),CURDATE()))
-
-        // date_format(str_to_date(`bill`.`totalAmountDue`, '%d/%M/%Y'), '%d/%m/%Y')
-
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `compound`.`compId` FROM `housing`, `compound` where `housing`.`compId` =  `compound`.`compId` AND `vacant` = 1";
+        /*$query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`  FROM `housing` , `compound` , `assignment` WHERE `housing`.`compId` = `compound`.`compId` AND `assignment`.`landline` is null OR DATEDIFF(`assignment`.`endDate`,CURDATE()) < 0;";*/
         connection.query($query, function(err, rows, fields) {
           if(err){
               console.log("An error ocurred performing the query.");
@@ -55,12 +67,12 @@
           console.log(rows)
           $('#mytableCheck').bootstrapTable({
               data: rows ,
-              height: 532,
+              height: 494,
               cache: false,
               striped: true,
               pagination: true,
-              pageSize: 10,
-              pageList: [10,25,50,100,200],
+              pageSize: 9,
+              pageList: [9,25,50,100,200],
               minimumCountColumns: 2,
               search: true,
               showRefresh:true,
@@ -70,29 +82,22 @@
                 title: '',
                 align: 'center',
                 checkbox: true
-              },  {
-                  field: 'andrewId',
-                  title: 'AndrewID',
-                  sortable: true
               },{
-                  field: 'totalAmountDue',
-                  title: 'total Amount Due',
+
+                  field: 'unitNo',
+                  title: 'Housing Unit',
                   sortable: true
-              },{
+              }, {
                   field: 'landLine',
                   title: 'Landline',
                   sortable: true
-              },{
-                  field: 'billDate',
-                  title: 'Bill Due',
+              }, {
+                  field: 'compName',
+                  title: 'Compound Name',
                   sortable: true
-              },{
-                  field: 'operate',
-                  title: 'Edit',
-                  align: 'center',
-                  // events: operateEvents,
-                  // formatter: operateFormatter
-              }, ]
+              },]
           });
         });
+
+
 </script>

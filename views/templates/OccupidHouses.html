@@ -1,98 +1,21 @@
 
     <div id = "page-wrapper">
-      <div class="control-group">
+      <div class="control-group employeeAll">
       <!-- Button -->
-      <div class="controls">
-        <a class="btn btn-danger" role = "button" onclick="goNewHouse()">New Landline</a>
-        <a class="btn btn-danger" role = "button" onclick="goNewLandline()">New Landline Assignment</a>
-      </div>
+
     </div>
-        <div class="col-md-10">
-          <div class="table-responsive">
-            <h1 id="mainTitle"> Occupied Houses</h1>
-                <table id="occupiedHouses" class="table table-bordred table-striped">
-              </table>    
+    <div class="col-md-17">
+      <div class="plan">
+          <div class="plan-name">
+            <center>
+            <h2>Occupid Houses</h2>
+            </center>
+          </div>
+          <div class="table-responsive" style="color: #990000;">
+                <table id="occupiedHouses" class="table table-bordred table-striped"></table>    
           </div>  
         </div>
-           <div class="col-md-10">
-          <div class="table-responsive">
-            <h1 id="mainTitle"> Vacant Houses</h1>
-                <table id="vacantHouses" class="table table-bordred table-striped"></table>    
-          </div>  
         </div>
-    </div>
-
-
-
-            <div class="modal fade" id="myModal" role="dialog">
-                <div class="modal-dialog">
-                
-                  <!-- Modal content-->
-                  <div class="modal-content">
-                    <div class="modal-body">
-                      
-
-
-
-
-                      <form class="form-horizontal" action='' method="POST">
-                        <fieldset>
-                          <div id="legend">
-                            <legend class="">Edit Employee</legend>
-                          </div>
-                          <div class="control-group">
-                            <label class="control-label"  for="FN">Unit Number</label>
-                            <div class="controls">
-                              <input id="housingUnitNo" type="text" placeholder="Unit Number" class="input-xlarge">
-                            </div>
-                          </div>
-                           <div class="control-group">
-                            <label class="control-label"  for="LN">Landline</label>
-                            <div class="controls">
-                              <input id="housingLandLine" type="text" placeholder="Landline" class="input-xlarge" disabled>
-                            </div>
-                          </div>
-                       
-                          <div class="control-group">
-                            <label class="control-label" >Compound Name</label>
-                                  <div class = "Select">
-                                    <select id="housingCompName">
-                                    </select>
-                                 </div>
-                          </div>
-                       <br>
-                          <div class="control-group">
-                            <!-- Button -->
-                            <div>
-                              <a href="#" class="btn btn-primary btn-md" onclick = "updateHousing()" data-dismiss="modal">Update</a>
-                            </div>
-                          </div>
-                        </fieldset>
-                      </form>
-
-
-
-
-
-
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                  </div>
-                  
-                </div>
-              </div>
-
-
-
-
-
-
-
-
-
-<!-- //////     EDIT ASSIGNMENT MODAL -->
 
 
            <div class="modal fade" id="editAssignment" role="dialog">
@@ -305,7 +228,7 @@
               $("div.andrewIdSelect select").val(row.andrewId);
               $("#assignmentId").val(row.assignmentId)
 
-              
+
               // $("div.compNameSelect select").val(row.compId);
               // $("#housingUnitId").val(row.unitNo)
             }
@@ -357,8 +280,10 @@
         // UPDATE table_name SET field1 = new-value1, field2 = new-value2
         // [WHERE Clause]
 
+        console.log(123123)
 
-          $query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"' WHERE assignmentId = '"+ assignmentId+"';";
+
+          $query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landLine +"', andrewId = '"+ andrewId+"' WHERE assignmentId = '"+ assignmentId+"';";
 
           connection.query($query, function(err, rows, fields) {
               if(err){
@@ -375,154 +300,4 @@
         }
 
 
-function updateAssignment(landline){
-
-    var startDate = document.getElementById("assignmentStartDate").value
-    var endDate = document.getElementById("assignmentEndDate").value
-    var andrewId = document.getElementById("assignmentAndrewId").value
-    var landline = document.getElementById("assignmentLandline").value
-  $query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landline +"', andrewId = '"+ andrewId+"';";
-
-  connection.query($query, function(err, rows, fields) {
-      if(err){
-          console.log("An error ocurred performing the query.");
-          console.log(err);
-          return;
-      }
-      alert("Employee Succesfully Deleted!")
-      $("#navigation").load("HouseMain.html");
-  });
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `compound`.`compId` FROM `housing`, `compound` where `housing`.`compId` =  `compound`.`compId` AND `vacant` = 1";
-
-        connection.query($query, function(err, rows, fields) {
-          if(err){
-              console.log("An error ocurred performing the query.");
-              console.log(err);
-              return; 
-          }
-          console.log(rows)
-          $('#vacantHouses').bootstrapTable({
-              data: rows ,
-              height: 532,
-              cache: false,
-              striped: true,
-              pagination: true,
-              pageSize: 10,
-              pageList: [10,25,50,100,200],
-              minimumCountColumns: 2,
-              search: true,
-              showRefresh:true,
-              checkboxEnable: true,
-              columns: [{
-                field: 'state',
-                title: '',
-                align: 'center',
-                checkbox: true
-              }, {
-                  field: 'unitNo',
-                  title: 'Unit Number',
-                  sortable: true,
-              }, {
-                  field: 'landLine',
-                  title: 'Landline Number',
-                  sortable: true
-              }, {
-                  field: 'compName',
-                  title: 'Compound Name',
-                  sortable: true
-              },  {
-                  field: 'operate',
-                  title: 'Edit',
-                  align: 'center',
-                  events: operateEventsVacant,
-                  formatter: operateFormatter
-              }, ]
-          });
-        });
-
-
-        function operateFormatter(value, row, index) {
-            return [
-                '<a class="edit" href="javascript:void(0)" title="Edit">',
-                '<i class="glyphicon glyphicon-edit"  data-toggle="modal" data-target="#myModal" ></i>',
-                '</a>  '
-            ].join('');
-        }
-
-        window.operateEventsVacant = {
-            'click .edit': function (e, value, row, index) {
-              $("#housingUnitNo").val(row.unitNo)
-              $("#housingLandLine").val(row.landLine)
-              $("div.Select select").val(row.compId);
-            }
-        };
-
-        function updateHousing(){
-
-            var unitNo = document.getElementById("housingUnitNo").value
-            var landLine = document.getElementById("housingLandLine").value
-            var compName = document.getElementById("housingCompName").value
-
-        // UPDATE table_name SET field1 = new-value1, field2 = new-value2
-        // [WHERE Clause]
-
-
-          $query = "UPDATE `housing` SET `unitNo` = '"+  unitNo  +"', `compId` = '"+ compName + "' WHERE `landLine` = '"+  landLine  +"'";
-
-          connection.query($query, function(err, rows, fields) {
-              if(err){
-                  console.log("An error ocurred performing the query.");
-                  console.log(err);
-                  return;
-              }
-              alert("Housing Succesfully Updated!")
-              $('#myModal').hide()
-              goLandlineMain();
-          });
-        }
-
-
-
-        $query = "SELECT * FROM `compound`";
-
-        connection.query($query, function(err, rows, fields) {
-            if(err){
-                console.log("An error ocurred performing the query.");
-                console.log(err);
-                return;
-            }
-          var compIds = rows
-          $.each(rows, function(i, value) {
-              console.log(value.compId)
-              $('#housingCompName').append($('<option value = "'+ value.compId+ '" >'+ value.compName + '</option>'))
-              // $('#housingCompName2').append($('<option value = "'+ value.compId+ '" >'+ value.compName + '</option>'))
-          });
-
-        });
 </script>

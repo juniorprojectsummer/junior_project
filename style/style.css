@@ -1,5 +1,5 @@
 @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
-@media(min-width:768px) {
+@media(min-width:500px) {
     body {
         margin-top: 18px;
         background-color: #f8f2ed;
@@ -16,7 +16,7 @@
 
 #page-wrapper-bills, #page-wrapper {
     margin-top: 0;
-    width: 100%;        
+    width: 84%;        
     padding: 0;
 }
 #page-wrapper{
@@ -82,6 +82,7 @@
         background-color: #fff;
         font-family: Arial;
 
+
     }
 
     .side-nav li a:hover {
@@ -103,7 +104,9 @@
     border-bottom: 1px solid #fff;
 
 }
-
+hr{
+    margin-top: 70px;
+}
 .navbar{
     background-color: #990000;
 }
@@ -113,7 +116,7 @@
 }
 #topnav {
     
-    width: 100%;
+    width: 84.35%;
     height:30px;
     background-color:#464646;
     font-size:14px;
@@ -222,4 +225,10 @@ button,.btn{
   background: #990000;
   color: #fff;
   border-color: #990000;
+}
+  label{
+    color: #990000;
+  }
+#Title{
+  color: #990000;
 }

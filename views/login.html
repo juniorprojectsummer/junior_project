@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-     <link rel="stylesheet" type="text/css" href="../css/login.css">
+     <link rel="stylesheet" type="text/css" href="../style/style.css">
      <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.css">
 
 <script type="text/javascript">
@@ -15,31 +15,19 @@
      
     
   </head>
-  <body style="background-color: #f8f2ed; margin-left: 10%;">
-    <div class="container" >
-                <div class="form-login"  style="background-color: #fff;background-color: #fff;
-  -moz-border-radius: 5px 5px 0 0;
-  -webkit-border-radius: 5px 5px 0 0;
-  border-radius: 5px 5px 0 0;
-  -moz-box-shadow: 0 0 6px 2px #b0b2ab;
-  -webkit-box-shadow: 0 0 6px 2px #b0b2ab;
-  box-shadow: 0 0 6px 2px #b0b2ab;
-  color: #990000;
-">
-                <center><h2>Welcome back.</h2></center>
+  <body style="background-color: #f8f2ed; padding-left: 200px; padding-right: 250px;">
+    <div id="wrapper">
+    <div id = "page-wrapper" class = "container" >
+                <center><h2 id="Title">Log In</h2></center>
                 <label>Username</label>
                 <input type="text" id="userName" class="form-control input-sm chat-input" placeholder="username" />
                 </br>
                 <label>Password</label>
                 <input type="password" id="userPassword" class="form-control input-sm chat-input" placeholder="password" />
-                </br>
-                <div class="wrapper">
-                <span class="group-btn">     
-                    <a href="#" class="btn btn-md" onclick = "validateForm()" style="background-color: #d17702; color:#990000 ">login <i class="fa fa-sign-in"></i></a>
-                </span>
-                </div>
-                </div>
+                </br>  
+                    <a class="btn" onclick = "validateForm()"  style="border-color: #990000;">login <i class="fa fa-sign-in"></i></a>
             
+            </div>
             </div>
 
   </body>

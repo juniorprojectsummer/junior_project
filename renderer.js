@@ -4,13 +4,25 @@
 var $       = require( 'jquery' );
 
     function goEmployeeMain() {
-      $(".container").load("templates/employeeMain.html");
+      $(".container").load("templates/AllEmployees.html");
+    }
+    function goActiveEmployee() {
+      $(".container").load("templates/ActiveEmployees.html");
+    }
+    function goInactiveEmployee() {
+      $(".container").load("templates/InactiveEmployee.html");
     }
     function goNewHouse() {
       $(".container").load("templates/newHouse.html");
     }
     function goLandlineMain() {
-      $(".container").load("templates/landlineMain.html");
+      $(".container").load("templates/AllHouses.html");
+    }
+    function goOccupidHouses() {
+      $(".container").load("templates/OccupidHouses.html");
+    }
+    function goVacantHouses() {
+      $(".container").load("templates/VacantHouses.html");
     }
     function goHome() {
       $(".container").load("templates/home.html");

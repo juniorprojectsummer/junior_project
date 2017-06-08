@@ -1,26 +1,30 @@
-
     <div id = "page-wrapper">
-      <div class="col-md-17">
+      <div class="control-group employeeAll">
+      <!-- Button -->
+
+    </div>
+    <div class="col-md-17">
       <div class="plan">
           <div class="plan-name">
             <center>
-            <h2>Total Amount Due For All Bills:</h2>
-            <span><h2>2,510 QR</h2></span>
+            <h2>All Inactive Employees</h2>
             </center>
           </div>
           <div class="table-responsive" style="color: #990000;">
-                <table id="allBills" class="table table-bordred table-striped">
-              </table>    
+                <table id="mytableCheck" class="table table-bordred table-striped"></table>    
           </div>  
         </div>
-    </div>
-    </div>
-     <script>
+        </div>
+
+
+
+
+<script type="text/javascript">
 
 
         require('../renderer.js');
 
-        var $     = require( 'jquery' );
+        var $     = require( 'jquery' ); 
         var mysql = require('mysql');
         // var bcrypt = require('bcrypt');
 
@@ -43,6 +47,8 @@
         });
 
 
+
+
         // var app = angular.module('myApp', []);
 
 
@@ -51,8 +57,7 @@
         }
 
 
-       /* $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `employee`;";*/
-        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`billDate` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline`; ";
+       $query = "SELECT `employee`.`andrewId`, `employee`.`firstName`, `employee`.`lastName`, `employee`.`email` , `employee`.`contractType` FROM `employee` LEFT JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` WHERE `assignment`.`andrewId` is  null OR DATEDIFF(`assignment`.`endDate`,CURDATE()) < 0;";
 
         connection.query($query, function(err, rows, fields) {
           if(err){
@@ -61,10 +66,9 @@
               return; 
           }
           console.log(rows)
-
-          $('#allBills').bootstrapTable({
+          $('#mytableCheck').bootstrapTable({
               data: rows ,
-              height: 500,
+              height: 494,
               cache: false,
               striped: true,
               pagination: true,
@@ -74,33 +78,31 @@
               search: true,
               showRefresh:true,
               checkboxEnable: true,
-              columns: [{
-
-                  field: 'landline',
-                  title: 'Landline',
+              columns: [ {
+                  field: 'firstName',
+                  title: 'First Name',
+                  sortable: true,
+              }, {
+                  field: 'lastName',
+                  title: 'Last Name',
                   sortable: true
               }, {
-                  field: 'empName',
-                  title: 'Employee',
+                  field: 'email',
+                  title: 'Email Address',
                   sortable: true
               }, {
-                  field: 'billNo',
-                  title: 'Bill No.',
+                  field: 'andrewId',
+                  title: 'AndrewID',
                   sortable: true
-              }, {
-                  field: 'totalAmountDue',
-                  title: 'Total Amount Due',
-                  sortable: true
-              }, {
-                  field: 'billDate',
-                  title: 'Bill Date',
-                  sortable: true
-              }, {
-                  field: 'pdfUrl',
-                  title: 'pdf',
-                  sortable: true
-              },]
+              }, 
+               {
+                  field: 'contractType',
+                  title: 'Contract Type',
+                  sortable: true,
+              },  ]
           });
         });
+
+       
 
 </script>
