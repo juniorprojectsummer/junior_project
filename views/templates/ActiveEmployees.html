@@ -62,10 +62,10 @@
         }
 
 
-       $query = "SELECT `employee`.`andrewId`, `employee`.`firstName`, `employee`.`lastName`, `employee`.`email` , `employee`.`contractType`, `assignment`.`landLine` FROM `employee` LEFT JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` WHERE `assignment`.`andrewId` is not null;";
+       $query = "SELECT `employee`.`andrewId`, `employee`.`firstName`, `employee`.`lastName`, `employee`.`email` , `employee`.`contractType`, `assignment`.`landLine` FROM `employee` LEFT JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` WHERE `assignment`.`andrewId` is not null AND (DATEDIFF(`assignment`.`endDate`,CURDATE()) > 0 OR `assignment`.`endDate` is null);";
 
 
- ///AND DATEDIFF(`assignment`.`endDate`,CURDATE()) >= 0
+ ///
         connection.query($query, function(err, rows, fields) {
           if(err){
               console.log("An error ocurred performing the query.");

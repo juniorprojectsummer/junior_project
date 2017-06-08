@@ -145,7 +145,7 @@
         }
 
 
-        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `employee`.`andrewId`, `compound`.`compName`, date_format(`assignment`.`startDate`, '%M %e, %Y') as startDate, date_format(`assignment`.`startDate`, '%Y-%m-%d') as startDateDisplay, date_format(`assignment`.`endDate`, '%Y-%m-%d') as endDateDisplay, date_format(`assignment`.`endDate`, '%M %e, %Y') as endDate, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `assignment`.`assignmentId` FROM `housing`, `compound`, `assignment`, `employee` WHERE `housing`.`compId` = `compound`.`compId` AND `housing`.`landline` = `assignment`.`landline` AND `employee`.`andrewId` = `assignment`.`andrewId`;";
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `employee`.`andrewId`, `compound`.`compName`, date_format(`assignment`.`startDate`, '%M %e, %Y') as startDate, date_format(`assignment`.`startDate`, '%Y-%m-%d') as startDateDisplay, date_format(`assignment`.`endDate`, '%Y-%m-%d') as endDateDisplay, date_format(`assignment`.`endDate`, '%M %e, %Y') as endDate, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `assignment`.`assignmentId` FROM `housing`, `compound`, `assignment`, `employee` WHERE `housing`.`compId` = `compound`.`compId` AND `housing`.`landline` = `assignment`.`landline` AND `employee`.`andrewId` = `assignment`.`andrewId` AND (DATEDIFF(`assignment`.`endDate`,CURDATE()) > 0 OR `assignment`.`endDate` is null) ;";
 
 
         connection.query($query, function(err, rows, fields) {
@@ -248,7 +248,6 @@
               $('#landLineSelect option:last').prop('selected', true);
               console.log(typeof row.startDate)
 
-
               // $("div.compNameSelect select").val(row.compId);
               // $("#housingUnitId").val(row.unitNo)
             }
@@ -327,36 +326,54 @@
 
         function operateFormatterEnd(value, row, index) {
             return [
-                '<a class="edit" href="javascript:void(0)" title="End">',
+                '<a class="end" href="javascript:void(0)" title="End">',
                 '<i class="glyphicon glyphicon-remove"  data-toggle="modal" data-target="#endAssignment" ></i>',
                 '</a>  '
             ].join('');
         }
         var count = 0
         window.operateEventsEnd = {
-            'click .edit': function (e, value, row, index) {
+            'click .end': function (e, value, row, index) {
 
-              if (0 == $('div.landLineSelect option[value='+row.landLine+']').length || 0 == $('div.andrewIdSelect option[value='+row.andrewId+']').length){
-                $('#assignmentAndrewId').append($('<option value = "'+ row.andrewId+ '" >'+ row.andrewId + '</option>'))
-                // $('#assignmentLandlineNo').append($('<option value = "'+ row.landLine+ '" >'+ row.landLine + '</option>'))
+              var r = confirm("Are you sure you want to end this assignment?");
+              if (r == true) {     
+                endAssignment(row.assignmentId, row.landLine)
+              } else {
+                  return;
               }
-
-              $("#assignmentStartDate").val(row.startDate)
-              $("#assignmentEndDate").val(row.endDate)
-              $("div.landLineSelect select").val(row.landLine);
-              $("div.andrewIdSelect select").val(row.andrewId);
-              $("#assignmentId").val(row.assignmentId)
-              count = count +1;
-
-
-              // $("div.compNameSelect select").val(row.compId);
-              // $("#housingUnitId").val(row.unitNo)
             }
         };
 
 
-        function endAssignment(){
+        function endAssignment(assignmentId, landLine){
+          var date = new Date();
+          date = "" + date.getFullYear() +"-"+date.getMonth() + "-" + date.getDate();
+          $query = "Update `assignment` SET `endDate` = '"+date +"' WHERE `assignmentId` = '"+  assignmentId  +"'";
 
+          connection.query($query, function(err, rows, fields) {
+              if(err){
+                  console.log("An error ocurred performing the query.");
+                  console.log(err);
+                  return;
+              }
+
+              $query = "Update `housing` SET `vacant` = '"+ 1 +"' WHERE `landLine` = '"+  landLine  +"'";
+
+              connection.query($query, function(err, rows, fields) {
+                  if(err){
+                      console.log("An error ocurred performing the query.");
+                      console.log(err);
+                      return;
+                  }
+
+                  alert("Assignment Succesfully Ended!")
+                  goOccupidHouses()
+                  
+              });
+
+          });
         }
+
+
 
 </script>
