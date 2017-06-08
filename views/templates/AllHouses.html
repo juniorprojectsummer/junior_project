@@ -14,13 +14,13 @@
           <div class="table-responsive" style="color: #990000;">
                 <button id="remove" class="btn btn-danger" disabled>Delete</button>
                 <a onclick="goNewLandline()" class="btn btn-danger" role="button">New House</a>
-                <table id="mytableCheck" class="table table-bordred table-striped"></table>    
+                <table id="occupiedHouse" class="table table-bordred table-striped"></table>    
           </div>  
         </div>
         </div>
 
 
-        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog">
                 
                   <!-- Modal content-->
@@ -28,7 +28,7 @@
                     <div class="modal-body">
                       
 
-
+                      <div id = "landLineReal" style="display: none;"></div>
 
 
                       <form class="form-horizontal" action='' method="POST">
@@ -45,7 +45,7 @@
                            <div class="control-group">
                             <label class="control-label"  for="LN">Landline</label>
                             <div class="controls">
-                              <input id="housingLandLine" type="text" placeholder="Landline" class="input-xlarge" disabled>
+                              <input id="housingLandLine" type="text" placeholder="Landline" class="input-xlarge">
                             </div>
                           </div>
                        
@@ -79,12 +79,6 @@
                   
                 </div>
               </div>
-
-
-
-
-
-
 
 
 <script type="text/javascript">
@@ -125,7 +119,7 @@
         }
 
 
-        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName` FROM `housing` INNER join `compound` where `housing`.`compId` = `compound`.`compId`;";
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, `compound`.`compId` FROM `housing` INNER join `compound` where `housing`.`compId` = `compound`.`compId`;";
 
         connection.query($query, function(err, rows, fields) {
           if(err){
@@ -134,14 +128,14 @@
               return; 
           }
           console.log(rows)
-          $('#mytableCheck').bootstrapTable({
+          $('#occupiedHouse').bootstrapTable({
               data: rows ,
-              height: 494,
+              height: 532,
               cache: false,
               striped: true,
               pagination: true,
-              pageSize: 9,
-              pageList: [9,25,50,100,200],
+              pageSize: 10,
+              pageList: [10,25,50,100,200],
               minimumCountColumns: 2,
               search: true,
               showRefresh:true,
@@ -151,47 +145,29 @@
                 title: '',
                 align: 'center',
                 checkbox: true
-              },{
-
+              }, {
                   field: 'unitNo',
-                  title: 'Housing Unit',
-                  sortable: true
+                  title: 'Unit Number',
+                  sortable: true,
               }, {
                   field: 'landLine',
-                  title: 'Landline',
+                  title: 'Landline Number',
                   sortable: true
               }, {
                   field: 'compName',
                   title: 'Compound Name',
                   sortable: true
-              },]
+              },  {
+                  field: 'operate',
+                  title: 'Edit',
+                  align: 'center',
+                  events: operateEventsOccupied,
+                  formatter: operateFormatter
+              }, ]
           });
         });
 
 
-        var $table = $('#mytableCheck'),
-            $remove = $('#remove');
-
-        $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-            $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-        });
-
-
-        $remove.click(function () {
-            var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
-                return row.andrewId
-            });
-
-            $table.bootstrapTable('remove', {
-                field: 'andrewId',
-                values: ids
-            });
-
-
-            $remove.prop('disabled', true);
-        });
-
-///    EDIT EMPLOYEE FUNCTIONS
         function operateFormatter(value, row, index) {
             return [
                 '<a class="edit" href="javascript:void(0)" title="Edit">',
@@ -200,38 +176,56 @@
             ].join('');
         }
 
-        window.operateEvents = {
+        window.operateEventsOccupied = {
             'click .edit': function (e, value, row, index) {
-              $("#employeeFirstName").val(row.firstName)
-              $("#employeeLastName").val(row.lastName)
-              $("#employeeEmail").val(row.email)
-              $("#employeeAndrewId").val(row.andrewId)
+              $("#housingUnitNo").val(row.unitNo)
+              $("#housingLandLine").val(row.landLine)
+              $("#landLineReal").val(row.landLine)
+              $("div.Select select").val(row.compId);
             }
         };
 
+        function updateHousing(){
+
+            var unitNo = document.getElementById("housingUnitNo").value
+            var landLine = document.getElementById("housingLandLine").value
+            var compName = document.getElementById("housingCompName").value
+            var landLineReal = document.getElementById("landLineReal").value
 
 
-        function updateEmployee(){
         // UPDATE table_name SET field1 = new-value1, field2 = new-value2
         // [WHERE Clause]
 
-          var email = document.getElementById("employeeEmail").value
-          var first = document.getElementById("employeeFirstName").value
-          var last = document.getElementById("employeeLastName").value
-          var andrewId = document.getElementById("employeeAndrewId").value
-          $query = "UPDATE `employee` SET `email` = '"+  email  +"', firstName = '"+  first  +"', lastName = '"+  last  +"' where `andrewId` = '"+  andrewId  +"'";
+
+          $query = "UPDATE `housing` SET `unitNo` = '"+  unitNo  +"', `compId` = '"+ compName + "', `landLine` = '"+ landLine + "' WHERE `landLine` = '"+  landLineReal  +"'";
 
           connection.query($query, function(err, rows, fields) {
               if(err){
                   console.log("An error ocurred performing the query.");
                   console.log(err);
                   return;
-              } 
-              alert("Employee Succesfully Updated!")
+              }
+              alert("Housing Succesfully Updated!")
               $('#myModal').hide()
-              goEmployeeMain();
+              goLandlineMain();
           });
-        };
+        }
 
+
+
+        $query = "SELECT * FROM `compound`";
+
+        connection.query($query, function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            }
+          var compIds = rows
+          $.each(rows, function(i, value) {
+              $('#housingCompName').append($('<option value = "'+ value.compId+ '" >'+ value.compName + '</option>'))
+          });
+
+        });
 
 </script>

@@ -5,13 +5,7 @@
      <link rel="stylesheet" type="text/css" href="../style/style.css">
      <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.css">
 
-<script type="text/javascript">
-    
-    var electron = require('electron')
-    var shell = electron.shell
-    var ipc = electron.ipcRenderer
 
-</script>
      
     
   </head>
@@ -34,12 +28,12 @@
 
 
   <script>
-
-
+    var $ = require('jquery')
     // You can also require other files to run in this process
     // require('../renderer.js')
-
-
+    // $(document).ready(function(){
+      $("#userName").focus()
+    // });
     var bcrypt = require('bcrypt-nodejs');
     var mysql = require('mysql');
     function validateForm () {

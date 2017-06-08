@@ -136,7 +136,8 @@ function endConnection() {
                  return;
              }           
              alert("Assignment Succesfully Added!")
-             goLandlineMain();
+             $('#newAssignment').hide()
+             goVacantHouses();
          });
 
      });

@@ -46,7 +46,7 @@
                            <div class="control-group">
                             <label class="control-label">Landline Number</label>
                             <div id = "landLineSelect">
-                              <select id="assignmentLandlineNo">
+                              <select name = "landLine" id="assignmentLandlineNo">
                               </select>
                            </div>
                           </div>
@@ -78,7 +78,7 @@
                           <div class="control-group">
                             <label class="control-label"  for="UN">Employee Andrew ID</label>
                             <div class = "andrewIdSelect">
-                              <select id="assignmentAndrewId">
+                              <select name = "andrewId" id="assignmentAndrewId">
                               </select>
                            </div>
                           </div>
@@ -101,7 +101,7 @@
 
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-default" onclick = "closeCall()" data-dismiss="modal">Close</button>
                     </div>
                   </div>
                   
@@ -145,7 +145,7 @@
         }
 
 
-        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `employee`.`andrewId`, `compound`.`compName`, date_format(`assignment`.`startDate`, '%M %e, %Y') as startDate, date_format(`assignment`.`endDate`, '%M %e, %Y') as endDate, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `assignment`.`assignmentId` FROM `housing`, `compound`, `assignment`, `employee` WHERE `housing`.`compId` = `compound`.`compId` AND `housing`.`landline` = `assignment`.`landline` AND `employee`.`andrewId` = `assignment`.`andrewId`;";
+        $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `employee`.`andrewId`, `compound`.`compName`, date_format(`assignment`.`startDate`, '%M %e, %Y') as startDate, date_format(`assignment`.`startDate`, '%Y-%m-%d') as startDateDisplay, date_format(`assignment`.`endDate`, '%Y-%m-%d') as endDateDisplay, date_format(`assignment`.`endDate`, '%M %e, %Y') as endDate, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `assignment`.`assignmentId` FROM `housing`, `compound`, `assignment`, `employee` WHERE `housing`.`compId` = `compound`.`compId` AND `housing`.`landline` = `assignment`.`landline` AND `employee`.`andrewId` = `assignment`.`andrewId`;";
 
 
         connection.query($query, function(err, rows, fields) {
@@ -199,6 +199,12 @@
                   title: 'Employee',
                   sortable: true
               },  {
+                  field: 'operateEndAssignment',
+                  title: 'End',
+                  align: 'center',
+                  events: operateEventsEnd,
+                  formatter: operateFormatterEnd
+              },{
                   field: 'operate',
                   title: 'Edit',
                   align: 'center',
@@ -218,15 +224,29 @@
             ].join('');
         }
 
+
+
+        function closeCall(){
+          $("select[name=landLine] option:last").remove();
+          $("select[name=andrewId] option:last").remove();
+        }
+
+
         window.operateEventsAssignment = {
             'click .edit': function (e, value, row, index) {
-              $('#assignmentAndrewId').append($('<option value = "'+ row.andrewId+ '" >'+ row.andrewId + '</option>'))
-              $('#assignmentLandlineNo').append($('<option value = "'+ row.landLine+ '" >'+ row.landLine + '</option>'))
-              $("#assignmentStartDate").val(row.startDate)
-              $("#assignmentEndDate").val(row.endDate)
+              if (0 == $('div.landLineSelect option[value='+row.landLine+']').length && 0 == $('div.andrewIdSelect option[value='+row.andrewId+']').length){
+                $('#assignmentAndrewId').append($('<option value = "'+ row.andrewId+ '" >'+ row.andrewId + '</option>'))
+                $('#assignmentLandlineNo').append($('<option value = "'+ row.landLine+ '" >'+ row.landLine + '</option>'))
+              }
+              $("#assignmentStartDate").val(row.startDateDisplay)
+              $("#assignmentEndDate").val(row.endDateDisplay)
               $("div.landLineSelect select").val(row.landLine);
               $("div.andrewIdSelect select").val(row.andrewId);
               $("#assignmentId").val(row.assignmentId)
+
+              $('#andrewIdSelect option:last').prop('selected', true);
+              $('#landLineSelect option:last').prop('selected', true);
+              console.log(typeof row.startDate)
 
 
               // $("div.compNameSelect select").val(row.compId);
@@ -299,5 +319,44 @@
           });
         }
 
+
+
+
+
+
+
+        function operateFormatterEnd(value, row, index) {
+            return [
+                '<a class="edit" href="javascript:void(0)" title="End">',
+                '<i class="glyphicon glyphicon-remove"  data-toggle="modal" data-target="#endAssignment" ></i>',
+                '</a>  '
+            ].join('');
+        }
+        var count = 0
+        window.operateEventsEnd = {
+            'click .edit': function (e, value, row, index) {
+
+              if (0 == $('div.landLineSelect option[value='+row.landLine+']').length || 0 == $('div.andrewIdSelect option[value='+row.andrewId+']').length){
+                $('#assignmentAndrewId').append($('<option value = "'+ row.andrewId+ '" >'+ row.andrewId + '</option>'))
+                // $('#assignmentLandlineNo').append($('<option value = "'+ row.landLine+ '" >'+ row.landLine + '</option>'))
+              }
+
+              $("#assignmentStartDate").val(row.startDate)
+              $("#assignmentEndDate").val(row.endDate)
+              $("div.landLineSelect select").val(row.landLine);
+              $("div.andrewIdSelect select").val(row.andrewId);
+              $("#assignmentId").val(row.assignmentId)
+              count = count +1;
+
+
+              // $("div.compNameSelect select").val(row.compId);
+              // $("#housingUnitId").val(row.unitNo)
+            }
+        };
+
+
+        function endAssignment(){
+
+        }
 
 </script>
