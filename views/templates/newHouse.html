@@ -46,6 +46,8 @@
     </div>
 
 <script type="text/javascript">
+
+    require('../renderer.js');
   
     var connection = mysql.createConnection({
         host     : 'mysql.qatar.cmu.local',
@@ -73,6 +75,7 @@
             return;
         }
       var compIds = rows
+      $('#houseCompId').append($('<option>Select..</option>'));
       $.each(rows, function(i, value) {
           console.log(value.compId)
           $('#houseCompId').append($('<option id = "'+value.compId+' " + value = "'+ value.compId+ '" >'+ value.compName + '</option>'))
@@ -81,10 +84,4 @@
     });
 
 
-
-
-
-
 </script>
-
-  <script src="../renderer.js">  </script>

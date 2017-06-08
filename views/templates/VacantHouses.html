@@ -90,12 +90,8 @@
                   <!-- Modal content-->
                   <div class="modal-content">
                     <div class="modal-body">
-                      
 
-
-
-
-                          <form class="form-horizontal" action='' method="POST">
+                    <form class="form-horizontal" action='' method="POST">
                       <fieldset>
                         <div id="legend">
                           <legend class="">LandLine</legend>
@@ -138,12 +134,6 @@
                         </div>
                       </fieldset>
                     </form>
-
-
-
-
-
-
 
                     </div>
                     <div class="modal-footer">
@@ -323,6 +313,8 @@
             }
         };
 
+        
+
         $query = "SELECT `employee`.`andrewId` FROM `employee` LEFT JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` WHERE `assignment`.`andrewId` is null";
 
         connection.query($query, function(err, rows, fields) {
@@ -332,6 +324,7 @@
                 return;
             }
             console.log(rows)
+          $('#assignmentAndrewId').append($('<option>Select Andrew ID</option>'))
           $.each(rows, function(i, value) {
               $('#assignmentAndrewId').append($('<option value = "'+ value.andrewId+ '" >'+ value.andrewId + '</option>'))
           });
@@ -343,6 +336,29 @@
             var endDate = document.getElementById("assignmentEndDate").value
             var andrewId = document.getElementById("assignmentAndrewId").value
             var landLine = document.getElementById("assignmentLandlineNo").value
+
+
+            if(andrewId == null || andrewId == "" || andrewId == "Select Andrew ID"){
+              alert("Andrew ID is required!!", "Bill Management System");
+              return;
+            }
+
+            if(landLine == null || landLine == "" || landLine == "Select Landline Number"){
+                alert("Landline Number is required!!", "Bill Management System");
+                return;
+            }
+
+            if (startDate == "" || startDate == null) {
+                alert("Start Date is required!!", "Bill Management System");
+                return;
+            }
+
+            if (endDate != null && endDate != ""){
+                if (endDate <= startDate){
+                    alert("End date cannot be before or on the Start Date.", "Bill Management System");
+                    return;
+                }
+            }
 
 
          $query = "INSERT INTO `assignment` (startDate, endDate, andrewId, landLine) VALUES ('"+ startDate +"', '"+ endDate +"', '"+ andrewId+"', '"+ landLine+"');";
@@ -360,7 +376,7 @@
                      alert(err);
                      return;
                  }           
-                 alert("Assignment Succesfully Added!")
+                 alert("Assignment Succesfully Added!", "Bill Management System");
                  goVacantHouses();
              });
 

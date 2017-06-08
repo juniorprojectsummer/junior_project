@@ -79,6 +79,7 @@
             return;
         }
         console.log(rows)
+        $('#assignmentAndrewId').append($('<option>Select Andrew ID</option>'));
       $.each(rows, function(i, value) {
           $('#assignmentAndrewId').append($('<option value = "'+ value.andrewId+ '" >'+ value.andrewId + '</option>'))
       });
@@ -93,6 +94,7 @@
             console.log(err);
             return;
         }
+      $('#assignmentLandlineNo').append($('<option>Select Landline Number</option>'));
       $.each(rows, function(i, value) {
           $('#assignmentLandlineNo').append($('<option value = "'+ value.landLine+ '" >'+ value.landLine + '</option>'))
       });

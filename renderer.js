@@ -82,57 +82,132 @@ function endConnection() {
 
 
 
-    function addEmployee(){
-        var email = document.getElementById("employeeEmail").value
-        var first = document.getElementById("employeeFirstName").value
-        var last = document.getElementById("employeeLastName").value
-        var andrewId = document.getElementById("employeeAndrewId").value
-        var contractType = document.getElementById("employeeContractType").value
+function addEmployee(){
+    var email = document.getElementById("employeeEmail").value
+    var first = document.getElementById("employeeFirstName").value
+    var last = document.getElementById("employeeLastName").value
+    var andrewId = document.getElementById("employeeAndrewId").value
+    var contractType = document.getElementById("employeeContractType").value
 
-        // var firstMatches = val.match(/\d+/g);
-        // var lastMatches = val.match(/\d+/g);
-        // if (firstMatches != null) {
-        //     alert('Fir');
-        // }
+    if(first == null || first == ""){
+        alert("First name is required!!", "Bill Management System");
+        return;
+    }
 
-     $query = "INSERT INTO `employee` VALUES ('"+ andrewId + "','"+ email +"', '"+ first+"', '"+ last+"', '"+ contractType+"');";
+    if(last == null || last == ""){
+        alert("Last name is required!!", "Bill Management System");
+        return;
+    }
 
-     connection.query($query, function(err, rows, fields) {
-         if(err){
-             console.log("An error ocurred performing the query.");
-             alert(err);
-             return;
-         }
-         console.log(rows)
-         endConnection();
-         alert("Employee Succesfully Created!")
-         goEmployeeMain();
-     });
+    if(andrewId == null || andrewId == ""){
+        alert("Andrew ID is required!!", "Bill Management System");
+        return;
+    }
+
+    if(contractType == null || contractType == "" || contractType == "Select Cotract Type"){
+        alert("Contract Type is required", "Bill Management System");
+        return;
+    }
+
+    if(email == null || email == ""){
+        alert("email is required", "Bill Management System");
+        return;
+    }
+
+    var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    
+    if (!re.test(email)){
+        alert(email + " is not a valid email address", "Bill Management System");
+        return;
+    }
+
+    var email_splitted = email.split("@");
+
+    email_splitted = email_splitted[0];
+
+    if (email_splitted != andrewId){
+
+        var dialog = remote.getGlobal('dialog');
+        var choice = dialog.showMessageBox(
+            remote.getCurrentWindow(),
+            {
+                type: 'question',
+                buttons: ['Yes', 'No'],
+                title: 'Bill Management System. Confirm: ',
+                message: 'Andrew ID is not the same as email.\nAre you sure you want to continue?'
+            });
+
+        if (choice == 1) return;
     }
 
 
+    $query = "INSERT INTO `employee` VALUES ('"+ andrewId + "','"+ email +"', '"+ first+"', '"+ last+"', '"+ contractType+"');";
+
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            if (err.toString().includes("ER_DUP_ENTRY")){
+                alert("Andrew ID already exists: " + andrewId + "\n\nEmployee was not created.", "Bill Management System");
+            }
+            else{
+                alert(err, "Bill Management System");
+            }
+            return;
+        }
+        console.log(rows)
+        endConnection();
+        alert("Employee Succesfully Created!", "Bill Management System")
+        goEmployeeMain();
+    });
+}
 
 
-    function addAssignment(){
-        var startDate = document.getElementById("assignmentStartDate").value
-        var endDate = document.getElementById("assignmentEndDate").value
-        var andrewId = document.getElementById("assignmentAndrewId").value
-        var landLine = document.getElementById("assignmentLandlineNo").value
 
 
-     $query = "INSERT INTO `assignment` (startDate, endDate, andrewId, landLine) VALUES ('"+ startDate +"', '"+ endDate +"', '"+ andrewId+"', '"+ landLine+"');";
-     console.log($query)
-     connection.query($query, function(err, rows, fields) {
+
+function addAssignment(){
+    var startDate = document.getElementById("assignmentStartDate").value
+    var endDate = document.getElementById("assignmentEndDate").value
+    var andrewId = document.getElementById("assignmentAndrewId").value
+    var landLine = document.getElementById("assignmentLandlineNo").value
+
+
+
+    if(andrewId == null || andrewId == "" || andrewId == "Select Andrew ID"){
+    alert("Andrew ID is required!!", "Bill Management System");
+    return;
+    }
+
+    if(landLine == null || landLine == "" || landLine == "Select Landline Number"){
+        alert("Landline Number is required!!", "Bill Management System");
+        return;
+    }
+
+    if (startDate == "" || startDate == null) {
+        alert("Start Date is required!!", "Bill Management System");
+        return;
+    }
+
+    if (endDate != null && endDate != ""){
+        if (endDate <= startDate){
+            alert("End date cannot be before or on the Start Date.", "Bill Management System");
+            return;
+        }
+    }
+    $query = "INSERT INTO `assignment` (startDate, endDate, andrewId, landLine) VALUES ('"+ startDate +"', '"+ endDate +"', '"+ andrewId+"', '"+ landLine+"');";
+    console.log($query)
+    connection.query($query, function(err, rows, fields) {
          if(err){
              console.log("An error ocurred performing the query.");
-             alert(err);
+             alert(err, "Bill Management, System");
              return;
          }
          $query = "UPDATE `housing` SET `vacant` = 0 WHERE `landLine` = '" + landLine+"';"
          connection.query($query, function(err, rows, fields) {
              if(err){
                  console.log("An error ocurred performing the query.");
-                 alert(err);
+                 alert(err, "Bill Management System");
                  return;
              }           
              alert("Assignment Succesfully Added!")
@@ -144,37 +219,63 @@ function endConnection() {
     }
 
 
-    function addHouse(){
-        var landLine = document.getElementById("houseLandline").value
-        var compno = document.getElementById("houseCompId").value
-        var unitid = document.getElementById("houseUnitId").value
+function addHouse(){
+    var landLine = document.getElementById("houseLandline").value
+    var compno = document.getElementById("houseCompId").value
+    var unitid = document.getElementById("houseUnitId").value
 
-        $query = "INSERT INTO `housing` VALUES ('"+ unitid + "','"+ landLine +"', 1, '"+ compno +"');";
-
-        connection.query($query, function(err, rows, fields) {
-            if(err){
-                console.log("An error ocurred performing the query.");
-                console.log(err);
-                return;
-            }
-            alert("House Succesfully Added!")
-            $("#navigation").load("landlineMain.html");
-        });
+    if (landLine == null || landLine == ""){
+        alert("Landline number is required", "Bill Management System");
+        return;
     }
 
-    function getAllCompounds(){
-        $query = "SELECT * FROM `compound`";
+    if (compno == null || compno == "" || compno == "Select.."){
+        alert("Compound name is required", "Bill Management System");
+        return;
+    }
 
-        connection.query($query, function(err, rows, fields) {
-            if(err){
-                console.log("An error ocurred performing the query.");
-                console.log(err);
-                return;
+    if (unitid == null || unitid == ""){
+        alert("Unit number is required", "Bill Management System");
+        return;
+    }
+
+    if (landLine.length > 8 || landLine.length < 8){
+        alert(landLine + " is not a valid landline\nKindly put a number with format 4xxxxxxx", "Bill Management System");
+        return;
+    }
+
+    $query = "INSERT INTO `housing` VALUES ('"+ unitid + "','"+ landLine +"', 1, '"+ compno +"');";
+
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            if (err.toString().includes("ER_DUP_ENTRY")){
+                alert("Landline already exists: " + landLine + "\n\nHouse was not created.", "Bill Management System");
             }
-            
-            return rows
-        });
-    };
+            else{
+                alert(err, "Bill Management System");
+            }
+            return;
+        }
+        alert("House Succesfully Added!", "Bill Management System")
+        $("#navigation").load("landlineMain.html");
+    });
+}
+
+function getAllCompounds(){
+    $query = "SELECT * FROM `compound`";
+
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        
+        return rows
+    });
+};
 
 //#################################
 

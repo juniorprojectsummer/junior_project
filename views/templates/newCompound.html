@@ -8,7 +8,7 @@
           <div class="control-group">
             <label class="control-label"  for="UN">Compound Name</label>
             <div class="controls">
-              <input id = "compoundName" type="text" placeholder="compounf" class="input-xlarge">
+              <input id = "compoundName" type="text" placeholder="compound" class="input-xlarge">
             </div>
           </div>
          
@@ -60,6 +60,12 @@
         function addCompound(){
         var compoundName = document.getElementById("compoundName").value 
         //THE COMP ID IS NOT INCREMENTAL???????
+
+        if(compoundName == null || compoundName == "" ){
+          alert("Compound Name is required!!", "Bill Management System");
+          return;
+        }
+        
          $query = "INSERT INTO `compound` (`compName`) VALUES ('" + compoundName + "');";
 
          connection.query($query, function(err, rows, fields) {

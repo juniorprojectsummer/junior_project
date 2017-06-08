@@ -240,6 +240,35 @@
           var first = document.getElementById("employeeFirstName").value
           var last = document.getElementById("employeeLastName").value
           var andrewId = document.getElementById("employeeAndrewId").value
+
+          if(first == null || first == ""){
+            alert("First name is required!!", "Bill Management System");
+            return;
+          }
+
+          if(last == null || last == ""){
+              alert("Last name is required!!", "Bill Management System");
+              return;
+          }
+
+
+          // if(contractType == null || contractType == "" || contractType == "Select Cotract Type"){
+          //     alert("Contract Type is required", "Bill Management System");
+          //     return;
+          // }
+
+          if(email == null || email == ""){
+              alert("email is required", "Bill Management System");
+              return;
+          }
+
+          var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+          
+          if (!re.test(email)){
+              alert(email + " is not a valid email address", "Bill Management System");
+              return;
+          }
+
           $query = "UPDATE `employee` SET `email` = '"+  email  +"', firstName = '"+  first  +"', lastName = '"+  last  +"' where `andrewId` = '"+  andrewId  +"'";
 
           connection.query($query, function(err, rows, fields) {
@@ -248,7 +277,7 @@
                   console.log(err);
                   return;
               } 
-              alert("Employee Succesfully Updated!")
+              alert("Employee Succesfully Updated!", "Bill Management System")
               $('#myModal').hide()
               goEmployeeMain();
           });
