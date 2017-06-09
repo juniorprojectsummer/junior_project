@@ -175,8 +175,8 @@ function addAssignment(){
 
 
     if(andrewId == null || andrewId == "" || andrewId == "Select Andrew ID"){
-    alert("Andrew ID is required!!", "Bill Management System");
-    return;
+        alert("Andrew ID is required!!", "Bill Management System");
+        return;
     }
 
     if(landLine == null || landLine == "" || landLine == "Select Landline Number"){
@@ -813,10 +813,14 @@ filepicker.onclick = openSelection;
 
 //*********************************************************Code For dialogbox ***************************************//
 function openSelection(){
+    console.log("It came here")
   // const dialog = require('electron').remote.dialog;
   const dialog = remote.getGlobal('dialog');
   var a = dialog.showOpenDialog({ properties: ['openDirectory']});
   console.log(a);
+  if (direc == undefined){
+    return;
+  }
   direc = a[0];
   //document.write(direc);
 

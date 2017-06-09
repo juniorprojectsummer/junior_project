@@ -1,5 +1,5 @@
 @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
-@media(min-width:500px) {
+@media(min-width:100px) {
     body {
         margin-top: 18px;
         background-color: #f8f2ed;
@@ -16,12 +16,12 @@
 
 #page-wrapper-bills, #page-wrapper {
     margin-top: 0;
-    width: 84%;        
+    width: 90%;        
     padding: 0;
 }
 #page-wrapper{
-	margin-left: 50px;
-	margin-right: 50px;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 
 @media(min-width:500px) {
@@ -232,3 +232,4 @@ button,.btn{
 #Title{
   color: #990000;
 }
+

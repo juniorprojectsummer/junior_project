@@ -1,28 +1,33 @@
 <html>
   <head>
+    <title>Bill Management system</title>
     <meta charset="UTF-8">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-     <link rel="stylesheet" type="text/css" href="../style/style.css">
+     <link rel="stylesheet" type="text/css" href="../css/login.css">
      <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.css">
-
-
-     
-    
   </head>
-  <body style="background-color: #f8f2ed; padding-left: 200px; padding-right: 250px;">
-    <div id="wrapper">
-    <div id = "page-wrapper" class = "container" >
-                <center><h2 id="Title">Log In</h2></center>
-                <label>Username</label>
-                <input type="text" id="userName" class="form-control input-sm chat-input" placeholder="username" />
-                </br>
-                <label>Password</label>
-                <input type="password" id="userPassword" class="form-control input-sm chat-input" placeholder="password" />
-                </br>  
-                    <a class="btn" onclick = "validateForm()"  style="border-color: #990000;">login <i class="fa fa-sign-in"></i></a>
-            
-            </div>
-            </div>
+  <body>
+    <!--
+    you can substitue the span of reauth email for a input with the email and
+    include the remember me checkbox
+    -->
+    <div class="container">
+        <div class="card card-container">
+            <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
+            <img id="profile-img" class="profile-img-card" src="../imgs/cmuq_red.jpg" />
+            <p id="profile-name" class="profile-name-card"></p>
+            <form class="form-signin">
+                <span id="reauth-email" class="reauth-email"></span>
+                <input type="email" id="userName" class="form-control" placeholder="Username" required autofocus>
+                <input type="password" id="userPassword" class="form-control" placeholder="Password" required>
+        
+                <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit" onclick = "validateForm()">Log in</button>
+            </form><!-- /form -->
+            <a href="#" class="forgot-password">
+                Forgot the password?
+            </a>
+        </div><!-- /card-container -->
+    </div><!-- /container -->
 
   </body>
 
@@ -63,7 +68,7 @@
           // for (i =0; i<workbook.Strings.length; i++){
           //   console.log(workbook.Strings[i].t);
           // }
-          alert("No Username or Password entered!")
+          alert("No Username or Password entered!", "Bill Management System")
           
             // return false;
         }
@@ -80,7 +85,7 @@
               }
 
               if (rows.length == 0){
-                alert("Username does not exist")
+                alert("Username does not exist", "Bill Management System");
               }
               else {
                 var hash = bcrypt.hashSync(pass);
@@ -91,7 +96,7 @@
                   
                 }
                 else{
-                  alert("Wrong Password!")
+                  alert("Wrong Password!", "Bill Management System");
                 }
               }
           });

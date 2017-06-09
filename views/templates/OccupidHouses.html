@@ -88,7 +88,7 @@
                           <div class="control-group">
                             <!-- Button -->
                             <div>
-                              <a href="#" class="btn btn-primary btn-md" onclick = "updateLandLineAssignment()" data-dismiss="modal">Update</a>
+                              <a href="#" class="btn btn-primary btn-md" onclick = "updateLandLineAssignment()">Update</a>
                             </div>
                           </div>
                         </fieldset>
@@ -299,8 +299,28 @@
         // UPDATE table_name SET field1 = new-value1, field2 = new-value2
         // [WHERE Clause]
 
-        console.log(123123)
+          
+            if(andrewId == null || andrewId == "" || andrewId == "Select Andrew ID"){
+                alert("Andrew ID is required!!", "Bill Management System");
+                return;
+            }
 
+            if(landLine == null || landLine == "" || landLine == "Select Landline Number"){
+                alert("Landline Number is required!!", "Bill Management System");
+                return;
+            }
+
+            if (startDate == "" || startDate == null) {
+                alert("Start Date is required!!", "Bill Management System");
+                return;
+            }
+
+            if (endDate != null && endDate != ""){
+                if (endDate <= startDate){
+                    alert("End date cannot be before or on the Start Date.", "Bill Management System");
+                    return;
+                }
+            }
 
           $query = "UPDATE `assignment` SET `startdate` = '"+ startDate + "', `enddate` = '"+ endDate +"', `landline` = '"+ landLine +"', andrewId = '"+ andrewId+"' WHERE assignmentId = '"+ assignmentId+"';";
 
@@ -312,7 +332,9 @@
               }
 
               alert("Assignment Succesfully Updated!")
-              $('#editAssignment').hide()
+              $('#editAssignment').modal().hide();
+              $(".modal-backdrop").remove();
+              jQuery('body').removeClass('modal-open');
               goLandlineMain();
  
           });
@@ -366,7 +388,7 @@
                       return;
                   }
 
-                  alert("Assignment Succesfully Ended!")
+                  alert("Assignment Succesfully Ended!", "Bill Management System")
                   goOccupidHouses()
                   
               });

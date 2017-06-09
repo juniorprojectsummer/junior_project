@@ -33,7 +33,7 @@
                       <form class="form-horizontal" action='' method="POST">
                         <fieldset>
                           <div id="legend">
-                            <legend class="">Edit Employee</legend>
+                            <legend class="">Edit House</legend>
                           </div>
                           <div class="control-group">
                             <label class="control-label"  for="FN">Unit Number</label>
@@ -98,7 +98,7 @@
                           <form class="form-horizontal" action='' method="POST">
                       <fieldset>
                         <div id="legend">
-                          <legend class="">LandLine</legend>
+                          <legend class="">New House Assignment</legend>
                         </div>
 
                         <div class="control-group">
@@ -274,6 +274,25 @@
             var compName = document.getElementById("housingCompName").value
             var landLineReal = document.getElementById("landLineReal").value
 
+            if (landLine == null || landLine == ""){
+                alert("Landline number is required", "Bill Management System");
+                return;
+            }
+
+            if (compName == null || compName == "" || compName == "Select.."){
+                alert("Compound name is required", "Bill Management System");
+                return;
+            }
+
+            if (unitNo == null || unitNo == ""){
+                alert("Unit number is required", "Bill Management System");
+                return;
+            }
+
+            if (landLine.length > 8 || landLine.length < 8){
+                alert(landLine + " is not a valid landline\nKindly put a number with format 4xxxxxxx", "Bill Management System");
+                return;
+            }
 
           $query = "UPDATE `housing` SET `unitNo` = '"+  unitNo  +"', `compId` = '"+ compName + "', `landLine` = '"+ landLine + "' WHERE `landLine` = '"+  landLineReal  +"'";
 
@@ -283,7 +302,10 @@
                   console.log(err);
                   return;
               }
-              alert("Housing Succesfully Updated!")
+              alert("Housing Succesfully Updated!", "Bill Management System");
+              $('#myModal').modal().hide();
+              $(".modal-backdrop").remove();
+              jQuery('body').removeClass('modal-open');
               goVacantHouses();
           });
         }
@@ -385,7 +407,10 @@
                      alert(err);
                      return;
                  }           
-                 alert("Assignment Succesfully Added!", "Bill Management System")
+                 alert("Assignment Succesfully Added!", "Bill Management System");
+                 $('#newAssignment').modal().hide();
+                $(".modal-backdrop").remove();
+                jQuery('body').removeClass('modal-open');
                  goVacantHouses();
              });
 

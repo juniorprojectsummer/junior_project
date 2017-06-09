@@ -60,7 +60,7 @@
                           <div class="control-group">
                             <!-- Button -->
                             <div>
-                              <a href="#" class="btn btn-primary btn-md" onclick = "updateHousing()" data-dismiss="modal">Update</a>
+                              <a href="#" class="btn btn-primary btn-md" onclick = "updateHousing()">Update</a>
                             </div>
                           </div>
                         </fieldset>
@@ -192,6 +192,25 @@
             var compName = document.getElementById("housingCompName").value
             var landLineReal = document.getElementById("landLineReal").value
 
+            if (landLine == null || landLine == ""){
+                alert("Landline number is required", "Bill Management System");
+                return;
+            }
+
+            if (compName == null || compName == "" || compName == "Select.."){
+                alert("Compound name is required", "Bill Management System");
+                return;
+            }
+
+            if (unitNo == null || unitNo == ""){
+                alert("Unit number is required", "Bill Management System");
+                return;
+            }
+
+            if (landLine.length > 8 || landLine.length < 8){
+                alert(landLine + " is not a valid landline\nKindly put a number with format 4xxxxxxx", "Bill Management System");
+                return;
+            }
 
         // UPDATE table_name SET field1 = new-value1, field2 = new-value2
         // [WHERE Clause]
@@ -205,8 +224,10 @@
                   console.log(err);
                   return;
               }
-              alert("Housing Succesfully Updated!")
-              $('#myModal').hide()
+              alert("Housing Succesfully Updated!", "Bill Management System")
+              $('#myModal').modal().hide();
+              $(".modal-backdrop").remove();
+              jQuery('body').removeClass('modal-open');
               goLandlineMain();
           });
         }
@@ -222,6 +243,7 @@
                 return;
             }
           var compIds = rows
+          $('#housingCompName').append($('<option>Select..</option>'))
           $.each(rows, function(i, value) {
               $('#housingCompName').append($('<option value = "'+ value.compId+ '" >'+ value.compName + '</option>'))
           });
