@@ -52,8 +52,7 @@
 
 
        /* $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `employee`;";*/
-        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`billDate` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline`; ";
-
+        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`billDate` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE (DATEDIFF(`assignment`.`endDate`,CURDATE()) > 0 OR `assignment`.`endDate` = '0000-00-00') ;";
         connection.query($query, function(err, rows, fields) {
           if(err){
               console.log("An error ocurred performing the query.");

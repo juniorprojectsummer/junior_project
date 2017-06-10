@@ -65,12 +65,25 @@
                           </div>
                         </fieldset>
                       </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
 
-
-
-
-
-
+              <!-- All bills-->
+              <div class="modal fade" id="MyBillsModal" role="dialog">
+                <div class="modal-dialog">
+                
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="table-responsive billsDiv" style="color: #990000;">
+                        <table id="allBills" class="table table-bordred table-striped"></table>    
+                      </div>  
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -163,7 +176,13 @@
                   align: 'center',
                   events: operateEventsOccupied,
                   formatter: operateFormatter
-              }, ]
+              }, {
+                  field: 'operateBills',
+                  title: 'Bills',
+                  align: 'center',
+                  events: operateEventsBill,
+                  formatter: operateFormatterBill
+              },]
           });
         });
 
@@ -175,7 +194,7 @@
                 '</a>  '
             ].join('');
         }
-
+  
         window.operateEventsOccupied = {
             'click .edit': function (e, value, row, index) {
               $("#housingUnitNo").val(row.unitNo)
@@ -184,6 +203,7 @@
               $("div.Select select").val(row.compId);
             }
         };
+       
 
         function updateHousing(){
 
@@ -250,4 +270,70 @@
 
         });
 
+
+
+
+
+      function operateFormatterBill(value, row, index) {
+                  return [
+                      '<a class="bills" href="javascript:void(0)" title="bills">',
+                      '<i class="fa fa-folder"  aria-hidden="true" data-toggle="modal" data-target="#MyBillsModal" ></i>',
+                      '</a>  '
+                  ].join('');
+              }
+
+       window.operateEventsBill = {
+
+
+                  'click .bills': function (e, value, row, index) {
+                    $('.billsDiv > div').remove();
+                    $('.billsDiv').append('<table id="allBills" class="table table-bordred table-striped"></table>')
+
+                    $query = "SELECT * FROM `bill` where `landline` ='" + row.landLine+"';"
+
+                            connection.query($query, function(err, rows, fields) {
+                              if(err){
+                                  console.log("An error ocurred performing the query.");
+                                  console.log(err);
+                                  return; 
+                              }
+                              console.log(rows)
+                              // console.log(("#landLineReal").val)
+                              $('#allBills').bootstrapTable({
+                                  data: rows ,
+                                  height: 532,
+                                  cache: false,
+                                  striped: true,
+                                  pagination: true,
+                                  pageSize: 10,
+                                  pageList: [10,25,50,100,200],
+                                  minimumCountColumns: 2,
+                                  search: true,
+                                  showRefresh:true,
+                                  checkboxEnable: true,
+                                  columns: [{
+                                    field: 'state',
+                                    title: '',
+                                    align: 'center',
+                                    checkbox: true
+                                  }, {
+                                      field: 'billNo',
+                                      title: 'Bill Number',
+                                      sortable: true,
+                                  }, {
+                                      field: 'billPeriod',
+                                      title: 'Bill Period',
+                                      sortable: true
+                                  }, {
+                                      field: 'totalAmountDue',
+                                      title: 'TotalAmountDue',
+                                      sortable: true
+                                  },  {
+                                      field: 'pdfurl',
+                                      title: 'pdf',
+                                  }, ]
+                              });
+                            });
+                    }
+              };                                
 </script>
