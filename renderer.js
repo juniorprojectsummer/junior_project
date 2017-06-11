@@ -42,6 +42,9 @@ var $       = require( 'jquery' );
     function goNewLandline() {
       $(".container").load("templates/newLandline.html");
     }
+    function goDevPage() {
+        $(".container").load("templates/devPage.html");
+    }
     function logout() {
       $(".navigation").remove();
       $(".container").load("login.html");

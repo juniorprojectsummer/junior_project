@@ -3,8 +3,8 @@
   <div class="panel-heading"><strong>Bills are not synchronized </strong>
   </div>
 
-  <div class="panel-body">
-  <div class="loader" style = "border-left: 60px;"></div>
+  <div class="panel-body"><!-- 
+  <div class="loader" style = "border-left: 60px;"></div> -->
     Press generate if all the bills are ready to be uploaded to the system
     <strong>Last time populated April </strong>
     <button type="button" class="btn btn-danger" id="filepicker">Populate</button>
@@ -15,7 +15,7 @@
   <div class="panel-heading"><strong>No Bills were sent to employees</strong></div>
   <div class="panel-body">Press the send button to send each bill to each employee
     <strong>Last time sent April </strong>
-    <button type="button" class="btn btn-danger">Send</button></div>
+    <button type="button" class="btn btn-danger" id="sendMails">Send</button></div>
 </div>
 
 
@@ -105,9 +105,9 @@ function openSelection(){
   var a = dialog.showOpenDialog({ properties: ['openDirectory']});
   // $("#filepicker").hide()
   // $(".loader").show()
-  if (direc == undefined){
-    return;
-  }
+  // if (direc == undefined){
+  //   return;
+  // }
   direc = a[0];
   //document.write(direc);
 
@@ -118,12 +118,13 @@ function openSelection(){
     for(let filePath of dir){
       
       var pathtopdf = direc + '/' + filePath;
+      var pathforadding = pathtopdf;
 
       //Converts it into a proper path
       pathtopdf = path.win32.normalize(pathtopdf);
 
       //Calls the pdf Reading function
-      var check = readPDF(pathtopdf);
+      var check = readPDF(pathtopdf, pathforadding);
 
       if (check == 0){
         countBillSkipped += 1
@@ -143,7 +144,7 @@ var pdfText = remote.getGlobal('pdfText');
 var fs = require('fs');
 
 //Function to read the pdf
-function readPDF(pathtopdf){
+function readPDF(pathtopdf, pathforadding){
 
   //Creates a buffer stream out of the pdf for faster performance
   var buffer = fs.readFileSync(pathtopdf);
@@ -157,7 +158,7 @@ function readPDF(pathtopdf){
     }
 
     //Function call to extract individual/required items 
-    return extractData(chunks, pathtopdf);
+    return extractData(chunks, pathforadding);
     //console.dir(chunks);
 
   });
@@ -176,7 +177,7 @@ function extractData(chunks, pdfPath){
 
     //Extract Bill number
     bill_no = chunks[9];
-    // console.log("Bill Number: ", bill_no);
+    console.log("Bill Number: ", bill_no);
 
     //Extract Bill date
     bill_date = chunks[11];
@@ -216,8 +217,7 @@ function extractData(chunks, pdfPath){
     // console.log("\n\n");
 
 
-
-    return addBill(bill_no, past_balance, payments_rec, total_amount, bill_date, bill_period, payment_deadline, pdf_URL, landline);
+    return addBill(bill_no, past_balance, payments_rec, total_amount, bill_date, bill_period, payment_deadline, pdf_URL.replace(/\\/g,"/"), landline);
   }
 
   else{
@@ -280,6 +280,124 @@ function getLandline(chunks){
   }
 }
 
+
+
+
+
+
+///////////// SENDING MAILS
+
+
+$("#sendMails").click(function(){
+  startSending( function(err,data){
+          if (err) {
+              // error handling code goes here
+              console.log("ERROR : ",err);            
+          } else {            
+              // code to execute on data retrieval
+            for (i = 0; i<data.length; i++){
+              sendMail(data[i].empName, data[i].landLine, data[i].compName, data[i].pdfUrl)
+            }  
+          }    
+
+  });
+});
+
+
+// var sendMails = document.getElementById('sendMails');
+// sendMails.onclick = 
+
+
+function startSending(callback){
+
+  var monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  var a = new Date();
+    $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `housing`.`landLine`, `compound`.`compName`, `bill`.`pdfUrl` from `bill`, `employee`, `housing`, `compound`, `assignment` WHERE `bill`.`landLine` = `housing`.`landLine` AND `housing`.`compId` = `compound`.`compId` AND `housing`.`landLine` = `assignment`.`landLine` AND `employee`.`andrewId` = `assignment`.`andrewId` AND date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%M') = '" + monthNames[3] + "';";
+    
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            // alert(err.toString());
+            // return;
+            callback(err, null)
+        }
+        else{
+          console.log(rows[0].pdfUrl)
+          callback(null, rows)
+        }
+
+
+        // for (item in rows){
+        //   sendMail(item.empName, item.landLine, item.compName, item.pdfUrl)
+        // }
+
+
+        // console.log(rows)
+    });
+}
+
+
+
+
+
+
+
+
+
+
+const nodemailer = require('nodemailer');
+var hbs = require('nodemailer-express-handlebars')
+// create reusable transporter object using the default SMTP transport
+let transporter = nodemailer.createTransport({
+    host: 'smtp.qatar.cmu.edu',
+    pool: true,
+    port: 25,
+    ignoreTLS: true,
+    secure: false, // secure:true for port 465, secure:false for port 587
+
+});
+
+
+
+transporter.use('compile',hbs({
+  viewPath: 'emailTemplates',
+  extName: '.hbs'
+}))
+
+
+
+
+function sendMail(empName, landLine, compName, pdfUrl){
+  // setup email data with unicode symbols
+  let mailOptions = {
+      from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
+      to: 'yasirk@qatar.cmu.edu', // list of receivers
+      subject: 'Ooredoo Bill Cycle', // Subject line
+      template: 'yourBill',
+      attachments: [
+      {   
+          path: pdfUrl
+      }
+      ],
+      context: {
+        empName: empName,
+        landLine: landLine,
+        compName: compName
+      }
+    };
+
+
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          return console.log(error);
+      }
+      console.log('Message %s sent: %s', info.messageId, info.response);
+  });
+}
 
 
 </script>

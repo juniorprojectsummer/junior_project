@@ -11,6 +11,9 @@ var ipc = electron.ipcMain;
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
+const shell = require('electron').shell;
+global.shell = shell;
+
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})

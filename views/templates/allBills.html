@@ -52,7 +52,7 @@
 
 
        /* $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `employee`;";*/
-        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`billDate` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE (DATEDIFF(`assignment`.`endDate`,CURDATE()) > 0 OR `assignment`.`endDate` = '0000-00-00') ;";
+        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`pdfUrl` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE (DATEDIFF(`assignment`.`endDate`,CURDATE()) > 0 OR `assignment`.`endDate` = '0000-00-00') ;";
         connection.query($query, function(err, rows, fields) {
           if(err){
               console.log("An error ocurred performing the query.");
@@ -95,11 +95,39 @@
                   title: 'Bill Date',
                   sortable: true
               }, {
-                  field: 'pdfUrl',
-                  title: 'pdf',
-                  sortable: true
+                  field: 'operatePDF',
+                  title: 'PDF',
+                  align: 'center',
+                  events: operateEventsBill,
+                  formatter: operateFormatterBill
               },]
           });
         });
 
+
+        function operateFormatterBill(value, row, index) {
+            return [
+                '<a class="openFile" href="javascript:void(0)" title="Edit">',
+                '<i class="glyphicon glyphicon-open-file"  data-toggle="" data-target="" ></i>',
+                '</a>  '
+            ].join('');
+        }
+  
+        window.operateEventsBill = {
+            'click .openFile': function (e, value, row, index) {
+
+              url = row.pdfUrl;
+              openPDf(url);
+            }
+        };
+
+        function openPDf(url){
+          const shell = remote.getGlobal('shell');
+          if (shell.openItem(url)){
+            shell.openItem(url);
+          }
+          else{
+            alert("Couldn't open link.", "Bill Management System");
+          }
+        }
 </script>

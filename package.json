@@ -25,6 +25,7 @@
     "electron-rebuild": "^1.5.11",
     "jquery": "^3.2.1",
     "mysql": "^2.13.0",
+    "nodemailer": "^4.0.1",
     "nodemailer-express-handlebars": "^2.0.0",
     "pdf-text": "^0.4.0",
     "pdfreader": "^0.2.3",
