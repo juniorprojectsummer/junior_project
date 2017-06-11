@@ -40,10 +40,12 @@
         }
 
 
-        $query =
+        $query = 
           "SELECT  `assignment`.`andrewId`, `assignment`.`landLine` , `bill`.`totalAmountDue` , `bill`.`billDate` FROM `assignment`  RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE ABS(DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y/%m/%d'),CURDATE())) <= 80 AND `totalAmountDue` >= 1000;"  ;
 
-         // "SELECT  `assignment`.`andrewId`, `assignment`.`landLine` , `bill`.`totalAmountDue` , `bill`.`billDate`, `compound`.`compName` , CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `assignment`, `employee`, `bill`, `compound`, `housing` WHERE `assignment`.`landline` = `bill`.`landline` AND `assignment`.`andrewId` = `employee`.`andrewId` AND `housing`.`compId` = `compound`.`compId` AND ABS(DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y/%m/%d'),CURDATE())) <= 80 AND `totalAmountDue` >= 1000;"  ;
+          // "SELECT  DISTINCT `assignment`.`andrewId`, `assignment`.`landLine` , `bill`.`totalAmountDue` , `bill`.`billDate`, `compound`.`compName` , CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `assignment`, `employee`, `bill`, `compound`, `housing` WHERE `assignment`.`landline` = `bill`.`landline` AND `assignment`.`andrewId` = `employee`.`andrewId` AND `housing`.`compId` = `compound`.`compId` AND ABS(DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y/%m/%d'),CURDATE())) <= 80 AND `totalAmountDue` >= 1000;"  ;
+
+        
 
 
 

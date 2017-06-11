@@ -9,6 +9,8 @@
             </center>
           </div>
           <div class="table-responsive" style="color: #990000;">
+            <label>Date:  </label><input type="month" name="datepicker" id="datepicker" style="color: #000;"/>
+          <button type="button" class="btn btn-default" onclick="UpdateBills()">show</button>
                 <table id="allBills" class="table table-bordred table-striped">
               </table>    
           </div>  
@@ -19,11 +21,11 @@
 
 
         require('../renderer.js');
-
+          
+       
         var $     = require( 'jquery' );
         var mysql = require('mysql');
         // var bcrypt = require('bcrypt');
-
 
         var connection = mysql.createConnection({
             host     : 'mysql.qatar.cmu.local',
@@ -44,90 +46,78 @@
 
 
         // var app = angular.module('myApp', []);
+        var mydate=new Date()
+        var year=mydate.getYear()
+        
+        if (year < 1000)
+            year+=1900
+        
+        var month=mydate.getMonth()+1
+        
+        if (month<10)
+            month="0"+month
 
-
+        // var showDate = ;
+        // console.log(showDate)
         function endConnection() {
           connection.end();
         }
+        function UpdateBills(){
+            var showDate= document.getElementById("datepicker").value+"-01"
+            console.log(showDate)
+            $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m') as `bdate`, `bill`.`billDate` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-01'),'"+showDate+"') = 0;"
 
+                    connection.query($query, function(err, rows, fields) {
+                      if(err){
+                          console.log("An error ocurred performing the query.");
+                          console.log(err);
+                          return; 
+                      }
+                      console.log(rows)
+
+                      $('#allBills').bootstrapTable({
+                          data: rows ,
+                          height: 500,
+                          cache: false,
+                          striped: true,
+                          pagination: true,
+                          pageSize: 9,
+                          pageList: [9,25,50,100,200],
+                          minimumCountColumns: 2,
+                          search: true,
+                          showRefresh:true,
+                          checkboxEnable: true,
+                          columns: [{
+
+                              field: 'landline',
+                              title: 'Landline',
+                              sortable: true
+                          }, {
+                              field: 'empName',
+                              title: 'Employee',
+                              sortable: true
+                          }, {
+                              field: 'billNo',
+                              title: 'Bill No.',
+                              sortable: true
+                          }, {
+                              field: 'totalAmountDue',
+                              title: 'Total Amount Due',
+                              sortable: true
+                          }, {
+                              field: 'bdate',
+                              title: 'Bill Date',
+                              sortable: true
+                          }, {
+                              field: 'pdfUrl',
+                              title: 'pdf',
+                              sortable: true
+                          },]
+                      });
+                    });
+        }
 
        /* $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `employee`;";*/
-        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`pdfUrl` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE (DATEDIFF(`assignment`.`endDate`,CURDATE()) > 0 OR `assignment`.`endDate` = '0000-00-00') ;";
-        connection.query($query, function(err, rows, fields) {
-          if(err){
-              console.log("An error ocurred performing the query.");
-              console.log(err);
-              return; 
-          }
-          console.log(rows)
+        
 
-          $('#allBills').bootstrapTable({
-              data: rows ,
-              height: 500,
-              cache: false,
-              striped: true,
-              pagination: true,
-              pageSize: 9,
-              pageList: [9,25,50,100,200],
-              minimumCountColumns: 2,
-              search: true,
-              showRefresh:true,
-              checkboxEnable: true,
-              columns: [{
-
-                  field: 'landline',
-                  title: 'Landline',
-                  sortable: true
-              }, {
-                  field: 'empName',
-                  title: 'Employee',
-                  sortable: true
-              }, {
-                  field: 'billNo',
-                  title: 'Bill No.',
-                  sortable: true
-              }, {
-                  field: 'totalAmountDue',
-                  title: 'Total Amount Due',
-                  sortable: true
-              }, {
-                  field: 'billDate',
-                  title: 'Bill Date',
-                  sortable: true
-              }, {
-                  field: 'operatePDF',
-                  title: 'PDF',
-                  align: 'center',
-                  events: operateEventsBill,
-                  formatter: operateFormatterBill
-              },]
-          });
-        });
-
-
-        function operateFormatterBill(value, row, index) {
-            return [
-                '<a class="openFile" href="javascript:void(0)" title="Edit">',
-                '<i class="glyphicon glyphicon-open-file"  data-toggle="" data-target="" ></i>',
-                '</a>  '
-            ].join('');
-        }
-  
-        window.operateEventsBill = {
-            'click .openFile': function (e, value, row, index) {
-
-              url = row.pdfUrl;
-              openPDf(url);
-            }
-        };
-
-        function openPDf(url){
-          const shell = remote.getGlobal('shell');
-          if (shell.openItem(url)){
-            shell.openItem(url);
-          }
-          else{
-            alert("Couldn't open link.", "Bill Management System");
-          }
-        }
 </script>
