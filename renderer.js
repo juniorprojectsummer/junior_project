@@ -25,6 +25,7 @@ var $       = require( 'jquery' );
       $(".container").load("templates/VacantHouses.html");
     }
     function goHome() {
+        
       $(".container").load("templates/home.html");
     }
     function goAllBills() {
@@ -44,6 +45,9 @@ var $       = require( 'jquery' );
     }
     function goDevPage() {
         $(".container").load("templates/devPage.html");
+    }   
+    function goMasterSheet() {
+        $(".container").load("templates/MasterSheet.html");
     }
     function logout() {
       $(".navigation").remove();
@@ -256,13 +260,13 @@ function addHouse(){
             if (err.toString().includes("ER_DUP_ENTRY")){
                 alert("Landline already exists: " + landLine + "\n\nHouse was not created.", "Bill Management System");
             }
-            else{
+            else {
                 alert(err, "Bill Management System");
             }
             return;
         }
         alert("House Succesfully Added!", "Bill Management System")
-        $("#navigation").load("landlineMain.html");
+        goHouseMain();
     });
 }
 

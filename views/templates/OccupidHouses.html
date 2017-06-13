@@ -109,32 +109,84 @@
               </div>
 
 
+           <div class="modal fade" id="endAssignment" role="dialog">
+                <div class="modal-dialog">
+                
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      
+                    <div id = "assignmentIdEnd" style="display: none;"></div>
+
+
+
+                      <form class="form-horizontal" action='' method="POST">
+                        <fieldset>
+                          <div id="legend">
+                            <legend class="">Edit Employee</legend>
+                          </div>
+
+
+                        <div class="control-group">
+                            <label class="control-label">End Date</label>
+                            <div class="controls">
+                              <input id = "assignmentEndDateEnd" type="date" placeholder="" class="input-xlarge">
+                            </div>
+                          </div>
+
+
+                       <br>
+                          <div class="control-group">
+                            <!-- Button -->
+                            <div>
+                              <a href="#" class="btn btn-primary btn-md" onclick = "endAssignment()">Update</a>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </form>
+
+
+
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" onclick = "closeCall()" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+
+
+
     <script>
 
 
         require('../renderer.js');
 
-        var $     = require( 'jquery' );
-        var mysql = require('mysql');
-        // var bcrypt = require('bcrypt');
+        // var $     = require( 'jquery' );
+        // var mysql = require('mysql');
+        // // var bcrypt = require('bcrypt');
 
 
-        var connection = mysql.createConnection({
-            host     : 'mysql.qatar.cmu.local',
-            user     : 'fmbills_devuser',
-            password : 'PatUmNed', // or the original password : 'apaswword'
-            database : 'fmbills_dev',
-            insecureAuth: true
-        });
+        // var connection = mysql.createConnection({
+        //     host     : 'mysql.qatar.cmu.local',
+        //     user     : 'fmbills_devuser',
+        //     password : 'PatUmNed', // or the original password : 'apaswword'
+        //     database : 'fmbills_dev',
+        //     insecureAuth: true
+        // });
 
-        // connect to mysql
-        connection.connect(function(err) {
-            // in case of error
-            if(err){
-                console.log(err.code);
-                console.log(err.fatal);
-            }
-        });
+        // // connect to mysql
+        // connection.connect(function(err) {
+        //     // in case of error
+        //     if(err){
+        //         console.log(err.code);
+        //         console.log(err.fatal);
+        //     }
+        // });
 
 
         // var app = angular.module('myApp', []);
@@ -316,6 +368,7 @@
                 return;
             }
 
+
             if (endDate != null && endDate != ""){
                 if (endDate <= startDate){
                     alert("End date cannot be before or on the Start Date.", "Bill Management System");
@@ -336,7 +389,7 @@
               $('#editAssignment').modal().hide();
               $(".modal-backdrop").remove();
               jQuery('body').removeClass('modal-open');
-              goLandlineMain();
+              goOccupidHouses();
  
           });
         }
@@ -358,20 +411,30 @@
         window.operateEventsEnd = {
             'click .end': function (e, value, row, index) {
 
-              var r = confirm("Are you sure you want to end this assignment?");
-              if (r == true) {     
-                endAssignment(row.assignmentId, row.landLine)
-              } else {
-                  return;
-              }
+              $("#assignmentEndDateEnd").val(row.endDateDisplay)
+              $("#assignmentIdEnd").val(row.assignmentId)
+
             }
         };
 
 
-        function endAssignment(assignmentId, landLine){
-          var date = new Date();
-          date = "" + date.getFullYear() +"-"+date.getMonth() + "-" + date.getDate();
-          $query = "Update `assignment` SET `endDate` = '"+date +"' WHERE `assignmentId` = '"+  assignmentId  +"'";
+        function endAssignment(){
+          // var date = new Date();
+          // date = "" + date.getFullYear() +"-"+(date.getMonth()+1) + "-" + date.getDate();
+
+          var endDate = document.getElementById("assignmentEndDateEnd").value
+          var assignmentId = document.getElementById("assignmentIdEnd").value
+          console.log(endDate)
+          console.log(assignmentId)
+          var a = new Date();
+          if (endDate == null || endDate == ""){
+            var r = confirm("Are you sure you want to keep the end date empty?");
+            if (r == false) {
+                return;
+            }
+          }
+
+          $query = "Update `assignment` SET `endDate` = '"+endDate +"' WHERE `assignmentId` = '"+  assignmentId  +"'";
 
           connection.query($query, function(err, rows, fields) {
               if(err){
@@ -379,20 +442,12 @@
                   console.log(err);
                   return;
               }
-
-              $query = "Update `housing` SET `vacant` = '"+ 1 +"' WHERE `landLine` = '"+  landLine  +"'";
-
-              connection.query($query, function(err, rows, fields) {
-                  if(err){
-                      console.log("An error ocurred performing the query.");
-                      console.log(err);
-                      return;
-                  }
-
-                  alert("Assignment Succesfully Ended!", "Bill Management System")
-                  goOccupidHouses()
-                  
-              });
+             
+               alert("Assignment will succesfully end on the given date!", "Bill Management System")
+              $('#endAssignment').modal().hide();
+              $(".modal-backdrop").remove();
+              jQuery('body').removeClass('modal-open');
+              goOccupidHouses();
 
           });
         }

@@ -11,7 +11,7 @@
             </center>
           </div>
           <div class="table-responsive" style="color: #990000;">
-                <table id="mytableCheck" class="table table-bordred table-striped"></table>    
+                <table id="activeEmployeeTable" class="table table-bordred table-striped"></table>    
           </div>  
         </div>
         </div>
@@ -72,7 +72,7 @@
               return; 
           }
           console.log(rows)
-          $('#mytableCheck').bootstrapTable({
+          $('#activeEmployeeTable').bootstrapTable({
               data: rows ,
               height: 494,
               cache: false,

@@ -14,7 +14,7 @@
           <div class="table-responsive" style="color: #990000;">
                 <button id="remove" class="btn btn-danger" disabled>Delete</button>
                 <a onclick="goNewHouse()" class="btn btn-danger" role="button">New House</a>
-                <table id="occupiedHouse" class="table table-bordred table-striped"></table>    
+                <table id="allHousesTable" class="table table-bordred table-striped"></table>    
           </div>  
         </div>
         </div>
@@ -51,7 +51,7 @@
                        
                           <div class="control-group">
                             <label class="control-label" >Compound Name</label>
-                                  <div class = "Select">
+                                  <div class = "SelectHouse">
                                     <select id="housingCompName">
                                     </select>
                                  </div>
@@ -92,6 +92,25 @@
                   
                 </div>
               </div>
+              <!-- All Assignments-->
+              <div class="modal fade" id="MyAssignmentsModal" role="dialog">
+                <div class="modal-dialog">
+                
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="table-responsive assignmentsDiv" style="color: #990000;">
+                        <table id="allAssignments" class="table table-bordred table-striped"></table>    
+                      </div>  
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+
 
 
 <script type="text/javascript">
@@ -141,7 +160,7 @@
               return; 
           }
           console.log(rows)
-          $('#occupiedHouse').bootstrapTable({
+          $('#allHousesTable').bootstrapTable({
               data: rows ,
               height: 532,
               cache: false,
@@ -182,6 +201,12 @@
                   align: 'center',
                   events: operateEventsBill,
                   formatter: operateFormatterBill
+              },{
+                  field: 'operateAssignments',
+                  title: 'Assignments',
+                  align: 'center',
+                  events: operateEventsAssignment,
+                  formatter: operateFormatterAssignment
               },]
           });
         });
@@ -200,7 +225,7 @@
               $("#housingUnitNo").val(row.unitNo)
               $("#housingLandLine").val(row.landLine)
               $("#landLineReal").val(row.landLine)
-              $("div.Select select").val(row.compId);
+              $("div.SelectHouse select").val(row.compId);
             }
         };
        
@@ -335,5 +360,69 @@
                               });
                             });
                     }
-              };                                
+              };    
+
+
+        function operateFormatterAssignment(value, row, index) {
+                  return [
+                      '<a class="assignments" href="javascript:void(0)" title="assignments">',
+                      '<i class="fa fa-list"  aria-hidden="true" data-toggle="modal" data-target="#MyAssignmentsModal" ></i>',
+                      '</a>  '
+                  ].join('');
+              }  
+        window.operateEventsAssignment = {
+
+
+                  'click .assignments': function (e, value, row, index) {
+                    $('.assignmentsDiv > div').remove();
+                    $('.assignmentsDiv').append('<table id="allAssignments" class="table table-bordred table-striped"></table>')
+
+                    $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landLine` , date_format(`assignment`.`startDate`, '%M %e, %Y') as startDate , date_format(`assignment`.`endDate`, '%M %e, %Y') as endDate FROM `assignment` INNER join `employee` on `employee`.`andrewId`= `assignment`.`andrewId` where `landline` ='" + row.landLine+"';"
+
+                            connection.query($query, function(err, rows, fields) {
+                              if(err){
+                                  console.log("An error ocurred performing the query.");
+                                  console.log(err);
+                                  return; 
+                              }
+                              console.log(rows)
+                              // console.log(("#landLineReal").val)
+                              $('#allAssignments').bootstrapTable({
+                                  data: rows ,
+                                  height: 532,
+                                  cache: false,
+                                  striped: true,
+                                  pagination: true,
+                                  pageSize: 10,
+                                  pageList: [10,25,50,100,200],
+                                  minimumCountColumns: 2,
+                                  search: true,
+                                  showRefresh:true,
+                                  checkboxEnable: true,
+                                  columns: [{
+                                    field: 'state',
+                                    title: '',
+                                    align: 'center',
+                                    checkbox: true
+                                  }, {
+                                      field: 'empName',
+                                      title: 'Employee ',
+                                      sortable: true,
+                                  }, {
+                                      field: 'landLine',
+                                      title: 'landLine',
+                                      sortable: true
+                                  }, {
+                                      field: 'startDate',
+                                      title: 'startDate',
+                                      sortable: true
+                                  },{
+                                      field: 'endDate',
+                                      title: 'endDate',
+                                      sortable: true
+                                  }, ]
+                              });
+                            });
+                    }
+              };                             
 </script>

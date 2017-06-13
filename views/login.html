@@ -41,24 +41,56 @@
     // });
     var bcrypt = require('bcrypt-nodejs');
     var mysql = require('mysql');
+    var connection = mysql.createConnection({
+        host     : 'mysql.qatar.cmu.local',
+        user     : 'fmbills_devuser',
+        password : 'PatUmNed', // or the original password : 'apaswword'
+        database : 'fmbills_dev',
+        insecureAuth: true
+    });
+
+    // connect to mysql
+    connection.connect(function(err) {
+      // in case of error
+      if(err){
+          console.log(err.code);
+          console.log(err.fatal);
+      }
+    });
+
+    $query = "SELECT `housing`.`landLine` FROM `assignment`, `housing` where `assignment`.`landLine` = `housing`.`landLine` AND DATEDIFF(`assignment`.`endDate`,CURDATE()) = 0;";
+
+
+    connection.query($query, function(err, rows, fields) {
+      if(err){
+          console.log("An error ocurred performing the query.");
+          console.log(err);
+          return; 
+      }
+
+      for (i = 0;i<rows.length; i++){
+        $query = "UPDATE `housing` SET `vacant` = 1 WHERE `landLine` = "+rows[i].landLine
+        connection.query($query, function(err, rows, fields) {
+          if(err){
+              console.log("An error ocurred performing the query.");
+              console.log(err);
+              return; 
+          }
+          console.log("Succesfully set vacant!")
+        });
+      }
+    });
+
+
+
+
+
+
+
+
     function validateForm () {
 
-        var connection = mysql.createConnection({
-            host     : 'mysql.qatar.cmu.local',
-            user     : 'fmbills_devuser',
-            password : 'PatUmNed', // or the original password : 'apaswword'
-            database : 'fmbills_dev',
-            insecureAuth: true
-        });
 
-        // connect to mysql
-        connection.connect(function(err) {
-          // in case of error
-          if(err){
-              console.log(err.code);
-              console.log(err.fatal);
-          }
-        });
         var user = document.getElementById("userName").value
         var pass = document.getElementById("userPassword").value
         if (user == "" || pass == "") {

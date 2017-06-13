@@ -1,27 +1,29 @@
 
 <div class="panel panel-danger">
-  <div class="panel-heading"><strong>Bills are not synchronized </strong>
+  <div class="panel-heading"><strong>Synchronized Bills</strong>
   </div>
 
   <div class="panel-body"><!-- 
   <div class="loader" style = "border-left: 60px;"></div> -->
-    Press generate if all the bills are ready to be uploaded to the system
-    <strong>Last time populated April </strong>
-    <button type="button" class="btn btn-danger" id="filepicker">Populate</button>
+    Press generate if all the bills are ready to be uploaded to the system.
+    <br><strong>Last time populated: <span id = "populatedBills" style="color:red;"></span></strong>
+    <button type="button" class="btn btn-danger" id="filepicker">Populate</button><br>
+    <br>
+    <span id = "showRead"></span><br>
+    <span id = "showNotRead"></span>
     
   </div>
 </div>
 <div class="panel panel-danger">
-  <div class="panel-heading"><strong>No Bills were sent to employees</strong></div>
-  <div class="panel-body">Press the send button to send each bill to each employee
-    <strong>Last time sent April </strong>
-    <button type="button" class="btn btn-danger" id="sendMails">Send</button></div>
+  <div class="panel-heading"><strong>Emails Sent</strong></div>
+  <div class="panel-body">Press the send button to send each bill to each employee.<br>
+    <strong>Last time sent April: <span id = "sentMailTime" style="color:red;"></span></strong>
+    <button type="button" class="btn btn-danger" id="sendMails" >Send</button><br>
+    <br>
+    <span id = "showSent"></span><br>
+    <span id = "showNotSent"></span>
+  </div>
 </div>
-
-
-
-
-
 
 <script>
 
@@ -41,8 +43,6 @@ var connection = mysql.createConnection({
     insecureAuth: true
 });
 
-
-
 // connect to mysql
 connection.connect(function(err) {
     // in case of error
@@ -52,29 +52,27 @@ connection.connect(function(err) {
     }
 });
 
-
-
-
 function addBill(billNo, pastBalance, paymentsReceived, totalAmountDue, billDate, billPeriod, deadline, pdfURL, landLine){
     $query = "INSERT INTO `bill` VALUES ('"+ billNo + "','"+ pastBalance +"', '"+ paymentsReceived +"', '"+ totalAmountDue+"', '"+ billDate+"', '"+ billPeriod+"', '"+ deadline +"', '"+ pdfURL+"', '"+ landLine+"');";
     
     connection.query($query, function(err, rows, fields) {
         if(err){
-            if (err.toString().substr(0,19) == "Error: ER_DUP_ENTRY"){
+            if (err.toString().substr(0,19) == "Error: ER_DUP_ENTRY", "Bill Management System"){
                 // alert("Bill Number " + billNo + " already exists in the database!")
             }
             else{
-                alert(err.toString() + "\n" + landLine);
+                alert(err.toString() + "\n" + landLine, "Bill Management System");
             }
             // console.log("An error ocurred performing the query.");
             // console.log(err);
+
             return 0;
+           // remote.getCurrentWindow().reload();
         }
-        return 1
+        return 1;
     });
+
 }
-
-
 
 const {remote} = require('electron');
 
@@ -82,10 +80,8 @@ var fs = require('fs');
 
 const path = require('path');
 
-
+const electron_data = remote.getGlobal('electron_data');
 //********************************************************** dialog box ************************************************//
-
-
 var direc;
 
 var filepicker = document.getElementById('filepicker');
@@ -93,23 +89,49 @@ if (filepicker != null)
 filepicker.onclick = openSelection;
 
 //*********************************************************Code For dialogbox ***************************************//
+
+
+electron_data.has('myDate').then(has_key => {
+  if (has_key == true){
+    var n;
+    electron_data.get('myDate').then(value => {
+      console.log(value);
+      console.log(value.t);
+      n = value.t;
+      document.getElementById("populatedBills").innerHTML = n;
+    });
+  }
+  else {
+    document.getElementById("populatedBills").innerHTML = "---------";
+  }
+
+});
+
+
 function openSelection(){
-
-
 
   var countBillAdded = 0;
   var countBillSkipped = 0;
   var countEnd = 0;
-  // const dialog = require('electron').remote.dialog;
+
   const dialog = remote.getGlobal('dialog');
   var a = dialog.showOpenDialog({ properties: ['openDirectory']});
-  // $("#filepicker").hide()
-  // $(".loader").show()
-  // if (direc == undefined){
-  //   return;
-  // }
+  if (a == undefined) return;
   direc = a[0];
-  //document.write(direc);
+
+  
+  var d = new Date();
+  var t = d.toLocaleDateString() + " at " + d.toLocaleTimeString();
+  
+  electron_data.set('myDate', {t}).then(data => {
+      console.log(data); // {'awesome': 'module'}
+    }); 
+
+
+  electron_data.save().then(error => {
+    console.log(error); // undefined
+  });
+
 
   //Call back to go through every file in the selected directory
   fs.readdir(direc, (err, dir) => {
@@ -131,12 +153,30 @@ function openSelection(){
       }else{
         countBillAdded += 1
       }
+      electron_data.has('myDate').then(has_key => {
+        if (has_key == true){
+          var n;
+          electron_data.get('myDate').then(value => {
+            console.log(value);
+            console.log(value.t);
+            n = value.t;
+            document.getElementById("populatedBills").innerHTML = n;
+          });
+        }
+        else {
+          document.getElementById("populatedBills").innerHTML = "---------";
+        }
 
+      });
+
+      document.getElementById("showRead").innerHTML = "Number of Bills successfully read: "+ countBillAdded;
+      document.getElementById("showNotRead").innerHTML = "Number of Bills not read: " + countBillSkipped;
     }
-
+   
   });
   // $(".loader").hide()
   // $("#filepicker").show()
+  
 }
 
 //Requirements 
@@ -281,7 +321,21 @@ function getLandline(chunks){
 }
 
 
+electron_data.has('emailDate').then(has_key => {
+  if (has_key == true){
+    var n;
+    electron_data.get('emailDate').then(value => {
+      console.log(value);
+      console.log(value.t);
+      n = value.t;
+      document.getElementById("sentMailTime").innerHTML = n;
+    });
+  }
+  else {
+    document.getElementById("sentMailTime").innerHTML = "---------";
+  }
 
+});
 
 
 
@@ -295,8 +349,37 @@ $("#sendMails").click(function(){
               console.log("ERROR : ",err);            
           } else {            
               // code to execute on data retrieval
+
+              var d = new Date();
+              var t = d.toLocaleDateString() + " at " + d.toLocaleTimeString();
+              
+              electron_data.set('emailDate', {t}).then(data => {
+                  console.log(data); // {'awesome': 'module'}
+                }); 
+
+
+              electron_data.save().then(error => {
+                console.log(error); // undefined
+              });
+
+              electron_data.has('emailDate').then(has_key => {
+                if (has_key == true){
+                  var n;
+                  electron_data.get('emailDate').then(value => {
+                    console.log(value);
+                    console.log(value.t);
+                    n = value.t;
+                    document.getElementById("sentMailTime").innerHTML = n;
+                  });
+                }
+                else {
+                  document.getElementById("sentMailTime").innerHTML = "---------";
+                }
+
+              });
+
             for (i = 0; i<data.length; i++){
-              sendMail(data[i].empName, data[i].landLine, data[i].compName, data[i].pdfUrl)
+              sendMail(data[i].empName, data[i].landLine, data[i].compName, data[i].pdfUrl,data[i].andrewId)
             }  
           }    
 
@@ -315,7 +398,7 @@ function startSending(callback){
   ];
 
   var a = new Date();
-    $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `housing`.`landLine`, `compound`.`compName`, `bill`.`pdfUrl` from `bill`, `employee`, `housing`, `compound`, `assignment` WHERE `bill`.`landLine` = `housing`.`landLine` AND `housing`.`compId` = `compound`.`compId` AND `housing`.`landLine` = `assignment`.`landLine` AND `employee`.`andrewId` = `assignment`.`andrewId` AND date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%M') = '" + monthNames[3] + "';";
+    $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `housing`.`landLine`, `employee`.`andrewId`,  `compound`.`compName`, `bill`.`pdfUrl` from `bill`, `employee`, `housing`, `compound`, `assignment` WHERE `bill`.`landLine` = `housing`.`landLine` AND `housing`.`compId` = `compound`.`compId` AND `housing`.`landLine` = `assignment`.`landLine` AND `employee`.`andrewId` = `assignment`.`andrewId` AND date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%M') = '" + monthNames[3] + "';";
     
     connection.query($query, function(err, rows, fields) {
         if(err){
@@ -344,7 +427,8 @@ function startSending(callback){
 
 
 
-
+var emailSent = 0;
+var emailNotSent = 0;
 
 
 const nodemailer = require('nodemailer');
@@ -369,8 +453,10 @@ transporter.use('compile',hbs({
 
 
 
-function sendMail(empName, landLine, compName, pdfUrl){
+function sendMail(empName, landLine, compName, pdfUrl, andrewId){
   // setup email data with unicode symbols
+
+  
   let mailOptions = {
       from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
       to: 'yasirk@qatar.cmu.edu', // list of receivers
@@ -394,10 +480,22 @@ function sendMail(empName, landLine, compName, pdfUrl){
   transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
           return console.log(error);
+          emailNotSent =  emailNotSent + 1;
       }
+      emailSent = emailSent + 1;
       console.log('Message %s sent: %s', info.messageId, info.response);
+      console.log(emailNotSent);
+      console.log(emailSent);
+      document.getElementById("showSent").innerHTML = "Number of Emails successfully sent: "+ emailSent;
+      document.getElementById("showNotSent").innerHTML = "Number of Emails not sent: " + emailNotSent;
+
+
   });
 }
+
+
+
+////////////////////////////////////////////////////////////// Dashboard Data ///////////////////////////////////////////////
 
 
 </script>
