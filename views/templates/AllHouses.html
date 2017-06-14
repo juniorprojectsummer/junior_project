@@ -355,13 +355,42 @@
                                       sortable: true
                                   },  {
                                       field: 'pdfurl',
-                                      title: 'pdf',
+                                      title: 'PDF',
+                                      align: 'center',
+                                      events: operateEventsPDF,
+                                      formatter: operateFormatterPDF
                                   }, ]
                               });
                             });
                     }
               };    
 
+        function operateFormatterPDF(value, row, index) {
+                                return [
+                                    '<a class="openFile" href="javascript:void(0)" title="Open PDF">',
+                                    '<i class="glyphicon glyphicon-open-file"  data-toggle="" data-target="" ></i>',
+                                    '</a>  '
+                                ].join('');
+                            }
+                      
+                            window.operateEventsPDF = {
+
+                                'click .openFile': function (e, value, row, index) {
+
+                                  url = row.pdfUrl;
+                                  openPDf(url);
+                                }
+                            };
+
+                            function openPDf(url){
+                              const shell = remote.getGlobal('shell');
+                              if (shell.openItem(url)){
+                                shell.openItem(url);
+                              }
+                              else{
+                                alert("Couldn't open link.", "Bill Management System");
+                              }
+                            }
 
         function operateFormatterAssignment(value, row, index) {
                   return [
