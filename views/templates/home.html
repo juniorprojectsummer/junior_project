@@ -451,14 +451,15 @@ function sendMail(email, empName, landLine, compName, pdfUrl, andrewId, unitNo, 
   if (listOfVacantAndST == ""){
     let mailOptions = {
         from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
-        to: "yasirk@qatar.cmu.edu", // list of receivers
+        to: email, // list of receivers
+        cc: "bmhasnah@qatar.cmu.edu",
         subject: 'Ooredoo Bill Cycle', // Subject line
         template: 'yourBill',
-        // attachments: [
-        // {   
-        //     path: pdfUrl
-        // }
-        // ],
+        attachments: [
+        {   
+            path: pdfUrl
+        }
+        ],
         context: {
           empName: empName,
           landLine: landLine,
@@ -492,11 +493,19 @@ function sendMail(email, empName, landLine, compName, pdfUrl, andrewId, unitNo, 
 
   else{
 
-    var plaintext = "Hi, \n\nThis email is as regards to the monthly Ooredoo billing Cycle.  \n\n"+ listOfVacantAndST + " Sincerely,\n\nFacilities Management Team\n\n\nThis is an automated email. If you have any questions or concerns, please contact Facilities at" + "fmbills@qatar.cmu.edu.".bold()
+    transporter = nodemailer.createTransport({
+        host: 'smtp.qatar.cmu.edu',
+        pool: true,
+        port: 25,
+        ignoreTLS: true,
+        secure: false, // secure:true for port 465, secure:false for port 587
+
+    });
+    var plaintext = "Hi, \n\nThis email is as regards to the monthly Ooredoo billing Cycle.  \n\n"+ listOfVacantAndST + " Sincerely,\n\nFacilities Management Team\n\n\nThis is an automated email. If you have any questions or concerns, please contact Facilities at" + "fmbills@qatar.cmu.edu."
     let mailOptions = {
         from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
-        to: "yasirk@qatar.cmu.edu",
-        cc: "yasirk@qatar.cmu.edu",
+        to: email,
+        cc: "bmhasnah@qatar.cmu.edu",
         subject: 'Ooredoo Bill Cycle', // Subject line
         text: plaintext
       };
