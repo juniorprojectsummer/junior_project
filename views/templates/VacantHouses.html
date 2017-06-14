@@ -345,7 +345,7 @@
             }
         };
 
-       $query = "SELECT `employee`.`andrewId`, `employee`.`firstName`, `employee`.`lastName`, `employee`.`email` , `employee`.`contractType` FROM `employee` LEFT JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` WHERE `assignment`.`andrewId` is  null OR DATEDIFF(`assignment`.`endDate`,CURDATE()) <= 0;";
+       $query = "SELECT DISTINCT `employee`.`andrewId`, `employee`.`firstName`, `employee`.`lastName`, `employee`.`email` , `employee`.`contractType` FROM `employee` LEFT JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` WHERE `assignment`.`andrewId` is  null OR DATEDIFF(`assignment`.`endDate`,CURDATE()) <= 0;";
 
         connection.query($query, function(err, rows, fields) {
             if(err){
@@ -400,20 +400,31 @@
                  alert(err);
                  return;
              }
-             $query = "UPDATE `housing` SET `vacant` = 0 WHERE `landLine` = '" + landLine+"';"
-             connection.query($query, function(err, rows, fields) {
-                 if(err){
-                     console.log("An error ocurred performing the query.");
-                     alert(err);
+             var d1 = new Date();
+             var d2 = new Date(endDate);
+             console.log(DateDiff.inDays(d1, d2) + ": Date difference")
+             if (DateDiff.inDays(d1, d2) > 0){
+                 $query = "UPDATE `housing` SET `vacant` = 0 WHERE `landLine` = '" + landLine+"';"
+                 connection.query($query, function(err, rows, fields) {
+                     if(err){
+                         console.log("An error ocurred performing the query.");
+                         alert(err, "Bill Management System");
+                         return;
+                     }           
+                     alert("Assignment Succesfully Added!", "Bill Management System");
+                     $('#newAssignment').modal().hide();
+                     $(".modal-backdrop").remove();
+                     jQuery('body').removeClass('modal-open');
+                     goVacantHouses();
                      return;
-                 }           
-                 alert("Assignment Succesfully Added!", "Bill Management System");
-                 $('#newAssignment').modal().hide();
-                $(".modal-backdrop").remove();
-                jQuery('body').removeClass('modal-open');
-                 goVacantHouses();
-             });
-
+                 });
+             }  
+             alert("Assignment Succesfully Added!", "Bill Management System");
+             $('#newAssignment').modal().hide();
+             $(".modal-backdrop").remove();
+             jQuery('body').removeClass('modal-open');
+             goVacantHouses();
+             return;
          });
         }
 

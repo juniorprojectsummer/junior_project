@@ -1,5 +1,4 @@
-
-    <div id = "page-wrapper">
+<div id = "page-wrapper">
       <div class="col-md-17">
       <div class="plan">
           <div class="plan-name">
@@ -21,15 +20,12 @@
     </div>
     </div>
      <script>
-
-
         require('../renderer.js');
           
        
         var $     = require( 'jquery' );
         var mysql = require('mysql');
         // var bcrypt = require('bcrypt');
-
         var connection = mysql.createConnection({
             host     : 'mysql.qatar.cmu.local',
             user     : 'fmbills_devuser',
@@ -37,7 +33,6 @@
             database : 'fmbills_dev',
             insecureAuth: true
         });
-
         // connect to mysql
         connection.connect(function(err) {
             // in case of error
@@ -46,9 +41,9 @@
                 console.log(err.fatal);
             }
         });
+        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `bill`.`landline` , `employee`.`contractType`, `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`pdfUrl` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` AND ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)));";
 
 
-        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`pdfUrl` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE (DATEDIFF(`assignment`.`endDate`,CURDATE()) > -2000 OR `assignment`.`endDate` = '0000-00-00') ;";
 
          
         connection.query($query, function(err, rows, fields) {
@@ -59,7 +54,7 @@
           }
           $('#allBills2').bootstrapTable({
               data: rows ,
-              height: 500,
+              height: 495,
               cache: false,
               striped: true,
               pagination: true,
@@ -70,13 +65,16 @@
               showRefresh:true,
               checkboxEnable: true,
               columns: [{
-
                   field: 'landline',
                   title: 'Landline',
                   sortable: true
               }, {
                   field: 'empName',
                   title: 'Employee',
+                  sortable: true
+              }, {
+                  field: 'contractType',
+                  title: 'Contract',
                   sortable: true
               }, {
                   field: 'billNo',
@@ -99,10 +97,6 @@
               },]
           }); 
         });
-
-
-
-
         function operateFormatterBill(value, row, index) {
             return [
                 '<a class="openFile" href="javascript:void(0)" title="OpenPDF">',
@@ -113,12 +107,10 @@
   
         window.operateEventsBill = {
             'click .openFile': function (e, value, row, index) {
-
               url = row.pdfUrl;
               openPDf(url);
             }
         };
-
         function openPDf(url){
           const shell = remote.getGlobal('shell');
           if (shell.openItem(url)){
@@ -128,9 +120,6 @@
             alert("Couldn't open link.", "Bill Management System");
           }
         }
-
-
-
         // var app = angular.module('myApp', []);
         var mydate=new Date()
         var year=mydate.getYear()
@@ -142,7 +131,6 @@
         
         if (month<10)
             month="0"+month
-
         // var showDate = ;
         // console.log(showDate)
         function endConnection() {
@@ -151,13 +139,10 @@
         function UpdateBills(){
             var showDate= document.getElementById("datepicker").value+"-01"
   
-
             $('.billsDiv2 > div').remove();
             $('.billsDiv2').append('<table id="allBills2" class="table table-bordred table-striped"></table>')
             
-
-            $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m') as `bdate`, `bill`.`billDate` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-01'),'"+showDate+"') = 0 AND ((DATEDIFF(`assignment`.`endDate`,CURDATE()) > 0 OR `assignment`.`endDate` = '0000-00-00') );";
-
+            $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landline` , `bill`.`billNo` , `bill`.`totalAmountDue` , date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m') as `bdate`, `bill`.`billDate` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline`  AND ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') > `assignment`.`endDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`))) WHERE DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-01'),'"+showDate+"') = 0 ;";
                     connection.query($query, function(err, rows, fields) {
                       if(err){
                           console.log("An error ocurred performing the query.");
@@ -165,7 +150,6 @@
                           return; 
                       }
                       console.log(rows)
-
                       $('#allBills2').bootstrapTable({
                           data: rows ,
                           height: 500,
@@ -179,7 +163,6 @@
                           showRefresh:true,
                           checkboxEnable: true,
                           columns: [{
-
                               field: 'landline',
                               title: 'Landline',
                               sortable: true
@@ -206,8 +189,7 @@
                           },]
                       });
                     });
-          $query2 = "SELECT SUM(totalAmountDue) as sum  FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` WHERE DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-01'),'"+showDate+"') = 0 AND ((DATEDIFF(`assignment`.`endDate`,CURDATE()) > 0 OR `assignment`.`endDate` = '0000-00-00') );";
-
+          $query2 = "SELECT SUM(totalAmountDue) as sum  FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline`  AND ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') > `assignment`.`endDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`))) WHERE DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-01'),'"+showDate+"') = 0 ;";
          connection.query($query2, function(err, rows, fields) {
                       if(err){
                           console.log("An error ocurred performing the query.");
@@ -218,8 +200,6 @@
             document.getElementById("amount").innerHTML = "Total Amount Due "+Math.ceil(rows[0].sum)+" QAR";
         });
       }
-
        /* $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` FROM `employee`;";*/
         
-
 </script>

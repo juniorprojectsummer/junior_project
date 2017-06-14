@@ -12,15 +12,6 @@ var ipc = electron.ipcMain;
 let mainWindow
 
 
-const electron_data = require('electron-data');
-
-electron_data.config({
-  filename: 'data',
-  path: './app-data',
-  autosave: true
-});
-
-global.electron_data = electron_data;
 
 const shell = require('electron').shell;
 global.shell = shell;

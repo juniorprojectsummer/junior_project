@@ -117,6 +117,7 @@
                     <div class="modal-body">
                       
                     <div id = "assignmentIdEnd" style="display: none;"></div>
+                    <div id = "assignmentlandLineEnd" style="display: none;"></div>
 
 
 
@@ -413,9 +414,11 @@
 
               $("#assignmentEndDateEnd").val(row.endDateDisplay)
               $("#assignmentIdEnd").val(row.assignmentId)
+              $("#assignmentlandLineEnd").val(row.landLine)
 
             }
         };
+
 
 
         function endAssignment(){
@@ -424,8 +427,8 @@
 
           var endDate = document.getElementById("assignmentEndDateEnd").value
           var assignmentId = document.getElementById("assignmentIdEnd").value
-          console.log(endDate)
-          console.log(assignmentId)
+          var assignmentlandLineEnd = document.getElementById("assignmentlandLineEnd").value
+
           var a = new Date();
           if (endDate == null || endDate == ""){
             var r = confirm("Are you sure you want to keep the end date empty?");
@@ -442,12 +445,34 @@
                   console.log(err);
                   return;
               }
-             
-               alert("Assignment will succesfully end on the given date!", "Bill Management System")
-              $('#endAssignment').modal().hide();
-              $(".modal-backdrop").remove();
-              jQuery('body').removeClass('modal-open');
-              goOccupidHouses();
+              var d1 = new Date();
+              var d2 = new Date(endDate);
+              console.log(DateDiff.inDays(d1, d2) + ": Date difference")
+              if (DateDiff.inDays(d1, d2) <= 0){
+                $query = "UPDATE `housing` SET `vacant` = 1 WHERE `landLine` = "+assignmentlandLineEnd
+
+                connection.query($query, function(err, rows, fields) {
+                    if(err){
+                        console.log("An error ocurred performing the query.");
+                        console.log(err);
+                        return;
+                    }
+                    
+                    alert("Assignment will succesfully end on the given date!", "Bill Management System")
+                    $('#endAssignment').modal().hide();
+                    $(".modal-backdrop").remove();
+                    jQuery('body').removeClass('modal-open');
+                    goOccupidHouses();
+                });   
+              }
+              else{
+                alert("Assignment will succesfully end on the given date!", "Bill Management System")
+                $('#endAssignment').modal().hide();
+                $(".modal-backdrop").remove();
+                jQuery('body').removeClass('modal-open');
+                goOccupidHouses();
+              }
+
 
           });
         }

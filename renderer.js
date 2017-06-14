@@ -25,8 +25,8 @@ var $       = require( 'jquery' );
       $(".container").load("templates/VacantHouses.html");
     }
     function goHome() {
-        
-      $(".container").load("templates/home.html");
+        remote.getCurrentWindow().reload();
+      //$(".container").load("templates/home.html");
     }
     function goAllBills() {
       $(".container").load("templates/allBills.html");
@@ -86,6 +86,35 @@ function endConnection() {
 
 
 
+var DateDiff = {
+
+    inDays: function(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+
+        return parseInt((t2-t1)/(24*3600*1000));
+    },
+
+    inWeeks: function(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+
+        return parseInt((t2-t1)/(24*3600*1000*7));
+    },
+
+    inMonths: function(d1, d2) {
+        var d1Y = d1.getFullYear();
+        var d2Y = d2.getFullYear();
+        var d1M = d1.getMonth();
+        var d2M = d2.getMonth();
+
+        return (d2M+12*d2Y)-(d1M+12*d1Y);
+    },
+
+    inYears: function(d1, d2) {
+        return d2.getFullYear()-d1.getFullYear();
+    }
+}
 
 
 
@@ -173,57 +202,67 @@ function addEmployee(){
 
 
 
-function addAssignment(){
-    var startDate = document.getElementById("assignmentStartDate").value
-    var endDate = document.getElementById("assignmentEndDate").value
-    var andrewId = document.getElementById("assignmentAndrewId").value
-    var landLine = document.getElementById("assignmentLandlineNo").value
+// function addAssignment(){
+//     var startDate = document.getElementById("assignmentStartDate").value
+//     var endDate = document.getElementById("assignmentEndDate").value
+//     var andrewId = document.getElementById("assignmentAndrewId").value
+//     var landLine = document.getElementById("assignmentLandlineNo").value
 
 
 
-    if(andrewId == null || andrewId == "" || andrewId == "Select Andrew ID"){
-        alert("Andrew ID is required!!", "Bill Management System");
-        return;
-    }
+//     if(andrewId == null || andrewId == "" || andrewId == "Select Andrew ID"){
+//         alert("Andrew ID is required!!", "Bill Management System");
+//         return;
+//     }
 
-    if(landLine == null || landLine == "" || landLine == "Select Landline Number"){
-        alert("Landline Number is required!!", "Bill Management System");
-        return;
-    }
+//     if(landLine == null || landLine == "" || landLine == "Select Landline Number"){
+//         alert("Landline Number is required!!", "Bill Management System");
+//         return;
+//     }
 
-    if (startDate == "" || startDate == null) {
-        alert("Start Date is required!!", "Bill Management System");
-        return;
-    }
+//     if (startDate == "" || startDate == null) {
+//         alert("Start Date is required!!", "Bill Management System");
+//         return;
+//     }
 
-    if (endDate != null && endDate != ""){
-        if (endDate <= startDate){
-            alert("End date cannot be before or on the Start Date.", "Bill Management System");
-            return;
-        }
-    }
-    $query = "INSERT INTO `assignment` (startDate, endDate, andrewId, landLine) VALUES ('"+ startDate +"', '"+ endDate +"', '"+ andrewId+"', '"+ landLine+"');";
-    console.log($query)
-    connection.query($query, function(err, rows, fields) {
-         if(err){
-             console.log("An error ocurred performing the query.");
-             alert(err, "Bill Management, System");
-             return;
-         }
-         $query = "UPDATE `housing` SET `vacant` = 0 WHERE `landLine` = '" + landLine+"';"
-         connection.query($query, function(err, rows, fields) {
-             if(err){
-                 console.log("An error ocurred performing the query.");
-                 alert(err, "Bill Management System");
-                 return;
-             }           
-             alert("Assignment Succesfully Added!")
-             $('#newAssignment').hide()
-             goVacantHouses();
-         });
+//     if (endDate != null && endDate != ""){
+//         if (endDate <= startDate){
+//             alert("End date cannot be before or on the Start Date.", "Bill Management System");
+//             return;
+//         }
+//     }
+//     $query = "INSERT INTO `assignment` (startDate, endDate, andrewId, landLine) VALUES ('"+ startDate +"', '"+ endDate +"', '"+ andrewId+"', '"+ landLine+"');";
+//     console.log($query)
+//     connection.query($query, function(err, rows, fields) {
+//          if(err){
+//              console.log("An error ocurred performing the query.");
+//              alert(err, "Bill Management, System");
+//              return;
+//          }
 
-     });
-    }
+//          var d1 = new Date();
+//          var d2 = new Date(endDate);
+//          console.log(DateDiff.inDays(d1, d2) + ": Date difference")
+//          if (DateDiff.inDays(d1, d2) <= 0){
+//              $query = "UPDATE `housing` SET `vacant` = 0 WHERE `landLine` = '" + landLine+"';"
+//              connection.query($query, function(err, rows, fields) {
+//                  if(err){
+//                      console.log("An error ocurred performing the query.");
+//                      alert(err, "Bill Management System");
+//                      return;
+//                  }           
+//                  alert("Assignment Succesfully Added!")
+//                  $('#newAssignment').hide()
+//                  goVacantHouses();
+//                  return;
+//              });
+//          }
+//          alert("Assignment Succesfully Added!")
+//          $('#newAssignment').hide()
+//          goVacantHouses();
+
+//      });
+//     }
 
 
 function addHouse(){

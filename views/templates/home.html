@@ -9,19 +9,19 @@
     <br><strong>Last time populated: <span id = "populatedBills" style="color:red;"></span></strong>
     <button type="button" class="btn btn-danger" id="filepicker">Populate</button><br>
     <br>
-    <span id = "showRead"></span><br>
-    <span id = "showNotRead"></span>
+    Number of Bills successfully read: <strong><span id = "showRead"></span></strong><br>
+    Number of Bills not read: <strong><span id = "showNotRead"></span></strong>
     
   </div>
 </div>
 <div class="panel panel-danger">
   <div class="panel-heading"><strong>Emails Sent</strong></div>
   <div class="panel-body">Press the send button to send each bill to each employee.<br>
-    <strong>Last time sent April: <span id = "sentMailTime" style="color:red;"></span></strong>
+    <strong>Last time sent: <span id = "sentMailTime" style="color:red;"></span></strong>
     <button type="button" class="btn btn-danger" id="sendMails" >Send</button><br>
     <br>
-    <span id = "showSent"></span><br>
-    <span id = "showNotSent"></span>
+    Total bills successfully sent: <strong><span id = "showSent"></span></strong><br>
+    Total bills not sent: <strong><span id = "showNotSent"></span></strong>
   </div>
 </div>
 
@@ -80,7 +80,7 @@ var fs = require('fs');
 
 const path = require('path');
 
-const electron_data = remote.getGlobal('electron_data');
+const storage = require('electron-json-storage');
 //********************************************************** dialog box ************************************************//
 var direc;
 
@@ -90,24 +90,21 @@ filepicker.onclick = openSelection;
 
 //*********************************************************Code For dialogbox ***************************************//
 
-
-electron_data.has('myDate').then(has_key => {
-  if (has_key == true){
-    var n;
-    electron_data.get('myDate').then(value => {
-      console.log(value);
-      console.log(value.t);
-      n = value.t;
-      document.getElementById("populatedBills").innerHTML = n;
-    });
-  }
-  else {
-    document.getElementById("populatedBills").innerHTML = "---------";
-  }
-
-});
+showPDFReadTime();
 
 
+function showPDFReadTime(){
+  storage.get('myDate', function(error, data) {
+
+        if (error) console.log(error);
+        if (data.t != null){
+          document.getElementById("populatedBills").innerHTML = data.t;
+        }
+        else{
+          document.getElementById("populatedBills").innerHTML = "---------";
+        }
+      });
+}
 function openSelection(){
 
   var countBillAdded = 0;
@@ -123,13 +120,10 @@ function openSelection(){
   var d = new Date();
   var t = d.toLocaleDateString() + " at " + d.toLocaleTimeString();
   
-  electron_data.set('myDate', {t}).then(data => {
-      console.log(data); // {'awesome': 'module'}
-    }); 
 
+  storage.set('myDate', { t }, function(error) {
+      if (error) console.log(error);
 
-  electron_data.save().then(error => {
-    console.log(error); // undefined
   });
 
 
@@ -153,24 +147,12 @@ function openSelection(){
       }else{
         countBillAdded += 1
       }
-      electron_data.has('myDate').then(has_key => {
-        if (has_key == true){
-          var n;
-          electron_data.get('myDate').then(value => {
-            console.log(value);
-            console.log(value.t);
-            n = value.t;
-            document.getElementById("populatedBills").innerHTML = n;
-          });
-        }
-        else {
-          document.getElementById("populatedBills").innerHTML = "---------";
-        }
+    
 
-      });
+      setTimeout(showPDFReadTime, 2000);
 
-      document.getElementById("showRead").innerHTML = "Number of Bills successfully read: "+ countBillAdded;
-      document.getElementById("showNotRead").innerHTML = "Number of Bills not read: " + countBillSkipped;
+      document.getElementById("showRead").innerHTML = countBillAdded;
+      document.getElementById("showNotRead").innerHTML = countBillSkipped;
     }
    
   });
@@ -320,25 +302,17 @@ function getLandline(chunks){
   }
 }
 
+// storage.get('emailDate', function(error, data) {
+//   if (error) console.log(error);
+//   if (data.t != null){
+//     document.getElementById("sentMailTime").innerHTML = data.t;
+//   }
+//   else{
+//     document.getElementById("sentMailTime").innerHTML = "---------";
+//   }
+// });
 
-electron_data.has('emailDate').then(has_key => {
-  if (has_key == true){
-    var n;
-    electron_data.get('emailDate').then(value => {
-      console.log(value);
-      console.log(value.t);
-      n = value.t;
-      document.getElementById("sentMailTime").innerHTML = n;
-    });
-  }
-  else {
-    document.getElementById("sentMailTime").innerHTML = "---------";
-  }
-
-});
-
-
-
+showEmailData();
 ///////////// SENDING MAILS
 
 
@@ -350,43 +324,60 @@ $("#sendMails").click(function(){
           } else {            
               // code to execute on data retrieval
 
+              emailSent = 0;
+              emailNotSent = 0;
+              listOfVacantAndST = "List of outstanding bills for short term employees and vacant landlines:\n\xA0"
               var d = new Date();
               var t = d.toLocaleDateString() + " at " + d.toLocaleTimeString();
               
-              electron_data.set('emailDate', {t}).then(data => {
-                  console.log(data); // {'awesome': 'module'}
-                }); 
 
-
-              electron_data.save().then(error => {
-                console.log(error); // undefined
+              storage.set('emailDate', { t }, function(error) {
+                  if (error) console.log(error);
               });
-
-              electron_data.has('emailDate').then(has_key => {
-                if (has_key == true){
-                  var n;
-                  electron_data.get('emailDate').then(value => {
-                    console.log(value);
-                    console.log(value.t);
-                    n = value.t;
-                    document.getElementById("sentMailTime").innerHTML = n;
-                  });
+    
+              setTimeout(showEmailData, 2000);
+              
+              var counter = 1;
+              for (i = 0; i<data.length; i++){
+                console.log(data[i].empName == '')
+                console.log("employee was empty"+ data[i].empName)
+                if (data[i].contractType == 'Short Term' || data[i].empName == undefined || data[i].empName == '' ){
+                  if (data[i].employee == ''){
+                    listOfVacantAndST += counter + "- " + data[i].landLine + " - Vacant\n\xA0"
+                    counter ++;
+                  }
+                  else{
+                    listOfVacantAndST += counter + "- " + data[i].landLine + " - " + data[i].andrewId + "\n\xA0"
+                    counter ++;
+                  }
                 }
-                else {
-                  document.getElementById("sentMailTime").innerHTML = "---------";
+
+                else{
+                  sendMail(data[i].email, data[i].empName, data[i].landLine, data[i].compName, data[i].pdfUrl,data[i].andrewId, data[i].unitNo, "")
                 }
 
-              });
+              }
 
-            for (i = 0; i<data.length; i++){
-              sendMail(data[i].empName, data[i].landLine, data[i].compName, data[i].pdfUrl,data[i].andrewId)
-            }  
-          }    
+              sendMail('jinsolk@andrew.cmu.edu', "", "", "", "","","", listOfVacantAndST)
+
+            }
 
   });
 });
 
+function showEmailData(){
+  storage.get('emailDate', function(error, data) {
+    
+    if (error) console.log(error);
 
+    if (data.t != null){
+      document.getElementById("sentMailTime").innerHTML = data.t;
+    }
+    else{
+      document.getElementById("sentMailTime").innerHTML = "---------";
+    }
+  });
+}
 // var sendMails = document.getElementById('sendMails');
 // sendMails.onclick = 
 
@@ -398,8 +389,9 @@ function startSending(callback){
   ];
 
   var a = new Date();
-    $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `housing`.`landLine`, `employee`.`andrewId`,  `compound`.`compName`, `bill`.`pdfUrl` from `bill`, `employee`, `housing`, `compound`, `assignment` WHERE `bill`.`landLine` = `housing`.`landLine` AND `housing`.`compId` = `compound`.`compId` AND `housing`.`landLine` = `assignment`.`landLine` AND `employee`.`andrewId` = `assignment`.`andrewId` AND date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%M') = '" + monthNames[3] + "';";
-    
+    $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `employee`.`contractType`, `employee`.`email`, `housing`.`landLine`, `housing`.`unitNo`, `employee`.`andrewId`,  `compound`.`compName`, `bill`.`pdfUrl` FROM `compound` ,`housing`, `bill` LEFT JOIN `assignment` on `assignment`.`landline` = `bill`.`landLine` AND ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`))) LEFT JOIN `employee` on `assignment`.`andrewId`=`employee`.`andrewId` WHERE  `bill`.`landLine` = `housing`.`landLine` AND `housing`.`compId` = `compound`.`compId`AND date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%M') = '" + monthNames[3] + "'  ORDER BY `employee`.`contractType`;";
+
+
     connection.query($query, function(err, rows, fields) {
         if(err){
             // alert(err.toString());
@@ -429,7 +421,7 @@ function startSending(callback){
 
 var emailSent = 0;
 var emailNotSent = 0;
-
+var listOfVacantAndST = "";
 
 const nodemailer = require('nodemailer');
 var hbs = require('nodemailer-express-handlebars')
@@ -453,44 +445,85 @@ transporter.use('compile',hbs({
 
 
 
-function sendMail(empName, landLine, compName, pdfUrl, andrewId){
+function sendMail(email, empName, landLine, compName, pdfUrl, andrewId, unitNo, listOfVacantAndST){
   // setup email data with unicode symbols
 
-  
-  let mailOptions = {
-      from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
-      to: 'yasirk@qatar.cmu.edu', // list of receivers
-      subject: 'Ooredoo Bill Cycle', // Subject line
-      template: 'yourBill',
-      attachments: [
-      {   
-          path: pdfUrl
-      }
-      ],
-      context: {
-        empName: empName,
-        landLine: landLine,
-        compName: compName
-      }
-    };
+  if (listOfVacantAndST == ""){
+    let mailOptions = {
+        from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
+        to: "yasirk@qatar.cmu.edu", // list of receivers
+        subject: 'Ooredoo Bill Cycle', // Subject line
+        template: 'yourBill',
+        // attachments: [
+        // {   
+        //     path: pdfUrl
+        // }
+        // ],
+        context: {
+          empName: empName,
+          landLine: landLine,
+          compName: compName,
+          unitNo: unitNo
+        }
+      };
 
 
 
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-          return console.log(error);
-          emailNotSent =  emailNotSent + 1;
-      }
-      emailSent = emailSent + 1;
-      console.log('Message %s sent: %s', info.messageId, info.response);
-      console.log(emailNotSent);
-      console.log(emailSent);
-      document.getElementById("showSent").innerHTML = "Number of Emails successfully sent: "+ emailSent;
-      document.getElementById("showNotSent").innerHTML = "Number of Emails not sent: " + emailNotSent;
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            emailNotSent =  emailNotSent + 1;
+            document.getElementById("showNotSent").innerHTML = emailNotSent;
+            document.getElementById("showSent").innerHTML = emailSent;
+            return console.log(error);
+            
+        }
+        emailSent = emailSent + 1;
+        console.log('Message %s sent: %s', info.messageId, info.response);
+        console.log(emailNotSent);
+        console.log(emailSent);
+        document.getElementById("showNotSent").innerHTML = emailNotSent;
+        document.getElementById("showSent").innerHTML = emailSent;
+
+    });
+  }
 
 
-  });
+  else{
+
+    var plaintext = "Hi, \n\nThis email is as regards to the monthly Ooredoo billing Cycle.  \n\n"+ listOfVacantAndST + " Sincerely,\n\nFacilities Management Team\n\n\nThis is an automated email. If you have any questions or concerns, please contact Facilities at" + "fmbills@qatar.cmu.edu.".bold()
+    let mailOptions = {
+        from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
+        to: "yasirk@qatar.cmu.edu",
+        cc: "yasirk@qatar.cmu.edu",
+        subject: 'Ooredoo Bill Cycle', // Subject line
+        text: plaintext
+      };
+
+
+
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            emailNotSent =  emailNotSent + 1;
+            document.getElementById("showNotSent").innerHTML = emailNotSent;
+            document.getElementById("showSent").innerHTML = emailSent;
+            return console.log(error);
+            
+        }
+        emailSent = emailSent + 1;
+        console.log('Message %s sent: %s', info.messageId, info.response);
+        console.log(emailNotSent);
+        console.log(emailSent);
+        document.getElementById("showNotSent").innerHTML = emailNotSent;
+        document.getElementById("showSent").innerHTML = emailSent;
+
+    });
+
+  }
+
 }
 
 

@@ -397,9 +397,7 @@
                     $('.employeeBillsDiv').append('<table id="allEmployeeBills" class="table table-bordred table-striped"></table>')
 
 
-                    $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `bill`.`billNo`, `bill`.`billPeriod`, `bill`.`totalAmountDue`, `bill`.`pdfurl` FROM `bill`,`assignment`, `housing`, `employee`, `compound` WHERE `bill`.`landLine` = `housing`.`landLine` AND `assignment`.`landLine` = `housing`.`landLine` AND `assignment`.`andrewId` = `employee`.`andrewId` AND `housing`.`compId` = `compound`.`compId` AND `assignment`.`andrewId` = '"+ row.andrewId + "';";
-                    // $query = "SELECT * FROM `bill` where `landline` ='" + row.landLine+"';"
-
+                    $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `bill`.`billNo`, `bill`.`billPeriod`, `bill`.`totalAmountDue`, `bill`.`pdfurl`  FROM `housing`, `compound` ,`employee`, `assignment` INNER JOIN `bill` on `assignment`.`landline` = `bill`.`landline` AND  ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') > `assignment`.`startDate`)))  WHERE `bill`.`landLine` = `housing`.`landLine` AND `housing`.`compId` = `compound`.`compId` AND `assignment`.`andrewId` = '"+ row.andrewId + "' AND `assignment`.`andrewId`=`employee`.`andrewId`; ";
                             connection.query($query, function(err, rows, fields) {
                               if(err){
                                   console.log("An error ocurred performing the query.");
