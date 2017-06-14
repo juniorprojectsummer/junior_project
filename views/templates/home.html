@@ -326,7 +326,7 @@ $("#sendMails").click(function(){
 
               emailSent = 0;
               emailNotSent = 0;
-              listOfVacantAndST = "List of outstanding bills for short term employees and vacant landlines:\n\xA0"
+              listOfVacantAndST = "List of outstanding bills for short term employees and vacant landlines:\n"
               var d = new Date();
               var t = d.toLocaleDateString() + " at " + d.toLocaleTimeString();
               
@@ -342,12 +342,12 @@ $("#sendMails").click(function(){
                 console.log(data[i].empName == '')
                 console.log("employee was empty"+ data[i].empName)
                 if (data[i].contractType == 'Short Term' || data[i].empName == undefined || data[i].empName == '' ){
-                  if (data[i].employee == ''){
-                    listOfVacantAndST += counter + "- " + data[i].landLine + " - Vacant\n\xA0"
+                  if (data[i].empName == '' || data[i].empName == undefined){
+                    listOfVacantAndST += counter + " - " + data[i].landLine + " | Vacant | "+data[i].unitNo+", "+data[i].compName+ "\n"
                     counter ++;
                   }
                   else{
-                    listOfVacantAndST += counter + "- " + data[i].landLine + " - " + data[i].andrewId + "\n\xA0"
+                    listOfVacantAndST += counter + " - " + data[i].landLine + " | Short Term | " + data[i].empName + " | " +data[i].unitNo + ", " + data[i].compName+ "\n"
                     counter ++;
                   }
                 }
@@ -358,7 +358,7 @@ $("#sendMails").click(function(){
 
               }
 
-              sendMail('jinsolk@andrew.cmu.edu', "", "", "", "","","", listOfVacantAndST)
+              sendMail('yasirk@qatar.cmu.edu', "", "", "", "","","", listOfVacantAndST)
 
             }
 
@@ -452,7 +452,7 @@ function sendMail(email, empName, landLine, compName, pdfUrl, andrewId, unitNo, 
     let mailOptions = {
         from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
         to: email, // list of receivers
-        cc: "bmhasnah@qatar.cmu.edu",
+        cc: "yasirk@qatar.cmu.edu",
         subject: 'Ooredoo Bill Cycle', // Subject line
         template: 'yourBill',
         attachments: [
@@ -505,7 +505,7 @@ function sendMail(email, empName, landLine, compName, pdfUrl, andrewId, unitNo, 
     let mailOptions = {
         from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
         to: email,
-        cc: "bmhasnah@qatar.cmu.edu",
+        cc: "yasirk@qatar.cmu.edu",
         subject: 'Ooredoo Bill Cycle', // Subject line
         text: plaintext
       };
