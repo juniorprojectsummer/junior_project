@@ -36,11 +36,11 @@ var $     = require( 'jquery' );
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
-    host     : 'mysql.qatar.cmu.local',
-    user     : 'fmbills_devuser',
-    password : 'PatUmNed', // or the original password : 'apaswword'
-    database : 'fmbills_dev',
-    insecureAuth: true
+            host     : 'mysql.qatar.cmu.local',
+            user     : 'fmbills_user',
+            password : 'F@mB11lsU$er', // or the original password : 'apaswword'
+            database : 'fmbills',
+            insecureAuth: true
 });
 
 // connect to mysql
@@ -324,6 +324,10 @@ $("#sendMails").click(function(){
           } else {            
               // code to execute on data retrieval
 
+              if (data.length == 0){
+                alert("There are no bills to be sent for this month!")
+                return;
+              }
               emailSent = 0;
               emailNotSent = 0;
               listOfVacantAndST = "List of outstanding bills for short term employees and vacant landlines:\n"
@@ -336,11 +340,8 @@ $("#sendMails").click(function(){
               });
     
               setTimeout(showEmailData, 2000);
-              
               var counter = 1;
               for (i = 0; i<data.length; i++){
-                console.log(data[i].empName == '')
-                console.log("employee was empty"+ data[i].empName)
                 if (data[i].contractType == 'Short Term' || data[i].empName == undefined || data[i].empName == '' ){
                   if (data[i].empName == '' || data[i].empName == undefined){
                     listOfVacantAndST += counter + " - " + data[i].landLine + " | Vacant | "+data[i].unitNo+", "+data[i].compName+ "\n"
@@ -394,22 +395,12 @@ function startSending(callback){
 
     connection.query($query, function(err, rows, fields) {
         if(err){
-            // alert(err.toString());
-            // return;
             callback(err, null)
         }
         else{
-          console.log(rows[0].pdfUrl)
           callback(null, rows)
         }
 
-
-        // for (item in rows){
-        //   sendMail(item.empName, item.landLine, item.compName, item.pdfUrl)
-        // }
-
-
-        // console.log(rows)
     });
 }
 

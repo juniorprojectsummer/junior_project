@@ -36,9 +36,9 @@
 
         var connection = mysql.createConnection({
             host     : 'mysql.qatar.cmu.local',
-            user     : 'fmbills_devuser',
-            password : 'PatUmNed', // or the original password : 'apaswword'
-            database : 'fmbills_dev',
+            user     : 'fmbills_user',
+            password : 'F@mB11lsU$er', // or the original password : 'apaswword'
+            database : 'fmbills',
             insecureAuth: true
         });
 
@@ -70,15 +70,14 @@ $query = "SELECT `housing`.`unitNo` , `housing`.`landLine`, `compound`.`compName
           console.log(rows)
           $('#mytableCheck').bootstrapTable({
               data: rows ,
-              height: 494,
+              height: 530,
               cache: false,
               striped: true,
               pagination: true,
-              pageSize: 9,
-              pageList: [9,25,50,100,200],
+              pageSize: 10,
+              pageList: [10,25,50,100,200],
               minimumCountColumns: 2,
               search: true,
-              showRefresh:true,
               checkboxEnable: true,
               columns: [{
                 field: 'state',

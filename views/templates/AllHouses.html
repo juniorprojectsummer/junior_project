@@ -12,7 +12,6 @@
             </center>
           </div>
           <div class="table-responsive" style="color: #990000;">
-                <button id="remove" class="btn btn-danger" disabled>Delete</button>
                 <a onclick="goNewHouse()" class="btn btn-danger" role="button">New House</a>
                 <table id="allHousesTable" class="table table-bordred table-striped"></table>    
           </div>  
@@ -125,9 +124,9 @@
 
         var connection = mysql.createConnection({
             host     : 'mysql.qatar.cmu.local',
-            user     : 'fmbills_devuser',
-            password : 'PatUmNed', // or the original password : 'apaswword'
-            database : 'fmbills_dev',
+            user     : 'fmbills_user',
+            password : 'F@mB11lsU$er', // or the original password : 'apaswword'
+            database : 'fmbills',
             insecureAuth: true
         });
 
@@ -170,14 +169,8 @@
               pageList: [10,25,50,100,200],
               minimumCountColumns: 2,
               search: true,
-              showRefresh:true,
               checkboxEnable: true,
               columns: [{
-                field: 'state',
-                title: '',
-                align: 'center',
-                checkbox: true
-              }, {
                   field: 'unitNo',
                   title: 'Unit Number',
                   sortable: true,
@@ -311,7 +304,6 @@
 
 
                   'click .bills': function (e, value, row, index) {
-                    $('.billsDiv > div').remove();
                     $('.billsDiv').append('<table id="allBills" class="table table-bordred table-striped"></table>')
 
                     $query = "SELECT * FROM `bill` where `landline` ='" + row.landLine+"';"
@@ -336,12 +328,7 @@
                                   search: true,
                                   showRefresh:true,
                                   checkboxEnable: true,
-                                  columns: [{
-                                    field: 'state',
-                                    title: '',
-                                    align: 'center',
-                                    checkbox: true
-                                  }, {
+                                  columns: [ {
                                       field: 'billNo',
                                       title: 'Bill Number',
                                       sortable: true,
@@ -405,7 +392,6 @@
 
 
                   'click .assignments': function (e, value, row, index) {
-                    $('.assignmentsDiv > div').remove();
                     $('.assignmentsDiv').append('<table id="allAssignments" class="table table-bordred table-striped"></table>')
 
                     $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `assignment`.`landLine` , date_format(`assignment`.`startDate`, '%M %e, %Y') as startDate , date_format(`assignment`.`endDate`, '%M %e, %Y') as endDate FROM `assignment` INNER join `employee` on `employee`.`andrewId`= `assignment`.`andrewId` where `landline` ='" + row.landLine+"';"

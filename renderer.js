@@ -59,9 +59,9 @@ var ipc = electron.ipcRenderer
 
 var connection = mysql.createConnection({
     host     : 'mysql.qatar.cmu.local',
-    user     : 'fmbills_devuser',
-    password : 'PatUmNed', // or the original password : 'apaswword'
-    database : 'fmbills_dev',
+    user     : 'fmbills_user',
+    password : 'F@mB11lsU$er', // or the original password : 'apaswword'
+    database : 'fmbills',
     insecureAuth: true
 });
 

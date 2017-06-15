@@ -12,7 +12,7 @@
             </center>
           </div>
           <div class="table-responsive" style="color: #990000;">
-                <button id="remove" class="btn btn-danger" disabled>Delete</button>
+
                 <a onclick="goNewEmployee()" class="btn btn-danger" role="button">New Employee</a>
                 <table id="allEmployeesTable" class="table table-bordred table-striped"></table>    
           </div>  
@@ -154,9 +154,9 @@
 
         var connection = mysql.createConnection({
             host     : 'mysql.qatar.cmu.local',
-            user     : 'fmbills_devuser',
-            password : 'PatUmNed', // or the original password : 'apaswword'
-            database : 'fmbills_dev',
+            user     : 'fmbills_user',
+            password : 'F@mB11lsU$er', // or the original password : 'apaswword'
+            database : 'fmbills',
             insecureAuth: true
         });
 
@@ -199,22 +199,16 @@
           console.log(rows)
           $('#allEmployeesTable').bootstrapTable({
               data: rows ,
-              height: 494,
+              height: 530,
               cache: false,
               striped: true,
               pagination: true,
-              pageSize: 9,
-              pageList: [9,25,50,100,200],
+              pageSize: 10,
+              pageList: [10,25,50,100,200],
               minimumCountColumns: 2,
               search: true,
-              showRefresh:true,
               checkboxEnable: true,
               columns: [{
-                field: 'state',
-                title: '',
-                align: 'center',
-                checkbox: true
-              }, {
                   field: 'firstName',
                   title: 'First Name',
                   sortable: true,
@@ -257,27 +251,9 @@
           });
         });
 
-        var $table = $('#allEmployeesTable'),
-            $remove = $('#remove');
-
-        $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-            $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-        });
+        var $table = $('#allEmployeesTable')
 
 
-        $remove.click(function () {
-            var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
-                return row.andrewId
-            });
-
-            $table.bootstrapTable('remove', {
-                field: 'andrewId',
-                values: ids
-            });
-
-
-            $remove.prop('disabled', true);
-        });
 
 ///    EDIT EMPLOYEE FUNCTIONS
         function operateFormatter(value, row, index) {
@@ -393,11 +369,10 @@
 
 
                   'click .bill': function (e, value, row, index) {
-                    $('.employeeBillsDiv > div').remove();
                     $('.employeeBillsDiv').append('<table id="allEmployeeBills" class="table table-bordred table-striped"></table>')
 
 
-                    $query = "SELECT `housing`.`unitNo`, `housing`.`landLine`, `compound`.`compName`, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `bill`.`billNo`, `bill`.`billPeriod`, `bill`.`totalAmountDue`, `bill`.`pdfUrl`  FROM `housing`, `compound` ,`employee`, `assignment` INNER JOIN `bill` on `assignment`.`landline` = `bill`.`landline` AND  ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') > `assignment`.`startDate`)))  WHERE `bill`.`landLine` = `housing`.`landLine` AND `housing`.`compId` = `compound`.`compId` AND `assignment`.`andrewId` = '"+ row.andrewId + "' AND `assignment`.`andrewId`=`employee`.`andrewId`; ";
+                    $query = "SELECT `housing`.`unitNo`, `employee`.`email`, `housing`.`landLine`, `compound`.`compName`, CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName`, `bill`.`billNo`, `bill`.`billPeriod`, `bill`.`totalAmountDue`, `bill`.`pdfUrl`  FROM `housing`, `compound` ,`employee`, `assignment` INNER JOIN `bill` on `assignment`.`landline` = `bill`.`landline` AND  ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') > `assignment`.`startDate`)))  WHERE `bill`.`landLine` = `housing`.`landLine` AND `housing`.`compId` = `compound`.`compId` AND `assignment`.`andrewId` = '"+ row.andrewId + "' AND `assignment`.`andrewId`=`employee`.`andrewId`; ";
                             connection.query($query, function(err, rows, fields) {
                               if(err){
                                   console.log("An error ocurred performing the query.");
@@ -489,7 +464,7 @@
 
                             window.operateEventsSendBill = {
                                 'click .sendBill': function (e, value, row, index) {
-                                    sendMail(row.empName, row.landLine, row.compName, row.pdfurl, row.unitNo)
+                                    sendMail(row.email, row.empName, row.landLine, row.compName, row.pdfUrl, row.unitNo)
                                 }
                             };
 
@@ -515,13 +490,13 @@
 
 
 
-                            function sendMail(empName, landLine, compName, pdfUrl, unitNo){
+                            function sendMail(email,empName, landLine, compName, pdfUrl, unitNo){
                               // setup email data with unicode symbols
 
                               let mailOptions = {
                                   from: '"Ooredoo Bill" <no-reply-fmbills@qatar.cmu.edu>', // sender address
-                                  to: 'yasir_khan15@hotmail.com', // list of receivers
-                                  subject: 'Ooredoo Bill Cycle', // Subject line
+                                  to: email, // list of receivers
+                                  subject: 'Ooredoo Bill', // Subject line
                                   template: 'yourBill',
                                   attachments: [
                                   {   
@@ -541,9 +516,10 @@
                               // send mail with defined transport object
                               transporter.sendMail(mailOptions, (error, info) => {
                                   if (error) {
-                                      console.log(error)
+                                      alert(error)
+                                      return;
                                   }
-                                  console.log('Message %s sent: %s', info.messageId, info.response);
+                                  alert('The bill is sent to '+ empName);
                               });
                             }
 
@@ -563,7 +539,6 @@
 
 
                   'click .assignments': function (e, value, row, index) {
-                    $('.assignmentsDiv > div').remove();
                     $('.assignmentsDiv').append('<table id="allAssignments" class="table table-bordred table-striped"></table>')
 
                     $query = "SELECT `employee`.`andrewId`, `assignment`.`landLine` , date_format(`assignment`.`startDate`, '%M %e, %Y') as startDate , date_format(`assignment`.`endDate`, '%M %e, %Y') as endDate FROM `assignment` INNER join `employee` on `employee`.`andrewId`= `assignment`.`andrewId` where `assignment`.`andrewId` ='" + row.andrewId+"';"

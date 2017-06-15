@@ -167,31 +167,6 @@
 
         require('../renderer.js');
 
-        // var $     = require( 'jquery' );
-        // var mysql = require('mysql');
-        // // var bcrypt = require('bcrypt');
-
-
-        // var connection = mysql.createConnection({
-        //     host     : 'mysql.qatar.cmu.local',
-        //     user     : 'fmbills_devuser',
-        //     password : 'PatUmNed', // or the original password : 'apaswword'
-        //     database : 'fmbills_dev',
-        //     insecureAuth: true
-        // });
-
-        // // connect to mysql
-        // connection.connect(function(err) {
-        //     // in case of error
-        //     if(err){
-        //         console.log(err.code);
-        //         console.log(err.fatal);
-        //     }
-        // });
-
-
-        // var app = angular.module('myApp', []);
-
 
         function endConnection() {
           connection.end();
@@ -220,14 +195,8 @@
               pageList: [10,25,50,100,200],
               minimumCountColumns: 2,
               search: true,
-              showRefresh:true,
               checkboxEnable: true,
               columns: [{
-                field: 'state',
-                title: '',
-                align: 'center',
-                checkbox: true
-              },{
 
                   field: 'unitNo',
                   title: 'Housing Unit',

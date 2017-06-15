@@ -28,9 +28,9 @@
         // var bcrypt = require('bcrypt');
         var connection = mysql.createConnection({
             host     : 'mysql.qatar.cmu.local',
-            user     : 'fmbills_devuser',
-            password : 'PatUmNed', // or the original password : 'apaswword'
-            database : 'fmbills_dev',
+            user     : 'fmbills_user',
+            password : 'F@mB11lsU$er', // or the original password : 'apaswword'
+            database : 'fmbills',
             insecureAuth: true
         });
         // connect to mysql
@@ -41,7 +41,7 @@
                 console.log(err.fatal);
             }
         });
-        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `bill`.`landline` , `employee`.`contractType`, `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`pdfUrl` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` AND ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)));";
+        $query = "SELECT CONCAT_WS(' ', `employee`.`firstName`, `employee`.`lastName`) AS `empName` , `bill`.`landline` , `employee`.`contractType`, `bill`.`billNo` , `bill`.`totalAmountDue` , `bill`.`billDate` , `bill`.`pdfUrl` FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline` AND ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`))) limit 500;";
 
 
 
@@ -54,12 +54,12 @@
           }
           $('#allBills2').bootstrapTable({
               data: rows ,
-              height: 495,
+              height: 530,
               cache: false,
               striped: true,
               pagination: true,
-              pageSize: 9,
-              pageList: [9,25,50,100,200],
+              pageSize: 10,
+              pageList: [10,25,50,100,200],
               minimumCountColumns: 2,
               search: true,
               showRefresh:true,
@@ -152,12 +152,12 @@
                       console.log(rows)
                       $('#allBills2').bootstrapTable({
                           data: rows ,
-                          height: 500,
+                          height: 530,
                           cache: false,
                           striped: true,
                           pagination: true,
-                          pageSize: 9,
-                          pageList: [9,25,50,100,200],
+                          pageSize: 10,
+                          pageList: [10,25,50,100,200],
                           minimumCountColumns: 2,
                           search: true,
                           showRefresh:true,
@@ -189,7 +189,9 @@
                           },]
                       });
                     });
-          $query2 = "SELECT SUM(totalAmountDue) as sum  FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline`  AND ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment `.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') > `assignment`.`endDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`))) WHERE DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-01'),'"+showDate+"') = 0 ;";
+          $query2 = "SELECT SUM(totalAmountDue) as sum  FROM `employee` INNER JOIN `assignment` on `employee`.`andrewId` = `assignment`.`andrewId` RIGHT JOIN `bill` on `assignment`.`landline` = `bill`.`landline`  AND ((date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') <`assignment`.`endDate` AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') > `assignment`.`startDate`)) OR (`assignment`.`endDate` = '0000-00-00' AND (date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-%d') >= `assignment`.`startDate`))) WHERE DATEDIFF(date_format(str_to_date(`bill`.`billDate`, '%d %M %Y'), '%Y-%m-01'),'"+showDate+"') = 0 ;";
+
+
          connection.query($query2, function(err, rows, fields) {
                       if(err){
                           console.log("An error ocurred performing the query.");
