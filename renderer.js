@@ -49,6 +49,9 @@ var $       = require( 'jquery' );
     function goMasterSheet() {
         $(".container").load("templates/MasterSheet.html");
     }
+    function goHelp() {
+        $(".container").load("templates/help.html");
+    }
     function logout() {
       $(".navigation").remove();
       $(".container").load("login.html");
